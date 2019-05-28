@@ -117,7 +117,7 @@
 <meta property="og:image" content="https://whitneylu.github.io/image/三次握手.png">
 <meta property="og:image" content="https://whitneylu.github.io/image/四次挥手.png">
 <meta property="og:image" content="https://whitneylu.github.io/image/滑动窗口.png">
-<meta property="og:updated_time" content="2019-05-28T14:22:21.814Z">
+<meta property="og:updated_time" content="2019-05-28T14:24:11.230Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="TCP">
 <meta name="twitter:description" content="一个TCP连接由一对套接字唯一标识，TCP提供双工服务，数据是双向流动的，一个完整的TCP连接是双向且对称的">
@@ -413,8 +413,7 @@
       
 
       
-        <p>##TCP头部</p>
-<p><img src="/image/TCP头部.png" alt></p>
+        <h2 id="TCP头部"><a href="#TCP头部" class="headerlink" title="TCP头部"></a>TCP头部</h2><p><img src="/image/TCP头部.png" alt></p>
 <ol>
 <li>一个TCP连接由一个4元组组成，由一对套接字构成，套接字是由IP地址和端口组成的，被称为socket；<strong>每个TCP连接由一对套接字唯一的标识</strong></li>
 <li><strong>序列号字段</strong>唯一的标识了TCP发送端到TCP接收端的数据流的一个字节，代表报文段的数据中的第一个字节，处理被传送分组的重复和传送顺序。基于窗口的流量控制，窗口大小可以随时间变化，称为窗口通告，接收方的窗口通告夹带着发送方的窗口大小值</li>
@@ -430,14 +429,12 @@
 <li>SO_LINGER可以改变close的行为</li>
 </ol>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">struct linger&#123;</span><br><span class="line">	int l_onoff; //设置为0时，选项被关闭</span><br><span class="line">	int l_linger; </span><br><span class="line">	/*l_onoff非0时，l_linger为0，close()不被阻塞立即执行，丢弃缓冲区数据，向对端发送一个RST报文，这种关闭方式被称为强制关闭*/</span><br><span class="line">	/*l_onoff非0，l_linger为非0，close()调用阻塞进程，知道所剩数据发送完毕或超时，如果socket()被设置为O_NONBLOCK状态，程序将不会等待close返回*/</span><br><span class="line">	/*如果在发送端缓冲区的所有数据被发送之前且延迟时间没有消耗完，close将会返回EWOULDBLOCK*/</span><br><span class="line">	</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
-<p>##TCP的连接和终止</p>
-<ol>
+<h2 id="TCP的连接和终止"><a href="#TCP的连接和终止" class="headerlink" title="TCP的连接和终止"></a>TCP的连接和终止</h2><ol>
 <li>TCP的连接和终止分别对应著名的三次握手和四次回收</li>
 </ol>
-<p>###三次握手<br><img src="/image/三次握手.png" alt></p>
-<p>###四次挥手<br><img src="/image/四次挥手.png" alt></p>
-<p>##TCP拥塞机制</p>
-<ol>
+<h3 id="三次握手"><a href="#三次握手" class="headerlink" title="三次握手"></a>三次握手</h3><p><img src="/image/三次握手.png" alt></p>
+<h3 id="四次挥手"><a href="#四次挥手" class="headerlink" title="四次挥手"></a>四次挥手</h3><p><img src="/image/四次挥手.png" alt></p>
+<h2 id="TCP拥塞机制"><a href="#TCP拥塞机制" class="headerlink" title="TCP拥塞机制"></a>TCP拥塞机制</h2><ol>
 <li>慢开始、拥塞避免、快速重传、快速恢复</li>
 <li>发送方维护拥塞窗口cwnd，开始时cwnd=1，每经过一个RTTcwnd+1，每次传输轮次后cwnd按指数增长</li>
 <li><strong>慢开始门限</strong>ssthress，当cwnd&gt;ssthress时，执行<strong>拥塞避免算法</strong>，cwnd线性增长</li>
@@ -577,8 +574,17 @@
       
 
       
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            Table of Contents
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            Overview
+          </li>
+        </ul>
+      
 
-      <section class="site-overview-wrap sidebar-panel sidebar-panel-active">
+      <section class="site-overview-wrap sidebar-panel">
         <div class="site-overview">
           <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
             
@@ -662,6 +668,22 @@
         </div>
       </section>
 
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#TCP头部"><span class="nav-number">1.</span> <span class="nav-text">TCP头部</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#TCP的连接和终止"><span class="nav-number">2.</span> <span class="nav-text">TCP的连接和终止</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#三次握手"><span class="nav-number">2.1.</span> <span class="nav-text">三次握手</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#四次挥手"><span class="nav-number">2.2.</span> <span class="nav-text">四次挥手</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#TCP拥塞机制"><span class="nav-number">3.</span> <span class="nav-text">TCP拥塞机制</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
       
 
       
