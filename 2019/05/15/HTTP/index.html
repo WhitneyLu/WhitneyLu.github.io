@@ -105,20 +105,18 @@
 
 
 
-<meta name="description" content="五层网络模型&amp;&amp;应用层协议 HTTP">
+<meta name="description" content="应用层协议 HTTP">
 <meta name="keywords" content="计算机网络">
 <meta property="og:type" content="article">
 <meta property="og:title" content="HTTP协议">
 <meta property="og:url" content="https://whitneylu.github.io/2019/05/15/HTTP/index.html">
 <meta property="og:site_name" content="Whitney&#39;s coding note">
-<meta property="og:description" content="五层网络模型&amp;&amp;应用层协议 HTTP">
+<meta property="og:description" content="应用层协议 HTTP">
 <meta property="og:locale" content="default">
-<meta property="og:image" content="https://whitneylu.github.io/image/5层网络模型.png">
-<meta property="og:updated_time" content="2019-05-28T11:27:42.160Z">
+<meta property="og:updated_time" content="2019-05-29T06:50:47.176Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="HTTP协议">
-<meta name="twitter:description" content="五层网络模型&amp;&amp;应用层协议 HTTP">
-<meta name="twitter:image" content="https://whitneylu.github.io/image/5层网络模型.png">
+<meta name="twitter:description" content="应用层协议 HTTP">
 
 
 
@@ -369,7 +367,7 @@
                   <span class="post-meta-item-text">Words count in article&#58;</span>
                 
                 <span title="Words count in article">
-                  475
+                  1.1k
                 </span>
               
 
@@ -385,7 +383,7 @@
                   <span class="post-meta-item-text">Reading time &asymp;</span>
                 
                 <span title="Reading time">
-                  1
+                  3
                 </span>
               
             </div>
@@ -393,7 +391,7 @@
 
           
               <div class="post-description">
-                  五层网络模型&&应用层协议 HTTP
+                  应用层协议 HTTP
               </div>
           
 
@@ -410,20 +408,33 @@
       
 
       
-        <p><img src="/image/5层网络模型.png" alt></p>
-<h3 id="应用层协议：HTTP"><a href="#应用层协议：HTTP" class="headerlink" title="应用层协议：HTTP"></a>应用层协议：HTTP</h3><ol>
+        <h2 id="应用层协议-HTTP"><a href="#应用层协议-HTTP" class="headerlink" title="应用层协议 HTTP"></a>应用层协议 HTTP</h2><ol>
 <li>Web的应用层协议是HTTP</li>
 <li>HTTP由两个程序实现：客户程序和服务器程序</li>
 <li>HTTP使用TCP作为支撑运输协议，HTTP客户首先发起一个与服务器的TCP连接，连接建立起来之后，浏览器和服务器进程就可以通过套接字接口访问TCP，TCP为HTTP提供可靠的数据传输服务</li>
 <li>服务器向客户发送被请求的文件，而不存储任何关于该客户的状态信息，所以HTTP是一个无状态协议</li>
 <li>HTTP默认持续连接，但是HTTP客户和服务器可以被配置成非持续连接</li>
-<li>非持续连接：每个TCP连接服务器发送一个对象后关闭，每个TCP连接只传输一个请求报文和一个响应报文</li>
-<li>浏览器可以打开5-10个并行的TCP连接，并行连接可以缩短响应时间</li>
-<li>往返时间RTT，是指一个短分组从客户到服务器然后再返回客户所花的时间。一次TCP连接涉及三次握手过程，三次握手的前两个部分消耗时间占用了一个RTT。客户结合第三部分向TCP连接发送一个HTTP请求报文，请求报文到达服务器，服务器就在该TCP连接上发送HTML文件，这个HTTP请求/响应用去了另一个RTT</li>
-<li>持续连接的HTTP：服务器在发送响应后保持该TCP连接打开，在相同的用户和服务器之间，后续的响应的请求报文能够通过相同的连接进行传送</li>
+<li><strong>非持续连接：</strong>每个TCP连接服务器发送一个对象后关闭，每个TCP连接只传输一个请求报文和一个响应报文</li>
+<li>浏览器可以打开5-10个并行的TCP连接，<strong>并行连接</strong>可以缩短响应时间</li>
+<li><strong>往返时间RTT</strong>，是指一个短分组从客户到服务器然后再返回客户所花的时间。一次TCP连接涉及三次握手过程，三次握手的前两个部分消耗时间占用了一个RTT。客户结合第三部分向TCP连接发送一个HTTP请求报文，请求报文到达服务器，服务器就在该TCP连接上发送HTML文件，这个HTTP请求/响应用去了另一个RTT</li>
+<li><strong>持续连接的HTTP：</strong>服务器在发送响应后保持该TCP连接打开，在相同的用户和服务器之间，后续的响应的请求报文能够通过相同的连接进行传送</li>
 <li>在持续连接中，一个完整的Web页面可以通过单个持续的TCP连接完成</li>
 <li>如果一条连接经过一段时间间隔没有被使用，HTTP服务器就关闭该连接</li>
 </ol>
+<h3 id="cookie"><a href="#cookie" class="headerlink" title="cookie"></a>cookie</h3><ol>
+<li>cookie有四个组件分别在请求报文、响应报文、用户端系统、Web站点的后端服务器中保存</li>
+<li>cookie用于标识一个客户，Web站点为每一个客户分配一个唯一的标识码，作为索引后端数据中的表项</li>
+<li>cookie允许对用户进行追踪或根据访问信息投放广告，被人为是侵犯用户隐私的</li>
+</ol>
+<h3 id="Web缓存"><a href="#Web缓存" class="headerlink" title="Web缓存"></a>Web缓存</h3><ol>
+<li>Web缓存器又称为代理服务器</li>
+<li>Web缓存器既是服务器又是客户，浏览器请求对象，Web缓存器先检查本地有没有这个对象，如果有就返回这个对象，如果没有就向对象的初始服务器打开TCP连接，Web缓存器在本地保存对象的副本，然后向客户的浏览器用HTTP响应报文发送副本</li>
+<li>Web缓存器可以减少客户请求的响应时间，可以减少一个机构的接入链路到因特网的通信量，改善所有用户的性能</li>
+<li>通过使用内容分发网络，Web缓存器在因特网中发挥着巨大作用</li>
+</ol>
+<h3 id="HTTP请求报文和响应报文"><a href="#HTTP请求报文和响应报文" class="headerlink" title="HTTP请求报文和响应报文"></a>HTTP请求报文和响应报文</h3><p><strong>报文由普通ASCII码书写</strong></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">#HTTP请求报文</span><br><span class="line">GET /somedir/page.html HTTP/1.1 #请求行由三个字段组成：方法字段，URL字段和HTTP版本字段</span><br><span class="line">#下面是首部行</span><br><span class="line">Host: www.someschool.edu #指明了对象所在的主机</span><br><span class="line">Connection:  close #表示使用非持续连接</span><br><span class="line">User-agent: #指明向服务器发送请求的浏览器的类型</span><br><span class="line">Accept-language: #表示用户得到该对象的语言版本</span><br><span class="line">#实体体 使用GET方法时，实体体为空，使用户POST时，才能使用实体体</span><br></pre></td></tr></table></figure>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">#HTTP响应报文</span><br><span class="line">HTTP/1.1 200 OK #初始状态行有三个字段，HTTP协议版本，状态码和响应的状态信息</span><br><span class="line">#200 OK 请求成功 301 Moved Permanently 请求对象已经被永久转移了 ...</span><br><span class="line">#下面是6个首部行</span><br><span class="line">Connection: close #发送完报文后关闭TCP连接</span><br><span class="line">Date: Tue, 18 Aug 2015 15:44:04 GMT</span><br><span class="line">Sever: Apache/2.2.3 (CentOS) #指示产生报文的服务器</span><br><span class="line">Last-Modified: Tue, 18 Aug 2015 15:11:03 GMT</span><br><span class="line">Content-Length: 6821 #被发送对象的字节数</span><br><span class="line">Content-Type: text/html #指示实体体中的对象是HTML文件</span><br><span class="line"></span><br><span class="line">(data data data...) #实体体</span><br></pre></td></tr></table></figure>
 
       
     </div>
@@ -478,8 +489,8 @@
         <div class="post-nav">
           <div class="post-nav-next post-nav-item">
             
-              <a href="/2019/04/28/Effective_C++_2/" rel="next" title="Effective C++ 2">
-                <i class="fa fa-chevron-left"></i> Effective C++ 2
+              <a href="/2019/05/05/计算网络基础1/" rel="next" title="计算机网络基础1">
+                <i class="fa fa-chevron-left"></i> 计算机网络基础1
               </a>
             
           </div>
@@ -571,7 +582,7 @@
               
                 <a href="/archives/">
               
-                  <span class="site-state-item-count">5</span>
+                  <span class="site-state-item-count">6</span>
                   <span class="site-state-item-name">posts</span>
                 </a>
               </div>
@@ -582,7 +593,7 @@
               
               <div class="site-state-item site-state-categories">
                 <a href="/categories/index.html">
-                  <span class="site-state-item-count">3</span>
+                  <span class="site-state-item-count">4</span>
                   <span class="site-state-item-name">categories</span>
                 </a>
               </div>
@@ -648,7 +659,7 @@
             
 
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#应用层协议：HTTP"><span class="nav-number">1.</span> <span class="nav-text">应用层协议：HTTP</span></a></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#应用层协议-HTTP"><span class="nav-number">1.</span> <span class="nav-text">应用层协议 HTTP</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#cookie"><span class="nav-number">1.1.</span> <span class="nav-text">cookie</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Web缓存"><span class="nav-number">1.2.</span> <span class="nav-text">Web缓存</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#HTTP请求报文和响应报文"><span class="nav-number">1.3.</span> <span class="nav-text">HTTP请求报文和响应报文</span></a></li></ol></li></ol></div>
             
 
           </div>
@@ -682,7 +693,7 @@
     
       <span class="post-meta-item-text">Site words total count&#58;</span>
     
-    <span title="Site words total count">14.2k</span>
+    <span title="Site words total count">15.1k</span>
   
 </div>
 
