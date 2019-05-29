@@ -94,7 +94,7 @@
 
 
 
-  <meta name="keywords" content="计算机网络,">
+  <meta name="keywords" content="操作系统,">
 
 
 
@@ -105,23 +105,18 @@
 
 
 
-<meta name="description" content="一个TCP连接由一对套接字唯一标识，TCP提供双工服务，数据是双向流动的，一个完整的TCP连接是双向且对称的">
-<meta name="keywords" content="计算机网络">
+<meta name="description" content="操作系统基础1：编译过程、指令操作、过程、栈基础">
+<meta name="keywords" content="操作系统">
 <meta property="og:type" content="article">
-<meta property="og:title" content="TCP">
-<meta property="og:url" content="https://whitneylu.github.io/2019/05/25/TCP/index.html">
+<meta property="og:title" content="操作系统基础1">
+<meta property="og:url" content="https://whitneylu.github.io/2019/03/24/操作系统基础1/index.html">
 <meta property="og:site_name" content="Whitney&#39;s coding note">
-<meta property="og:description" content="一个TCP连接由一对套接字唯一标识，TCP提供双工服务，数据是双向流动的，一个完整的TCP连接是双向且对称的">
+<meta property="og:description" content="操作系统基础1：编译过程、指令操作、过程、栈基础">
 <meta property="og:locale" content="default">
-<meta property="og:image" content="https://whitneylu.github.io/image/TCP头部.png">
-<meta property="og:image" content="https://whitneylu.github.io/image/三次握手.png">
-<meta property="og:image" content="https://whitneylu.github.io/image/四次挥手.png">
-<meta property="og:image" content="https://whitneylu.github.io/image/滑动窗口.png">
-<meta property="og:updated_time" content="2019-05-29T02:28:36.974Z">
+<meta property="og:updated_time" content="2019-05-29T08:44:32.387Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="TCP">
-<meta name="twitter:description" content="一个TCP连接由一对套接字唯一标识，TCP提供双工服务，数据是双向流动的，一个完整的TCP连接是双向且对称的">
-<meta name="twitter:image" content="https://whitneylu.github.io/image/TCP头部.png">
+<meta name="twitter:title" content="操作系统基础1">
+<meta name="twitter:description" content="操作系统基础1：编译过程、指令操作、过程、栈基础">
 
 
 
@@ -151,13 +146,13 @@
 
 
 
-  <link rel="canonical" href="https://whitneylu.github.io/2019/05/25/TCP/">
+  <link rel="canonical" href="https://whitneylu.github.io/2019/03/24/操作系统基础1/">
 
 
 
 
 
-  <title>TCP | Whitney's coding note</title>
+  <title>操作系统基础1 | Whitney's coding note</title>
   
 
 
@@ -284,7 +279,7 @@
   
   
   <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="https://whitneylu.github.io/2019/05/25/TCP/">
+    <link itemprop="mainEntityOfPage" href="https://whitneylu.github.io/2019/03/24/操作系统基础1/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="name" content="WhitneyLu">
@@ -301,7 +296,7 @@
 
         
         
-          <h1 class="post-title" itemprop="name headline">TCP</h1>
+          <h1 class="post-title" itemprop="name headline">操作系统基础1</h1>
         
 
         <div class="post-meta">
@@ -313,8 +308,8 @@
               
                 <span class="post-meta-item-text">Posted on</span>
               
-              <time title="Post created" itemprop="dateCreated datePublished" datetime="2019-05-25T00:00:00+08:00">
-                2019-05-25
+              <time title="Post created" itemprop="dateCreated datePublished" datetime="2019-03-24T00:00:00+08:00">
+                2019-03-24
               </time>
             
 
@@ -336,8 +331,8 @@
               
               
                 <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/TCP-IP/" itemprop="url" rel="index">
-                    <span itemprop="name">TCP/IP</span>
+                  <a href="/categories/操作系统基础/" itemprop="url" rel="index">
+                    <span itemprop="name">操作系统基础</span>
                   </a>
                 </span>
 
@@ -372,7 +367,7 @@
                   <span class="post-meta-item-text">Words count in article&#58;</span>
                 
                 <span title="Words count in article">
-                  1.1k
+                  2.6k
                 </span>
               
 
@@ -388,7 +383,7 @@
                   <span class="post-meta-item-text">Reading time &asymp;</span>
                 
                 <span title="Reading time">
-                  3
+                  9
                 </span>
               
             </div>
@@ -396,7 +391,7 @@
 
           
               <div class="post-description">
-                  一个TCP连接由一对套接字唯一标识，TCP提供双工服务，数据是双向流动的，一个完整的TCP连接是双向且对称的
+                  操作系统基础1：编译过程、指令操作、过程、栈基础
               </div>
           
 
@@ -413,47 +408,108 @@
       
 
       
-        <h2 id="TCP头部"><a href="#TCP头部" class="headerlink" title="TCP头部"></a>TCP头部</h2><p><img src="/image/TCP头部.png" alt></p>
-<ol>
-<li>一个TCP连接由一个4元组组成，由一对套接字构成，套接字是由IP地址和端口组成的，被称为socket；<strong>每个TCP连接由一对套接字唯一的标识</strong></li>
-<li><strong>序列号字段</strong>唯一的标识了TCP发送端到TCP接收端的数据流的一个字节，代表报文段的数据中的第一个字节，处理被传送分组的重复和传送顺序。基于窗口的流量控制，窗口大小可以随时间变化，称为窗口通告，接收方的窗口通告夹带着发送方的窗口大小值</li>
-<li><strong>确认号字段</strong>是发送方期待接收的下一个序列号加1，这个字段只有在ACK位字段被启用的情况下才有效，选择确认选项高速发送方正确接收到次序杂乱的数据</li>
-<li><strong>头部长度</strong>限制了TCP至多只能携带60位的头部</li>
-<li>16位限定了<strong>窗口大小</strong>至多65535字节，限制了TCP的吞吐量性能。定义分组窗口作为已发送还未被接收的分组的集合，窗口大小是分组数量，ACK反向流动</li>
-<li>ACK表示确认号是否有效，TCP使用的ACK是累积的，1）是否接收到分组；2）接收方接收到的是否和发送方发送的一致</li>
-<li>PSH表示接收端应用程序应立即从TCP接收缓冲区中读走数据；RST表示要求对方对方重新建立连接；SYN表示请求建立一个连接；FIN表示通知对方本端要关闭连接了</li>
-<li><strong>TCP校验和字段</strong>覆盖了TCP的头部和数据以及头部中的一些字段，TCP会丢弃一个带无效校验和的报文段</li>
-<li><strong>紧急指针</strong>只在<strong>URG字段</strong>被设置时才有效，是必须被加到报文段的序列号字段上的正偏移，产生紧急数据的最后一个字节的序列号。这是发送方提供给另一端的特殊标志数据的方法</li>
-<li>最常见的选项字段是<strong>最大段大小选项称为MSS</strong>，连接的每个端点基本上都在它发送的第一个报文段上指定这个选项，指定接收方希望接收到的报文段的最大值</li>
-<li>SO_RESEADDR可以用来设定端口释放后可以立即被使用；位于TIME_WAIT状态的套接字重复绑定使用，server程序在bind()之前设置这个TCP选项</li>
-<li>SO_LINGER可以改变close的行为</li>
+        <h2 id="操作系统基础1"><a href="#操作系统基础1" class="headerlink" title="操作系统基础1"></a>操作系统基础1</h2><h3 id="编译系统分为四个阶段："><a href="#编译系统分为四个阶段：" class="headerlink" title="编译系统分为四个阶段："></a>编译系统分为四个阶段：</h3><ol>
+<li>预处理器，#include包含的程序直接插入到程序，对预定义的常量等进行替换，还有内联函数的调用</li>
+<li>编译器，将程序语言变成汇编语言</li>
+<li>汇编器，将汇编语言翻译成机器语言</li>
+<li>链接器，调用了printf得到可执行的hello文件</li>
 </ol>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">struct linger&#123;</span><br><span class="line">	int l_onoff; //设置为0时，选项被关闭</span><br><span class="line">	int l_linger; </span><br><span class="line">	/*l_onoff非0时，l_linger为0，close()不被阻塞立即执行，丢弃缓冲区数据，向对端发送一个RST报文，这种关闭方式被称为强制关闭*/</span><br><span class="line">	/*l_onoff非0，l_linger为非0，close()调用阻塞进程，知道所剩数据发送完毕或超时，如果socket()被设置为O_NONBLOCK状态，程序将不会等待close返回*/</span><br><span class="line">	/*如果在发送端缓冲区的所有数据被发送之前且延迟时间没有消耗完，close将会返回EWOULDBLOCK*/</span><br><span class="line">	</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
-<h2 id="TCP的连接和终止"><a href="#TCP的连接和终止" class="headerlink" title="TCP的连接和终止"></a>TCP的连接和终止</h2><ol>
-<li>TCP的连接和终止分别对应著名的三次握手和四次挥手</li>
+<h3 id="指令"><a href="#指令" class="headerlink" title="指令"></a>指令</h3><ol>
+<li>x86_64是目前笔记本和台式机最常用的处理器的机器语言，x86-64的指令长度为1-15位，设置指令的格式，将字节唯一的解码成机器指令</li>
+<li>x86-64的中央处理单元包含一组16个存储64位值的通用目的存储器</li>
+<li>程序计数器：给出下一条指令在内存中的位置</li>
+<li>整数寄存器文件：包含16个命名位置，存储64位值</li>
+<li>条件码寄存器保存最近执行的算术或逻辑运算符指令的状态信息</li>
+<li>向量寄存器存放一个或多个整数或浮点型的值</li>
+<li><p>Linux命令行</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">gcc -S mstore.c #查看汇编代码，产生mstore.s汇编文件</span><br><span class="line">gcc Og -s -masm=intel mstore.c #产生函数multstore的Intel格式的汇编代码</span><br><span class="line">objdump -d mstore.o #反汇编器得到代表指令的字节值</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>GNU调试工具GDB</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br></pre></td><td class="code"><pre><span class="line">gdb x/14xb multstore #显示函数multstore14个16进制表示的字节,GNU调试工具GDB</span><br><span class="line">gdb prog #启动gdb</span><br><span class="line">quit #退出gdb</span><br><span class="line">run #运行程序</span><br><span class="line">kill #停止程序</span><br><span class="line">break mulstore #在函数入口处设置断点</span><br><span class="line">break * 0x400540 #在地址位置处设置断点</span><br><span class="line">delete 1 #删除断点1</span><br><span class="line">delete #删除所有断点</span><br><span class="line">stepi #执行一条指令</span><br><span class="line">stepi 4 #执行4条指令</span><br><span class="line">nexti #以函数调用为单位，执行一条指令</span><br><span class="line">continue #继续执行</span><br><span class="line">finish #运行到当前函数返回</span><br><span class="line">disas #反汇编当前函数</span><br><span class="line">disas mulstore #反汇编当前函数</span><br><span class="line">disas 0x400544 #反汇编位于地址附近的函数</span><br><span class="line">disas 0x400540,0x40054d #反汇编位于地址范围内的代码</span><br><span class="line">print /x \$rip #以十六进制输出十六进制输出程序计数器的值</span><br><span class="line">print $rax #以十进制输出%rax的内容</span><br><span class="line">x/2g 0x7fffffffffe818 #检查从地址开始的2字</span><br><span class="line">x/20 mulstore #检查函数的前20个字节</span><br><span class="line">info frame #有关当前栈帧的信息</span><br><span class="line">info registers #所有寄存器的值</span><br><span class="line">help #获取有关GDB的信息</span><br></pre></td></tr></table></figure>
+</li>
+<li><p><strong>指令集</strong>是CPU用来计算和控制计算机系统的一套指令集合</p>
+</li>
+<li>把许多不同的指令划分成指令类，每一类执行相同的操作，操作数大小不同</li>
+<li>指令可以有多个操作数：<strong>立即数</strong> -577或0x1F；<strong>寄存器</strong>，表示某个寄存器的内容；<strong>内存引用</strong>，根据计算出来的地址访问某个内存位置</li>
+<li>源操作数指定的值是一个立即数，目的操作数指定一个位置，传送指令的两个操作数不能都是内存的位置</li>
+<li>C语言中的地址就是指针，间接引用指针就是把指针放在寄存器中，内存引用寄存器，局部变量x通常保存在寄存器中而不是内存中</li>
 </ol>
-<h3 id="三次握手"><a href="#三次握手" class="headerlink" title="三次握手"></a>三次握手</h3><p><img src="/image/三次握手.png" alt></p>
-<h3 id="四次挥手"><a href="#四次挥手" class="headerlink" title="四次挥手"></a>四次挥手</h3><p><img src="/image/四次挥手.png" alt></p>
-<h2 id="TCP拥塞机制"><a href="#TCP拥塞机制" class="headerlink" title="TCP拥塞机制"></a>TCP拥塞机制</h2><ol>
-<li>慢开始、拥塞避免、快速重传、快速恢复</li>
-<li>发送方维护拥塞窗口cwnd，开始时cwnd=1，每经过一个RTTcwnd+1，每次传输轮次后cwnd按指数增长</li>
-<li><strong>慢开始门限</strong>ssthress，当cwnd&gt;ssthress时，执行<strong>拥塞避免算法</strong>，cwnd线性增长</li>
-<li>网络拥塞时，将ssthress设为原来的一半，cwnd重置为1</li>
-<li><strong>快速重传</strong>要求对方接收到一个失序报文断后立即发出重复确认，发送方持续受到三个重复确认就将ssthress减半，但不执行慢开始算法，将cwnd设为ssthress</li>
-<li><strong>滑动窗口</strong><br><img src="/image/滑动窗口.png" alt></li>
+<h4 id="算术和逻辑指令操作"><a href="#算术和逻辑指令操作" class="headerlink" title="算术和逻辑指令操作"></a>算术和逻辑指令操作</h4><ol>
+<li>ADD指令集是加法指令</li>
+<li>leaq #加载有效地址，目的操作数必须是一个寄存器</li>
+<li>移位操作的第二项给出操作数，移位量可以是一个立即数或者存放在单字节寄存器%cl</li>
+<li>控制指令操作</li>
 </ol>
 <ul>
-<li>发送窗口收到对端窗口内字节的ACK确认才会移动窗口的左边界</li>
-<li>应用程序通过API通知TCP协议栈缩小TCP接收窗口，对端按照通知的窗口来改变发送窗口</li>
+<li>jump #改变机器代码指令的执行顺序</li>
+<li>CF #进位标志 最近的操作使最高位得到进位</li>
+<li>ZF #零标志 最近的操作结果得到0</li>
+<li>SF #符号标志 最近的操作结果得到负数</li>
+<li>OF #最近的操作导致补码溢出</li>
+<li>CMP和TEST两类指令只设置条件码而不改变任何其他寄存器，CMP指令根据两个操作数之差设置条件码，不更新目的寄存器</li>
+<li>SET指令，将字节设置为0或者1</li>
+</ul>
+<ol start="5">
+<li>条件指令</li>
+</ol>
+<ul>
+<li>条件跳转只能是直接跳转</li>
+<li>跳转目标用符号标号书写，跳转指令有几种不同的编码：使用地址偏移量或者给出四个字节标志的绝对地址指定跳转目标</li>
+<li>当执行计算机相对寻址时，程序计数器的值是跳转指令后面的那条指令的地址，处理将更新程序计数器作为执行指令的第一步</li>
+<li>rep用来实现字符串重复操作，用rep后面跟ret组合来避免使ret指令称为条件跳转指令的目标</li>
+<li>处理器使用流水线获得高性能，因此使用条件传送分支会比条件控制转移有更好的性能</li>
+<li>处理器采用分支预测逻辑来猜测每条跳转指令是否会执行，发生错误预测时要求处理器丢掉跳转该条指令已经所做的工作，确认分支预测错误的处罚</li>
+<li>编译出来使用条件传送的代码所需的时间都是大约8个时钟周期，控制流不依赖于数据，这样可以使处理器更容易保持流水线是满的</li>
+</ul>
+<ol start="6">
+<li>循环指令，汇编中使用条件和跳转实现循环</li>
+<li>switch根据整数索引值进行多重分支，通过使用跳转表实现的更加高效</li>
+<li><strong>过程</strong>是一种封装代码的方式，程序用过程作为抽象机制，隐藏程序的具体实现，过程可以是函数、方法、子例程、处理函数等等</li>
+</ol>
+<h3 id="过程"><a href="#过程" class="headerlink" title="过程"></a>过程</h3><p><strong>过程P调用过程Q，Q执行后返回到P，具体实现为以下几个方面</strong></p>
+<ol>
+<li><strong>传递控制：</strong> 进入程序Q时程序计数器被设置为程序Q的起始位置，返回时程序计数器被设置为P调用Q后面的那条指令的地址</li>
+<li><strong>传递数据：</strong> P要能够给Q提供一个或多个参数，Q要能够给P返回一个值</li>
+<li><strong>分配和释放内存：</strong> Q要为局部变量分配空间，返回前必须释放这些空间，Q调用P，Q执行过程中，P以及向上追溯到P的调用链的过程都是被暂时挂起的，当Q运行时只需要为局部变量分配新的存储空间，返回时释放</li>
+<li><strong>转移控制</strong> </li>
+</ol>
+<ul>
+<li>Q调用P，Q执行过程中，P以及向上追溯到P的调用链的过程都是被暂时挂起的，当Q运行时只需要为局部变量分配新的存储空间，返回时释放</li>
+<li>程序可以用栈来管理存储空间，栈和程序寄存器存放传递控制和数据、分配内存所需要的信息。P调用Q时，控制和数据信息添加到栈尾，当P返回时这些信息会被释放掉</li>
+<li>过程需要的存储空间超过寄存器能够存放的大小时，在栈上分配空间，称为过程的<strong>栈帧</strong>，正在执行的过程的帧总是在栈顶</li>
+<li>P调用Q时，把返回的地址压入栈中</li>
+<li>调用可以是直接的也可以是间接的，直接调用时一个标号，间接调用是*后面跟一个操作数指示符</li>
+</ul>
+<ol start="5">
+<li><strong>数据传送</strong></li>
+</ol>
+<ul>
+<li>大部分进程间的数据传送是通过寄存器实现的</li>
+<li>x86-64可以通过寄存器最多传递6个整型参数，寄存器使用的名字取决于传递的数据类型的大小，如果一个函数要传递超过6个整型参数，多余的部分通过栈来传递，参数7位于栈顶</li>
+</ul>
+<ol start="6">
+<li><strong>寄存器中的存储空间</strong></li>
+</ol>
+<ul>
+<li>栈上的局部存储：寄存器不够存放所有的参数、局部变量使用取地址符&amp;必须返回一个地址、某些局部变量是数组或结构</li>
+<li>寄存器是被所有过程共享的资源，但是必须确保当一个过程调用另一个过程时，被调用过程不会覆盖调用者稍后会使用的寄存器值</li>
+<li>寄存器%rbx、%rbp、%r12-%r15被划分为被调用者保存寄存器，P调用Q时，Q保存这些寄存器的值</li>
+<li>栈指针%rsp</li>
+<li>其他寄存器都被划分为调用者保存寄存器</li>
 </ul>
 <ol start="7">
-<li>重传超时时间RTO</li>
+<li><strong>递归过程</strong>调用自身，每个调用过程在栈中都有自己的私有空间</li>
 </ol>
-<ul>
-<li>自适应重传算法：按照当前RTT的准确估计来调整RTO</li>
-<li>karn算法：新RTO=γ*旧RTO，γ典型值为2</li>
-<li>不再重传时，更新平均RTT和重传时间的数值</li>
-</ul>
+<h3 id="栈"><a href="#栈" class="headerlink" title="栈"></a>栈</h3><ol>
+<li>缓冲区溢出会导致覆盖栈上存储的某些信息，随着字符串变长，下面的信息会被破坏</li>
+<li>如果攻击者可以确定一个web服务器的占空间，可以设计在许多服务器上都能实施的攻击（安全单一化）</li>
+<li><strong>栈随机化</strong>（地址空间布局随机化Address_Space Layout Randommization ASLR）每次运行时程序的不同部分，都会被加载到内存的不同区域，以此来对抗一些形式的攻击</li>
+<li><strong>栈保护者</strong>（stacker protector）机制检测缓冲区越界，在栈帧中任何局部缓冲区和栈状态之间存储一个特殊的金丝雀值(canary)，在程序运行时随机产生，在函数返回之前检查金丝雀值是否改变，如果改变程序终止</li>
+<li>GCC会试着确定一个函数是否容易受到栈溢出攻击，自动插入溢出检测，使用命令行-fno-stack-protector</li>
+<li>%fs:40 指明金丝雀值是用段寻址从内存读入的，段寻址机制可以追溯到80826的寻址，将金丝雀值存放在一个特殊的段中，标志为只读，攻击者不能覆盖，函数返回钱对比金丝雀值，两数相同，xorq返回0，函数正常运行，否则代码调用一个错误处理例程</li>
+<li><strong>限制可执行代码区域</strong>，保存寄存器产生的代码的那部分内存才是可执行的，其他都被限制为只允许读和写，虚拟内存空间在逻辑上被称为页，NX(No-Execute,不执行位)将读和执行模式分开，栈可以被标记为可读和可写</li>
+<li><strong>支持变长栈帧</strong>：调用alloca函数在栈上分配任意字节数量的存储，x86-64使用%rbp作为帧指针或称为基址针（base pointer）</li>
+</ol>
 
       
     </div>
@@ -480,7 +536,7 @@
       
         <div class="post-tags">
           
-            <a href="/tags/计算机网络/" rel="tag"><i class="fa fa-tag"></i> 计算机网络</a>
+            <a href="/tags/操作系统/" rel="tag"><i class="fa fa-tag"></i> 操作系统</a>
           
         </div>
       
@@ -508,18 +564,14 @@
         <div class="post-nav">
           <div class="post-nav-next post-nav-item">
             
-              <a href="/2019/05/15/HTTP/" rel="next" title="HTTP协议">
-                <i class="fa fa-chevron-left"></i> HTTP协议
-              </a>
-            
           </div>
 
           <span class="post-nav-divider"></span>
 
           <div class="post-nav-prev post-nav-item">
             
-              <a href="/2019/05/28/TCP和UDP的区别/" rel="prev" title="TCP和UDP的区别">
-                TCP和UDP的区别 <i class="fa fa-chevron-right"></i>
+              <a href="/2019/04/22/Effective_C++_1/" rel="prev" title="Effective C++ 1">
+                Effective C++ 1 <i class="fa fa-chevron-right"></i>
               </a>
             
           </div>
@@ -678,7 +730,7 @@
             
 
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#TCP头部"><span class="nav-number">1.</span> <span class="nav-text">TCP头部</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#TCP的连接和终止"><span class="nav-number">2.</span> <span class="nav-text">TCP的连接和终止</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#三次握手"><span class="nav-number">2.1.</span> <span class="nav-text">三次握手</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#四次挥手"><span class="nav-number">2.2.</span> <span class="nav-text">四次挥手</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#TCP拥塞机制"><span class="nav-number">3.</span> <span class="nav-text">TCP拥塞机制</span></a></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#操作系统基础1"><span class="nav-number">1.</span> <span class="nav-text">操作系统基础1</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#编译系统分为四个阶段："><span class="nav-number">1.1.</span> <span class="nav-text">编译系统分为四个阶段：</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#指令"><span class="nav-number">1.2.</span> <span class="nav-text">指令</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#算术和逻辑指令操作"><span class="nav-number">1.2.1.</span> <span class="nav-text">算术和逻辑指令操作</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#过程"><span class="nav-number">1.3.</span> <span class="nav-text">过程</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#栈"><span class="nav-number">1.4.</span> <span class="nav-text">栈</span></a></li></ol></li></ol></div>
             
 
           </div>
