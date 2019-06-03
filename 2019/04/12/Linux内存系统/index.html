@@ -1,0 +1,1078 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next pisces use-motion" lang>
+<head><meta name="generator" content="Hexo 3.8.0">
+  <meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform">
+<meta http-equiv="Cache-Control" content="no-siteapp">
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css">
+
+
+
+
+  
+  
+  
+  
+
+  
+    
+    
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+    
+    
+    <link href="https://fonts.cat.net/css?family=Roboto Slab:300,300italic,400,400italic,700,700italic&subset=latin,latin-ext" rel="stylesheet" type="text/css">
+  
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css">
+
+<link href="/css/main.css?v=5.1.4" rel="stylesheet" type="text/css">
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=5.1.4">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=5.1.4" color="#222">
+
+
+
+
+
+  <meta name="keywords" content="操作系统,">
+
+
+
+
+
+
+
+
+
+
+<meta name="description" content="Intel Core i7/Linux内存系统-地址翻译、动态内存分配">
+<meta name="keywords" content="操作系统">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Intel Core i7&#x2F;Linux内存系统">
+<meta property="og:url" content="https://whitneylu.github.io/2019/04/12/Linux内存系统/index.html">
+<meta property="og:site_name" content="Whitney&#39;s coding note">
+<meta property="og:description" content="Intel Core i7/Linux内存系统-地址翻译、动态内存分配">
+<meta property="og:locale" content="default">
+<meta property="og:image" content="https://whitneylu.github.io/image/第123级页表条目格式.jpg">
+<meta property="og:image" content="https://whitneylu.github.io/image/第4级页表条目格式.jpg">
+<meta property="og:image" content="https://whitneylu.github.io/image/Linux虚拟内存.png">
+<meta property="og:image" content="https://whitneylu.github.io/image/Linux组织的虚拟内存的结构.jpg">
+<meta property="og:image" content="https://whitneylu.github.io/image/Linux缺页处理.jpg">
+<meta property="og:image" content="https://whitneylu.github.io/image/mmap参数的可视化解释.jpg">
+<meta property="og:image" content="https://whitneylu.github.io/image/Mark&Sweep用到的函数.png">
+<meta property="og:updated_time" content="2019-06-03T02:28:34.534Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Intel Core i7&#x2F;Linux内存系统">
+<meta name="twitter:description" content="Intel Core i7/Linux内存系统-地址翻译、动态内存分配">
+<meta name="twitter:image" content="https://whitneylu.github.io/image/第123级页表条目格式.jpg">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Pisces',
+    version: '5.1.4',
+    sidebar: {"position":"left","display":"post","offset":12,"b2t":false,"scrollpercent":true,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    duoshuo: {
+      userId: '0',
+      author: 'Author'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="https://whitneylu.github.io/2019/04/12/Linux内存系统/">
+
+
+
+
+
+  <title>Intel Core i7/Linux内存系统 | Whitney's coding note</title>
+  
+
+
+
+
+
+
+
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="default">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">Whitney's coding note</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle">Study as if you were going to live forever.</p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br>
+            
+            Home
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br>
+            
+            Tags
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br>
+            
+            Categories
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br>
+            
+            Archives
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="https://whitneylu.github.io/2019/04/12/Linux内存系统/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="WhitneyLu">
+      <meta itemprop="description" content>
+      <meta itemprop="image" content="/images/nessa.png">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Whitney's coding note">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">Intel Core i7/Linux内存系统</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">Posted on</span>
+              
+              <time title="Post created" itemprop="dateCreated datePublished" datetime="2019-04-12T00:00:00+08:00">
+                2019-04-12
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category">
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">In</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Intel-Core-i7-Linux内存系统/" itemprop="url" rel="index">
+                    <span itemprop="name">Intel Core i7/Linux内存系统</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+            <span class="post-meta-divider">|</span>
+            <span class="page-pv"><i class="fa fa-file-o"></i>
+            <span class="busuanzi-value" id="busuanzi_value_page_pv"></span>
+            </span>
+          
+
+          
+            <div class="post-wordcount">
+              
+                
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-file-word-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">Words count in article&#58;</span>
+                
+                <span title="Words count in article">
+                  3.4k
+                </span>
+              
+
+              
+                <span class="post-meta-divider">|</span>
+              
+
+              
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-clock-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">Reading time &asymp;</span>
+                
+                <span title="Reading time">
+                  11
+                </span>
+              
+            </div>
+          
+
+          
+              <div class="post-description">
+                  Intel Core i7/Linux内存系统-地址翻译、动态内存分配
+              </div>
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <h2 id="Intel-Core-i7-Linux内存系统"><a href="#Intel-Core-i7-Linux内存系统" class="headerlink" title="Intel Core i7/Linux内存系统"></a>Intel Core i7/Linux内存系统</h2><ol>
+<li>处理器封装包括4个核、一个所有核共享的L3高速缓存，DDR3内存控制器</li>
+<li>每个核包含一个层次结构的TLB、一个层次结构的数据和指令高速缓存、一组快速的点到点链路</li>
+<li>TLB是虚拟寻址的四条组相联的，L1、L2、L3是物理寻址的，块大小是64字节</li>
+<li>L1和L2是8路组相联的，L3是16路组相联的</li>
+</ol>
+<h3 id="Core-i7地址翻译"><a href="#Core-i7地址翻译" class="headerlink" title="Core i7地址翻译"></a>Core i7地址翻译</h3><p>第一级、第二级或第三级页表中条目的格式<br><img src="/image/第123级页表条目格式.jpg" alt><br>第四级页表中条目的格式<br><img src="/image/第4级页表条目格式.jpg" alt></p>
+<ol>
+<li>采用四级页表层次</li>
+<li>每个进程都有自己私有的页表层次结构，CR3控制寄存器指向第一级页表的起始位置，CR3的值是每个进程上下文的一部分</li>
+<li>第一级、第二级或第三级页表中条目的格式，P=1时，地址字段包含一个40位物理页号PPN，指向页表的开始处，要求物理页4KB对齐</li>
+<li>第四级页表中条目的格式，P=1时，地址字段包括一个40位的PPN，指向物理内存中某一页的基地址，要求物理页4KB对齐</li>
+<li>PTE有3个权限位，控制对页的访问</li>
+</ol>
+<ul>
+<li>R/W确定页的读写权限</li>
+<li>U/S确定能否在用户模式中访问</li>
+<li>XD用来禁止从某些内存页取指令</li>
+</ul>
+<ol start="6">
+<li>每次访问一个页时，MMU都会设置A位，称为引用位；设置D位修改位，修改位告诉内核在复制替换页之前，是否要写会牺牲页。内核可以调用一条特殊的内核指令清除引用位和修改位</li>
+</ol>
+<h3 id="Linux虚拟内存系统"><a href="#Linux虚拟内存系统" class="headerlink" title="Linux虚拟内存系统"></a>Linux虚拟内存系统</h3><p><strong>Linux虚拟内存</strong><br><img src="/image/Linux虚拟内存.png" alt></p>
+<ol>
+<li>Linux为每个进程维护了一个单独的虚拟地址空间，虚拟内存位于用户栈之上</li>
+<li>内核虚拟内存包含内核中的代码和数据结构，Linux将一组连续的虚拟内存映射到相应的物理内存，内核的其他区域包含每个进程都不相同的数据</li>
+<li>Linux将虚拟内存组织成一些区域的集合（段集合），允许虚拟地址空间有间隙</li>
+<li>Linux组织的虚拟内存的结构<br><img src="/image/Linux组织的虚拟内存的结构.jpg" alt></li>
+</ol>
+<ul>
+<li>任务结构中的条目mm指向mm_struct，描述虚拟内存的当前状态</li>
+<li>pgd指向第一级页表的基址；mmap指向一个vm_area_structs(区域结构)的链表</li>
+<li>每个vm_area_structs都描述了当前虚拟空间的一个区域</li>
+<li>内核运行进程时，将pgd存放在CR3控制寄存器中</li>
+<li>具体区域的具体字段包含下面的字段：1）vm_start指向区域的起始处；2）vm_end指向区域的结束处；3）vm_port区域中所有页的读写许可权限；4）vm_flags描述区域内的页面是进程共享的还是私有的；4）vm_next指向链表中的下一个区域结构</li>
+</ul>
+<ol start="5">
+<li>Linux异常缺页处理：</li>
+</ol>
+<ul>
+<li>检查虚拟地址A是否合法</li>
+<li>检查内存访问是否合法</li>
+<li>前两项都是合法的，内核选择一个牺牲页面，如果牺牲页面已经被修改过了，将它交换出去，换入新的页面并更新页表。缺页程序返回时，CPU重新执行这条指令，不会再发生缺页中断了<br><img src="/image/Linux缺页处理.jpg" alt></li>
+</ul>
+<ol start="6">
+<li>虚拟内存区域可以映射两种类型的对象中的一种：</li>
+</ol>
+<ul>
+<li>Linux文件系统中的普通文件</li>
+<li>匿名文件：匿名文件是由内核创建的，如果CPU第一次引用这样一个区域内的虚拟文件时，内核就在物理内存中找到一个合适的牺牲页表，如果牺牲页面已经被修改过了，用二进制零覆盖并更新页表</li>
+</ul>
+<h4 id="共享对象"><a href="#共享对象" class="headerlink" title="共享对象"></a>共享对象</h4><ol>
+<li>进程对共享对象的修改对其他进程是可见的；进程对私有对象的修改对其他进程不可见。</li>
+<li>映射到共享对象的虚拟内存区域称为共享区域，类似的，有私有区域</li>
+<li>两个进程将一个私有对象映射到它们虚拟内存的不同区域，，共享同一个物理副本，私有区域的页表条目被标记为只读，区域结构被标记为私有的写时复制。</li>
+<li>如果有进程试图写私有页面，会触发一个保护故障，故障处理程序在物理内存中创建这个页面的一个新的副本，更新页表条目指向这个新的副本，然后恢复这个页面的写权限</li>
+</ol>
+<h4 id="fork函数"><a href="#fork函数" class="headerlink" title="fork函数"></a>fork函数</h4><p>为每个进程都保持了私有空间的抽象概念</p>
+<h4 id="execve函数-加载和执行程序"><a href="#execve函数-加载和执行程序" class="headerlink" title="execve函数,加载和执行程序"></a>execve函数,加载和执行程序</h4><ol>
+<li>删除已存在的用户区域</li>
+<li>映射色号私有区域</li>
+<li>映射共享区域</li>
+<li>设置程序计数器，指向代码区域的入口点</li>
+</ol>
+<h4 id="使用mmap函数的用户级内存映射"><a href="#使用mmap函数的用户级内存映射" class="headerlink" title="使用mmap函数的用户级内存映射"></a>使用mmap函数的用户级内存映射</h4><p><img src="/image/mmap参数的可视化解释.jpg" alt></p>
+<ol>
+<li>Linux进程可以用mmap函数来创建新的虚拟内存区域，并把对象映射到这些区域中</li>
+</ol>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line">#include &lt;首次适配会在链表起始处留下小的碎片&gt;</span><br><span class="line">#include &lt;sys/mman.h&gt;</span><br><span class="line"></span><br><span class="line">void *mmap(void *start , size_t length , int port , int flags , int fd , off_t offset);</span><br><span class="line">//新建虚拟内存区域地址从start开始，将文件描述符fd指定的对象的第一个连续的片映射到这个新的区域</span><br><span class="line">//连续的片的大小为length字节，从距文件开始处偏移量为offset字节的地方开始</span><br><span class="line">//start的地址通常被定义为NULL</span><br><span class="line">//参数prot包含描述新映射的虚拟内存区域的访问权限位...</span><br><span class="line">//参数flag描述被映射对象类型的位组成</span><br><span class="line"></span><br><span class="line">bufp=Mmap(NULL,size,PROT_READ,MAP_PRIVATE|MAP_ANON,0,0);</span><br><span class="line">//内核创建一个包含size字节的只读/私有/请求二进制零的虚拟内存区域</span><br><span class="line"></span><br><span class="line">//munmap函数删除虚拟内存的区域</span><br><span class="line">#include &lt;unistd.h&gt;</span><br><span class="line">#include &lt;sys/mman.h&gt;</span><br><span class="line"></span><br><span class="line">int munmap(void *start,size_t length);</span><br></pre></td></tr></table></figure>
+<h3 id="动态内存分配"><a href="#动态内存分配" class="headerlink" title="动态内存分配"></a>动态内存分配</h3><ol>
+<li>动态内存分配器维护着一个进程的虚拟内存区域，成为堆heap</li>
+<li>对于每个进程，内核维护着一个变量brk（break）指向堆的顶部</li>
+<li>显式分配器：要求显式地释放任何已分配的块（new/delete）</li>
+<li>显式分配器的约束：处理任意请求序列，但是没有假设分配和释放的顺序；立即响应请求；只使用堆；对齐块；不修改已经分配的块</li>
+<li>隐式分配器：要求分配器检测一个已分配块何时不再被使用，释放这个块，也称为垃圾收集器。自动释放已分配的块的过程称为垃圾收集（智能指针）</li>
+<li><strong>垃圾收集器</strong>是一种动态内存分配器，自动释放程序不再需要的已分配块，自动回收堆存储的过程称为<strong>垃圾收集</strong></li>
+</ol>
+<ul>
+<li>有向可达图，将节点分为根节点和堆节点，对接点对应已分配的块，根节点不在堆中，指向堆中的指针</li>
+<li>存在根节点到达块的路径，节点p可达，不可达节点对应于垃圾，不能被应用再次使用</li>
+<li>收集器代替应用调用free</li>
+</ul>
+<ol start="7">
+<li>Mark&amp;Sweep垃圾收集器</li>
+</ol>
+<ul>
+<li>由标记阶段和清除阶段组成，标记阶段调用mark函数，清除阶段调用sweep函数一次。</li>
+<li>标记阶段标记处根节点所有的可达和已分配的后继，清除阶段清除所有未标记的已分配块，块头部中空闲的低位中的一位通常用来表示这个块是否被标记了</li>
+<li>ptr定义为typedef void *ptr<br><img src="/image/Mark&amp;Sweep用到的函数.png" alt><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">#include &lt;stdlib.h&gt;</span><br><span class="line">void *malloc(size_t size);</span><br><span class="line">//返回一个指针指向大小至少位size字节的内存块</span><br><span class="line">//如果程序要求的块比可用的虚拟内存大，返回NULL，设置errno</span><br><span class="line">//malloc不初始化它返回的内存，需要初始化的动态内存的程序可以适应calloc，想要改变已分配的块的大小使用realloc</span><br><span class="line">//malloc使用mmap和munmap显式地分配和释放堆内存</span><br><span class="line"></span><br><span class="line">#include &lt;unistd.h&gt;</span><br><span class="line">void *sbrk(inrptr_t incr);</span><br><span class="line">//通过brk指针增加incr来扩展和收缩堆</span><br><span class="line">//成功返回brk的旧值，失败返回-1，并将errno设为ENOMEN</span><br><span class="line">//如果incr为0，函数返回brk当前值</span><br></pre></td></tr></table></figure>
+</li>
+</ul>
+<ol start="8">
+<li><p>free 简单的返回到调用函数</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">#include &lt;stdlib.h&gt;</span><br><span class="line">void free(void *ptr);</span><br><span class="line">//ptr参数指向已分配块的起始位置，否则free就是未定义的</span><br><span class="line">//没有返回值，不会告诉应用哪里出错了</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>有未使用的内存但不能没能满足分配请求称为碎片，有内部碎片和外部碎片。内部碎片是有效载荷和已分配内存之差；外部碎片是必须要请求更大的虚拟内存分散映射多个块</p>
+</li>
+<li>放置已分配的块有三种</li>
+</ol>
+<ul>
+<li><strong>首次适配</strong>会在链表起始处留下小的碎片</li>
+<li><strong>下一次适配</strong>从上一次结束的地方开始搜索，比首次适配快，利用率低</li>
+<li><strong>最佳适配</strong>慢，分离式空闲链表组织，接近于最佳适配策略，不需要进行彻底的堆搜索</li>
+</ul>
+<ol start="11">
+<li>分配器通过调用sbrk函数，向内核请求额外的堆内存，分配器将额外的内存转换为一个大的空闲块，将这个块插入空闲链表中，然后将被请求的块放置到这个新的空闲块</li>
+<li>合并空闲块：分配器采用立即合并或者推迟合并</li>
+<li>带标记的合并</li>
+</ol>
+<ul>
+<li>使用边界标记来合并前面的空闲块，在每个块的结尾处添加一个脚本是头部标记的一个副本，合并所有的前后空闲块情况的合并</li>
+<li>将前面的块的已分配/空闲位存放当前块中多出来的低位，则已分配的块就不需要脚部了</li>
+</ul>
+<h4 id="显式空闲链表"><a href="#显式空闲链表" class="headerlink" title="显式空闲链表"></a>显式空闲链表</h4><ol>
+<li>将空闲块组织成一个某种形式的显式数据结构，实现这个数据结构的指针可以存放在空闲块的主体中</li>
+<li>使用首次分配的时间从块总数的时间减少到空闲块数量的线性时间</li>
+<li>释放块的时间可以是线性的，也可以是常数，取决于排序策略</li>
+<li>一种方法是使用后进后出的方法来维护链表，将新释放的块放在链表头部，在常数时间内完成首次适配放置和释放块，以及有边界标记的合并</li>
+<li>另一种方法是按照地址顺序来维护链表，释放块需要线性时间来搜索定位，比后进后出排序的首次适配有<strong>更高的内存利用率</strong></li>
+<li>显式链表的缺点是空闲块必须足够大，包含所有指针，以及头部和可能的脚部，导致更大的最小块的大小，提高内部碎片的程度</li>
+</ol>
+<h4 id="分离的空闲链表"><a href="#分离的空闲链表" class="headerlink" title="分离的空闲链表"></a>分离的空闲链表</h4><ol>
+<li>使用分离存储来减少分配时间，将所有可能的块划分为大小类，每个大小类都有一个空闲链表，按照大小升序排列</li>
+<li><strong>简单分离存储</strong>：每个大小类的空闲链表包含大小相等的块，每个块的大小就是这个大小类中最大元素的大小</li>
+</ol>
+<ul>
+<li>空闲块不分割不合并，不需要头部和脚部，分配和释放都在空闲链表的起始处，是单向的</li>
+<li>如果链表为非空，分配器向系统请求一个固定大小的额外内存片，将这个片分成大小相等的块，将块链接起来形成新的空闲链表</li>
+<li>释放一个块只要简单的将块插入相应的空闲链表的前部</li>
+<li>任何块都需要唯一字段是每个空闲块中的一个字的succ指针，最大块的大小是一个字</li>
+</ul>
+<ol start="3">
+<li><strong>分离配适</strong>：每个链表包含潜在的大小不同的块，是大小类的成员</li>
+</ol>
+<ul>
+<li>分配块时，确定请求的大小类，对适当的空闲链表进行首次适配，查找合适的块，并可选地进行分割，将剩余部分插入适当的空闲链表中</li>
+<li>如果没有找到合适的块，向系统请求额外的堆内存，从新的堆内存中分离出一块，将剩余部分放置在适当的大小类中</li>
+<li>释放一个块执行合并，将结果存放到相应的空闲链表中</li>
+<li>C标准库中的GNU malloc包就是采用的这种方法</li>
+</ul>
+<ol start="4">
+<li><strong>伙伴系统</strong>：快速搜索和快速合并，缺点是可能导致显著的内部碎片</li>
+<li><strong>递归的二分割块</strong>，直到找到合适的块，将剩余的半块放置到合适的空闲链表中</li>
+</ol>
+<h4 id="C程序中常见的与内存有关的错误"><a href="#C程序中常见的与内存有关的错误" class="headerlink" title="C程序中常见的与内存有关的错误"></a>C程序中常见的与内存有关的错误</h4><ol>
+<li>间接引用坏指针</li>
+<li>读未初始化的内存</li>
+<li>允许栈缓冲区溢出：不检查输入串的大小写入栈中的目标缓冲器，这个程序就会有缓冲区溢出错误</li>
+<li>假设指针和指向的对象是相同大小的</li>
+<li>造成错位错误：常见的覆盖错误</li>
+<li>引用指针而不是指针指向的对象</li>
+<li>误解指针运算 </li>
+<li>引用不存在的变量</li>
+<li>引用空闲堆块中的数据</li>
+<li>引起内存泄露</li>
+</ol>
+
+      
+    </div>
+    
+    
+    
+
+    
+      <div>
+        <div id="wechat_subscriber" style="display: block; padding: 10px 0; margin: 20px auto; width: 100%; text-align: center">
+    <img id="wechat_subscriber_qcode" src="/images/wechat.jpg" alt="WhitneyLu wechat" style="width: 200px; max-width: 100%;">
+    <div>Contact me by scanning my public WeChat QR code</div>
+</div>
+
+
+      </div>
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/操作系统/" rel="tag"><i class="fa fa-tag"></i> 操作系统</a>
+          
+        </div>
+      
+
+      
+      
+        <div class="post-widgets">
+        
+
+        
+
+        
+          
+          <div id="needsharebutton-postbottom">
+            <span class="btn">
+              <i class="fa fa-share-alt" aria-hidden="true"></i>
+            </span>
+          </div>
+        
+        </div>
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2019/04/10/虚拟内存/" rel="next" title="虚拟内存">
+                <i class="fa fa-chevron-left"></i> 虚拟内存
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2019/04/22/Effective_C++_1/" rel="prev" title="Effective C++ 1">
+                Effective C++ 1 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+<script type="text/javascript" src="https://me.idealli.com/images/load.gif" data-src="/js/src/love.js"></script>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            Table of Contents
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            Overview
+          </li>
+        </ul>
+      
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <img class="site-author-image" itemprop="image" src="/images/nessa.png" alt="WhitneyLu">
+            
+              <p class="site-author-name" itemprop="name">WhitneyLu</p>
+              <p class="site-description motion-element" itemprop="description"></p>
+          </div>
+
+          <nav class="site-state motion-element">
+
+            
+              <div class="site-state-item site-state-posts">
+              
+                <a href="/archives/">
+              
+                  <span class="site-state-item-count">12</span>
+                  <span class="site-state-item-name">posts</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-categories">
+                <a href="/categories/index.html">
+                  <span class="site-state-item-count">9</span>
+                  <span class="site-state-item-name">categories</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-tags">
+                <a href="/tags/index.html">
+                  <span class="site-state-item-count">3</span>
+                  <span class="site-state-item-name">tags</span>
+                </a>
+              </div>
+            
+
+          </nav>
+
+          
+
+          
+            <div class="links-of-author motion-element">
+                
+                  <span class="links-of-author-item">
+                    <a href="https://github.com/yourname" target="_blank" title="GitHub">
+                      
+                        <i class="fa fa-fw fa-github"></i></a>
+                  </span>
+                
+                  <span class="links-of-author-item">
+                    <a href="mailto:miracle960118@gmail.com" target="_blank" title="E-Mail">
+                      
+                        <i class="fa fa-fw fa-envelope"></i></a>
+                  </span>
+                
+                  <span class="links-of-author-item">
+                    <a href="https://www.instagram.com" target="_blank" title="Instagram">
+                      
+                        <i class="fa fa-fw fa-instagram"></i></a>
+                  </span>
+                
+            </div>
+          
+
+          
+          
+
+          
+          
+
+          
+
+        </div>
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#Intel-Core-i7-Linux内存系统"><span class="nav-number">1.</span> <span class="nav-text">Intel Core i7/Linux内存系统</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#Core-i7地址翻译"><span class="nav-number">1.1.</span> <span class="nav-text">Core i7地址翻译</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Linux虚拟内存系统"><span class="nav-number">1.2.</span> <span class="nav-text">Linux虚拟内存系统</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#共享对象"><span class="nav-number">1.2.1.</span> <span class="nav-text">共享对象</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#fork函数"><span class="nav-number">1.2.2.</span> <span class="nav-text">fork函数</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#execve函数-加载和执行程序"><span class="nav-number">1.2.3.</span> <span class="nav-text">execve函数,加载和执行程序</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#使用mmap函数的用户级内存映射"><span class="nav-number">1.2.4.</span> <span class="nav-text">使用mmap函数的用户级内存映射</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#动态内存分配"><span class="nav-number">1.3.</span> <span class="nav-text">动态内存分配</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#显式空闲链表"><span class="nav-number">1.3.1.</span> <span class="nav-text">显式空闲链表</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#分离的空闲链表"><span class="nav-number">1.3.2.</span> <span class="nav-text">分离的空闲链表</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#C程序中常见的与内存有关的错误"><span class="nav-number">1.3.3.</span> <span class="nav-text">C程序中常见的与内存有关的错误</span></a></li></ol></li></ol></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; <span itemprop="copyrightYear">2019</span>
+  <span class="with-love">
+    <i class="fa fa-Whitney"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">WhitneyLu</span>
+
+  
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item-icon">
+      <i class="fa fa-area-chart"></i>
+    </span>
+    
+      <span class="post-meta-item-text">Site words total count&#58;</span>
+    
+    <span title="Site words total count">35.6k</span>
+  
+</div>
+
+
+
+
+
+
+
+        
+<div class="busuanzi-count">
+  <script async src="https://dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+  
+    <span class="site-uv">
+      <i class="fa fa-user"></i>
+      <span class="busuanzi-value" id="busuanzi_value_site_uv"></span>
+      
+    </span>
+  
+
+  
+    <span class="site-pv">
+      <i class="fa fa-eye"></i>
+      <span class="busuanzi-value" id="busuanzi_value_site_pv"></span>
+      
+    </span>
+  
+</div>
+
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+          <span id="scrollpercent"><span>0</span>%</span>
+        
+      </div>
+    
+
+    
+      <div id="needsharebutton-float">
+        <span class="btn">
+          <i class="fa fa-share-alt" aria-hidden="true"></i>
+        </span>
+      </div>
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.4"></script>
+
+
+
+  
+  
+
+
+  <script type="text/javascript" src="/js/src/affix.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/schemes/pisces.js?v=5.1.4"></script>
+
+
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.4"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+  
+  
+  <link rel="stylesheet" href="/lib/needsharebutton/needsharebutton.css">
+
+  
+  
+  <script src="/lib/needsharebutton/needsharebutton.js"></script>
+
+  <script>
+    
+      pbOptions = {};
+      
+          pbOptions.iconStyle = "default";
+      
+          pbOptions.boxForm = "horizontal";
+      
+          pbOptions.position = "bottomCenter";
+      
+          pbOptions.networks = "Weibo,Wechat,Douban,QQZone,Twitter,Facebook";
+      
+      new needShareButton('#needsharebutton-postbottom', pbOptions);
+    
+    
+      flOptions = {};
+      
+          flOptions.iconStyle = "default";
+      
+          flOptions.boxForm = "vertical";
+      
+          flOptions.position = "topRight";
+      
+          flOptions.networks = "Weibo,Wechat,Douban,QQZone,Twitter,Facebook";
+      
+      new needShareButton('#needsharebutton-float', flOptions);
+    
+  </script>
+
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>
