@@ -5,7 +5,7 @@
   
 
 
-<html class="theme-next pisces use-motion" lang>
+<html class="theme-next gemini use-motion" lang>
 <head><meta name="generator" content="Hexo 3.8.0">
   <meta charset="UTF-8">
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
@@ -113,7 +113,7 @@
 <meta property="og:site_name" content="Whitney&#39;s coding note">
 <meta property="og:description" content="网络IO模型-四种网络IO模型、select/poll/epoll基本原理和异同点以及各自的优缺点">
 <meta property="og:locale" content="default">
-<meta property="og:updated_time" content="2019-06-09T15:51:02.968Z">
+<meta property="og:updated_time" content="2019-06-10T06:43:51.655Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="网络IO模型">
 <meta name="twitter:description" content="网络IO模型-四种网络IO模型、select/poll/epoll基本原理和异同点以及各自的优缺点">
@@ -124,7 +124,7 @@
   var NexT = window.NexT || {};
   var CONFIG = {
     root: '/',
-    scheme: 'Pisces',
+    scheme: 'Gemini',
     version: '5.1.4',
     sidebar: {"position":"left","display":"post","offset":12,"b2t":false,"scrollpercent":true,"onmobile":false},
     fancybox: true,
@@ -444,7 +444,7 @@
 <h3 id="异步IO模型"><a href="#异步IO模型" class="headerlink" title="异步IO模型"></a>异步IO模型</h3><ol>
 <li>用户发起read操作之后，开始做其他事，从内核的角度当他收到一个异步的read操作之后，立即返回，不会对用户进程产生任何阻塞，内核等待数据准备完成后，然后将数据拷贝到用户内存中，内核给用户进程发送一个信号，返回read操作已完成的信息</li>
 </ol>
-<h3 id="select"><a href="#select" class="headerlink" title="select"></a>select</h3><figure class="highlight plain"><figcaption><span>select(int maxfdp, fd_set *readfds, fd_set *writefds, </span></figcaption><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">			fd_set *errorfds, struct timeval *timeout);</span><br><span class="line">			</span><br><span class="line">/*fd_set是文件描述符集合*/</span><br><span class="line">/*timeval有两个成员，一个是秒数，一个是毫秒数*/</span><br><span class="line">/*maxfds是一个整数值，是集合中所有文件描述符的范围*/</span><br><span class="line">/*readfds是指向fd_set结构的指针，如果集合中有一个文件可读，select就会返回一个大于0的值，如果没有可读文件	的，根据timeout参数判断是否超时，如果超时返回0，如果发生错误返回负值*/</span><br><span class="line">/*wretefds是指向fd_set结构的指针，监视文件描述符的写变化，如果集合中有文件可写，返回一个大于0的值，如果没	有，根据timeout参数判断是否超时，如果超时返回0，如果发生错误返回负值*/</span><br><span class="line">/*timeout是select的超时时间，如果引入NULL以形参传入，表示不传入时间结构，将select置为阻塞状态，知道文件集	中的某个文件描述符发生变化位置</span><br><span class="line">若将时间值设为0，变成非阻塞函数，不管文件描述符如何变化都立即返回，无变化返回0，有变化返回一个正值</span><br><span class="line">如果将timeout大于0，select在等待时间内阻塞，超时时间内有事件到来后返回，否则在超时后返回，超时返回0，出错返	回-1*/</span><br></pre></td></tr></table></figure>
+<h3 id="select"><a href="#select" class="headerlink" title="select"></a>select</h3><figure class="highlight plain"><figcaption><span>select(int maxfdp, fd_set *readfds, fd_set *writefds, </span></figcaption><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">				fd_set *errorfds, struct timeval *timeout);</span><br><span class="line">				</span><br><span class="line">	/*fd_set是文件描述符集合*/</span><br><span class="line">	/*timeval有两个成员，一个是秒数，一个是毫秒数*/</span><br><span class="line">	/*maxfds是一个整数值，是集合中所有文件描述符的范围*/</span><br><span class="line">	/*readfds是指向fd_set结构的指针，如果集合中有一个文件可读，select就会返回一个大于0的值，如果没有可读文件的，根据timeout参数判断是否超时，如果超时返回0，如果发生错误返回负值*/</span><br><span class="line">	/*wretefds是指向fd_set结构的指针，监视文件描述符的写变化，如果集合中有文件可写，返回一个大于0的值，如果没有，根据timeout参数判断是否超时，如果超时返回0，如果发生错误返回负值*/</span><br><span class="line">	/*timeout是select的超时时间，如果引入NULL以形参传入，表示不传入时间结构，将select置为阻塞状态，知道文件集中的某个文件描述符发生变化位置</span><br><span class="line">	/*若将时间值设为0，变成非阻塞函数，不管文件描述符如何变化都立即返回，无变化返回0，有变化返回一个正值</span><br><span class="line">如果将timeout大于0，select在等待时间内阻塞，超时时间内有事件到来后返回，否则在超时后返回，超时返回0，出错返回-1*/</span><br></pre></td></tr></table></figure>
 <h3 id="poll"><a href="#poll" class="headerlink" title="poll"></a>poll</h3><ol>
 <li><p>poll也能用来执行多路复用</p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">#include &lt;poll.h&gt;</span><br><span class="line">int poll(struct pollfd *fds, unsigned int nfds, int timeout);</span><br><span class="line">		//timeout指定等待的毫秒数，无论IO是否准备好，poll都会返回</span><br><span class="line">		//timeout指定为负数值时，表示无限超时，poll一直挂起知道某件事发生</span><br><span class="line">		//timeout为0表示poll调用立即返回，并列出准备好IO的文件描述符</span><br><span class="line">		//调用成功，函数返回revents域中国不为0的文件描述符的个数</span><br><span class="line">		//如果在超时前没有任何事件发生，返回0，失败返回-1，并设置errno</span><br><span class="line">struct pollfd&#123;</span><br><span class="line">	int fd;</span><br><span class="line">	short events; //监视文件描述符的时间掩码，由用户来设置这个域的属性</span><br><span class="line">	short revents; //文件描述符的操作结果事件掩码，内核在调用返回时设置这个域</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
