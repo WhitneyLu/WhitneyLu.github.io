@@ -1,0 +1,992 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next gemini use-motion" lang>
+<head><meta name="generator" content="Hexo 3.8.0">
+  <meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform">
+<meta http-equiv="Cache-Control" content="no-siteapp">
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css">
+
+
+
+
+  
+  
+  
+  
+
+  
+    
+    
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+    
+    
+    <link href="https://fonts.cat.net/css?family=Roboto Slab:300,300italic,400,400italic,700,700italic&subset=latin,latin-ext" rel="stylesheet" type="text/css">
+  
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css">
+
+<link href="/css/main.css?v=5.1.4" rel="stylesheet" type="text/css">
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=5.1.4">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=5.1.4" color="#222">
+
+
+
+
+
+  <meta name="keywords" content="操作系统,">
+
+
+
+
+
+
+
+
+
+
+<meta name="description" content="多线程-线程的创建和结束、线程的属性、多线程同步、多线程可重入">
+<meta name="keywords" content="操作系统">
+<meta property="og:type" content="article">
+<meta property="og:title" content="多线程">
+<meta property="og:url" content="https://whitneylu.github.io/2019/06/11/多线程/index.html">
+<meta property="og:site_name" content="Whitney&#39;s coding note">
+<meta property="og:description" content="多线程-线程的创建和结束、线程的属性、多线程同步、多线程可重入">
+<meta property="og:locale" content="default">
+<meta property="og:image" content="https://whitneylu.github.io/Users/luxinwei/笔记/后台开发/加互斥锁前产生竞争.png">
+<meta property="og:image" content="https://whitneylu.github.io/Users/luxinwei/笔记/后台开发/加互斥锁后.png">
+<meta property="og:updated_time" content="2019-06-11T13:23:37.228Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="多线程">
+<meta name="twitter:description" content="多线程-线程的创建和结束、线程的属性、多线程同步、多线程可重入">
+<meta name="twitter:image" content="https://whitneylu.github.io/Users/luxinwei/笔记/后台开发/加互斥锁前产生竞争.png">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Gemini',
+    version: '5.1.4',
+    sidebar: {"position":"left","display":"post","offset":12,"b2t":false,"scrollpercent":true,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    duoshuo: {
+      userId: '0',
+      author: 'Author'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="https://whitneylu.github.io/2019/06/11/多线程/">
+
+
+
+
+
+  <title>多线程 | Whitney's coding note</title>
+  
+
+
+
+
+
+
+
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="default">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">Whitney's coding note</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle">Study as if you were going to live forever.</p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br>
+            
+            Home
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br>
+            
+            Tags
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br>
+            
+            Categories
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br>
+            
+            Archives
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="https://whitneylu.github.io/2019/06/11/多线程/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="WhitneyLu">
+      <meta itemprop="description" content>
+      <meta itemprop="image" content="/images/nessa.png">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Whitney's coding note">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">多线程</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">Posted on</span>
+              
+              <time title="Post created" itemprop="dateCreated datePublished" datetime="2019-06-11T00:00:00+08:00">
+                2019-06-11
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category">
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">In</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/线程/" itemprop="url" rel="index">
+                    <span itemprop="name">线程</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+            <span class="post-meta-divider">|</span>
+            <span class="page-pv"><i class="fa fa-file-o"></i>
+            <span class="busuanzi-value" id="busuanzi_value_page_pv"></span>
+            </span>
+          
+
+          
+            <div class="post-wordcount">
+              
+                
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-file-word-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">Words count in article&#58;</span>
+                
+                <span title="Words count in article">
+                  2.2k
+                </span>
+              
+
+              
+                <span class="post-meta-divider">|</span>
+              
+
+              
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-clock-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">Reading time &asymp;</span>
+                
+                <span title="Reading time">
+                  8
+                </span>
+              
+            </div>
+          
+
+          
+              <div class="post-description">
+                  多线程-线程的创建和结束、线程的属性、多线程同步、多线程可重入
+              </div>
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <h2 id="多线程"><a href="#多线程" class="headerlink" title="多线程"></a>多线程</h2><ol>
+<li>对于每个进程，系统资源都是独立的，频繁的切换进程产生额外的开销严重影响系统性能</li>
+<li>类似于交互性的GUI程序，如果每个任务都由进程来实现，就会非常低效</li>
+<li>每一个进程内部的多个线程共享进程的上下文资源</li>
+<li>一个程序运行过程中，只有一个控制权，函数被调用时，该函数获得控制权，成为激活函数</li>
+<li>多线程允许一个进程内存存在多个控制权，以便让多个函数同时处于激活状态，允许多个函数操作同时运行</li>
+<li>栈后进先出，只有最下方的帧可以被读写，创建一个新线程的时候传建一个新的栈，每个栈对应一个线程。某个栈执行全部弹出之后，对应线程完成并结束</li>
+<li>如上所述，多线程的进程在内存中有多个栈，多个栈之间用一定的空白区域隔开</li>
+<li>每个线程调用自己栈最下方的帧中的参数和变量，并与其他线程共享内存中的Text、heap和global data区域</li>
+</ol>
+<h3 id="线程的创建和结束"><a href="#线程的创建和结束" class="headerlink" title="线程的创建和结束"></a>线程的创建和结束</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><span class="line">#include &lt;pthread.h&gt;</span><br><span class="line"></span><br><span class="line">int pthread_creat(pthread_t *thread, const pthread_attr_t *attr,</span><br><span class="line">					 void *(*start_routine) (void *), void *arg)；</span><br><span class="line">					 /* *thread是指向线程标识符的指针*/</span><br><span class="line">					 /* *attr设置线程属性，指定不同的线程属性*/</span><br><span class="line">					 /* 第三个参数是线程运行函数的起始地址*/</span><br><span class="line">					 /* *arg是运行函数的参数*/</span><br><span class="line">/*若线程创建成功，则返回0。thread指向的内存单元被设置为新创建线程的线程ID，新创建的线程从*start_routine函数的位置开始执行*/</span><br><span class="line">/*线程创建出错，返回出错编号，新创建的线程从*start_routine*/</span><br><span class="line"></span><br><span class="line">int pthread_join(pthread_t thread， void **retval)；</span><br><span class="line">		//函数等待一个线程结束</span><br><span class="line">		//thread表示被等待的线程标识符</span><br><span class="line">		//**retval为用户定义的指针，用来存放被等待线程的返回值</span><br><span class="line">		//这个函数是线程阻塞函数，调用它的函数一直等待到被等待的线程结束为止，函数返回时，被等待的线程的资源被回收</span><br><span class="line">		</span><br><span class="line">		</span><br><span class="line">void pthread_exit(void *retval);</span><br><span class="line">		//函数结束，调用它的线程结束</span><br><span class="line">		//pthread_join由主线程来调用，等待子线程退出，pthread_exit由子线程调用，用来结束当前线程</span><br><span class="line">		//子线程通过pthread_exit传递一个返回值，主线程通过pthread_join来或者该返回值来判断该子进程的退出是正常还是异常</span><br><span class="line">		</span><br><span class="line">//获得线程ID，在线程调用函数使用pthread_self获得，或者在创建函数时生成的ID</span><br></pre></td></tr></table></figure>
+<h3 id="线程的属性"><a href="#线程的属性" class="headerlink" title="线程的属性"></a>线程的属性</h3><ol>
+<li>线程有一组属性可以在线程被创建时指定，改组属性被封装在一个对象中，对象可以用来设置一个或一组线程的属性</li>
+<li>线程属性对象的类型为pthread_addr_t</li>
+<li>属性值不能直接设置，必须使用相关函数进行操作，初始化的函数为pthread_addr_init</li>
+<li>进程地址空间不够用时，指定新建线程使用malloc分配的空间作为自己的栈空间</li>
+</ol>
+<h3 id="多线程同步"><a href="#多线程同步" class="headerlink" title="多线程同步"></a>多线程同步</h3><h4 id="互斥锁"><a href="#互斥锁" class="headerlink" title="互斥锁"></a>互斥锁</h4><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br></pre></td><td class="code"><pre><span class="line">#include &lt;stdio.h&gt;</span><br><span class="line">#include &lt;pthread.h&gt;</span><br><span class="line">#include &lt;unistd.h&gt;</span><br><span class="line"></span><br><span class="line">//pthread_mutex_t mutex_x= PTHREAD_MUTEX_INITIALIZER; //互斥锁</span><br><span class="line">int total_ticket_num=20; //全局变量</span><br><span class="line"></span><br><span class="line">void *sell_ticket(void *arg)</span><br><span class="line">&#123;</span><br><span class="line">    for(int i=0; i&lt;20; ++i)</span><br><span class="line">    &#123;</span><br><span class="line">        //pthread_mutex_lock(&amp;mutex_x); //使用互斥锁将对total_ticket_num的操作进行加锁</span><br><span class="line">        if(total_ticket_num&gt;0)</span><br><span class="line">        &#123;</span><br><span class="line">            sleep(1);</span><br><span class="line">            total_ticket_num--;</span><br><span class="line">            printf(&quot;sell the %dth ticket\n&quot;,20-total_ticket_num);</span><br><span class="line">        &#125;</span><br><span class="line">        //pthread_mutex_unlock(&amp;mutex_x); //使用互斥锁将对total_ticket_num的操作进行解锁</span><br><span class="line">    &#125;</span><br><span class="line">    return 0;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">int main()</span><br><span class="line">&#123;</span><br><span class="line">    int iRet;</span><br><span class="line">    pthread_t tids[4];</span><br><span class="line">    int i=0;</span><br><span class="line">    for(i=0; i&lt;4; ++i) //四个线程</span><br><span class="line">    &#123;</span><br><span class="line">        int iRet=pthread_create(&amp;tids[i], NULL, &amp;sell_ticket, NULL); //创建成功返回0，&amp;sell_ticket线程运行函数的起始位置</span><br><span class="line">        if(iRet)</span><br><span class="line">        &#123;</span><br><span class="line">            printf(&quot;pthread_creat error, iRet=%d\n&quot;,iRet);</span><br><span class="line">            return iRet;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    sleep(20);</span><br><span class="line">    void *retval;</span><br><span class="line">    for(i=0; i&lt;4; ++i)</span><br><span class="line">    &#123;</span><br><span class="line">        iRet=pthread_join(tids[i], &amp;retval);</span><br><span class="line">        if(iRet)</span><br><span class="line">        &#123;</span><br><span class="line">            printf(&quot;tid=%d join error, iRet=%d\n&quot;, tids[i], iRet);</span><br><span class="line">            return iRet;</span><br><span class="line">        &#125;</span><br><span class="line">        printf(&quot;retval=%ld\n&quot;, (long*)retval);</span><br><span class="line">    &#125;</span><br><span class="line">    return 0;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<ol>
+<li>未加互斥锁之前产生竞争，并且出现票超卖<br><img src="/Users/luxinwei/笔记/后台开发/加互斥锁前产生竞争.png" alt></li>
+<li>加互斥锁后<br><img src="/Users/luxinwei/笔记/后台开发/加互斥锁后.png" alt></li>
+<li>创建互斥锁有动态和静态两种，上述的加锁方式是静态的</li>
+<li>锁可以用<code>pthread_mutex_init</code>动态地创建</li>
+</ol>
+<h4 id="条件变量"><a href="#条件变量" class="headerlink" title="条件变量"></a>条件变量</h4><ol>
+<li>使用条件变量来阻塞一个进程，当条件不满足时，线程需要解开互斥锁并等待条件发生变化</li>
+<li><p>条件变量也有静态和动态两种创建方式</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">pthread_cond_t cond=PTHREAD_COND_INITIALIZER; //静态</span><br><span class="line">int pthread_cond_init(pthread_cond_t *cond, pthread_condattr_t *cond_attr); </span><br><span class="line">//动态，当cond为NULL时，使用默认属性</span><br><span class="line">int pthread_cond_destory(pthread_cond_t *cond); //注销一个条件变量</span><br><span class="line">int pthread_cond_wait(pthread_cond_t *cond, pthread_mutex_t *mutex); //等待</span><br><span class="line">int pthread_cond_timewait(pthread_cond_t *cond, pthread_mutex_t *mutex, const struct timespec *abstime); //条件等待</span><br><span class="line">//这两种等待都必须和互斥锁配合防止多个线程同时请求等待产生竞争</span><br><span class="line">pthread_cond_singal(); //激活一个等待该条件的进程，存在多个等待进程时，按照顺序激活其中一个</span><br><span class="line">pthread_cond_broadcast(): //激活所有等待线程</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>在某些情况下，使用条件变量没有掌握好触发的时机，可以使用计数器来记录等待的线程的个数，在决定触发条件变量前先检查该变量</p>
+</li>
+</ol>
+<h4 id="读写锁"><a href="#读写锁" class="headerlink" title="读写锁"></a>读写锁</h4><ol>
+<li>可以哟多个线程同时占用读模式，但是只允许一个线程占用写模式</li>
+</ol>
+<ul>
+<li>写加锁状态，这个锁被解锁之前，所有对这个锁加锁的线程都会被阻塞</li>
+<li>读加锁状态，所有试图以读模式对它进行加锁的线程都可以得到访问权，但是以写模式对它进行加锁的线程都会被阻塞</li>
+<li>读模式的锁栈状态，当有线程以写模式加锁时，读写锁对随后的读模式锁的请求阻塞，避免读模式锁被长期阻塞</li>
+</ul>
+<ol start="2">
+<li>读写锁适用于对数据结构的读操作次数大于写操作次数的场合</li>
+<li>读写锁有两种初始化方式：</li>
+</ol>
+<ul>
+<li>通过静态分配的读写锁赋予常值PTHREAD_RWLOCK_INITIALIZER</li>
+<li>调用pthread_rwlock_init()动态的初始化，如果执行成功则返回0，出错则返回出错码<br><code>int pthread_rwlock_init(pthread_rwlock_t *rwptr, const pthread_rwlockattr_t *attr);</code></li>
+</ul>
+<ol start="4">
+<li>当线程不需要读写锁的时候，调用pthread_rwlock_destory()，如果执行成功则返回0，出错则返回出错码<br><code>int pthread_rwlock_destory(pthread_rwlock_t *rwptr);</code></li>
+<li>读写锁的数据类型是pthread_rwlock_t<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">pthread_rwlock_rdlock(pthread_rwlock_t *rwptr); //用来获取读出锁，如果相应的读出锁被某个写入者占有，则阻塞调用线程</span><br><span class="line">pthread_rwlock_wrlock(pthread_rwlock_t *rwptr); //用来获取写入锁，如果相应的写如梭被其他写入锁和读出者占用，则阻塞该调用线程</span><br><span class="line">pthread_rwlock_unlock(pthread_rwlock_t *rwptr); //用来释放一个读出锁或者写入锁</span><br><span class="line">//以上三个函数都是阻塞式的，如果获取不到锁，调用线程不是立即返回的，调用线程投入到睡眠等待</span><br><span class="line">//调用成功返回0，调用失败返回错误码</span><br><span class="line"></span><br><span class="line">//非阻塞式的读写锁的函数，如果不能马上获取到，立即返回EBUSY错误提示</span><br><span class="line">pthread_rwlock_rdlock(pthread_rwlock_t *tryrwptr); </span><br><span class="line">pthread_rwlock_wrlock(pthread_rwlock_t *tryrwptr);</span><br></pre></td></tr></table></figure>
+</li>
+</ol>
+<h4 id="信号量"><a href="#信号量" class="headerlink" title="信号量"></a>信号量</h4><ol>
+<li>互斥锁只允许一个线程进入临界区，信号量允许多个线程进入临界区</li>
+<li>要使信号量同步，需要包含头文件<code>semaphore.h</code><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">int sem_init(sem_t *sem, int pshared, unsigned int value); </span><br><span class="line">//初始化sem指向的信号对象，设置它的共享选项，并给它一个初始的整数值，pshared=0表示这个信号量是当前进程的局部信号量，否则信号量在多个进程之间共享</span><br><span class="line">int sem_wait(sem_t *sem); //用于以原子操作的方式将信号量的值-1</span><br><span class="line">int sem_post(sem_t *sem); //用于以原子操作的方式将信号量的值+1</span><br><span class="line">int sem_destory(sem_t sem); //用于对用完的信号量进行清理</span><br></pre></td></tr></table></figure>
+</li>
+</ol>
+<h3 id="多线程可重入"><a href="#多线程可重入" class="headerlink" title="多线程可重入"></a>多线程可重入</h3><ol>
+<li>可重入函数的特点：</li>
+</ol>
+<ul>
+<li>不为连续的调用持有静态数据</li>
+<li>不返回指向静态数据的指针</li>
+<li>所有数据都由函数的调用者提供</li>
+<li>使用本地数据，或者通过制作全局数据的本地副本来保护全局数据</li>
+<li>必须调用全局变量时，要利用互斥锁和信号量来保护全局变量</li>
+<li>不调用任何不可重入函数</li>
+</ul>
+<ol start="2">
+<li>可重入代码可以被多次调用而仍然正常工作</li>
+<li>编写的多线程程序，通过定义宏_REENTRANT告诉编译器需要可重入功能</li>
+<li>_REENTRANT做的三件事</li>
+</ol>
+<ul>
+<li>为部分函数重新定义的可安全重入的版本</li>
+<li>stdio.h中的原来以宏的形式实现一些函数将变成可安全重入的函数</li>
+<li>在error.h中定义的变量error现在将成为一个函数调用，以一种安全的多线程方式来获取真正的errno的值</li>
+</ul>
+
+      
+    </div>
+    
+    
+    
+
+    
+      <div>
+        <div id="wechat_subscriber" style="display: block; padding: 10px 0; margin: 20px auto; width: 100%; text-align: center">
+    <img id="wechat_subscriber_qcode" src="/images/wechat.jpg" alt="WhitneyLu wechat" style="width: 200px; max-width: 100%;">
+    <div>Contact me by scanning my public WeChat QR code</div>
+</div>
+
+
+      </div>
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/操作系统/" rel="tag"><i class="fa fa-tag"></i> 操作系统</a>
+          
+        </div>
+      
+
+      
+      
+        <div class="post-widgets">
+        
+
+        
+
+        
+          
+          <div id="needsharebutton-postbottom">
+            <span class="btn">
+              <i class="fa fa-share-alt" aria-hidden="true"></i>
+            </span>
+          </div>
+        
+        </div>
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2019/06/09/网络IO模型/" rel="next" title="网络IO模型">
+                <i class="fa fa-chevron-left"></i> 网络IO模型
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+<script type="text/javascript" src="https://me.idealli.com/images/load.gif" data-src="/js/src/love.js"></script>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            Table of Contents
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            Overview
+          </li>
+        </ul>
+      
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <img class="site-author-image" itemprop="image" src="/images/nessa.png" alt="WhitneyLu">
+            
+              <p class="site-author-name" itemprop="name">WhitneyLu</p>
+              <p class="site-description motion-element" itemprop="description"></p>
+          </div>
+
+          <nav class="site-state motion-element">
+
+            
+              <div class="site-state-item site-state-posts">
+              
+                <a href="/archives/">
+              
+                  <span class="site-state-item-count">15</span>
+                  <span class="site-state-item-name">posts</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-categories">
+                <a href="/categories/index.html">
+                  <span class="site-state-item-count">12</span>
+                  <span class="site-state-item-name">categories</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-tags">
+                <a href="/tags/index.html">
+                  <span class="site-state-item-count">3</span>
+                  <span class="site-state-item-name">tags</span>
+                </a>
+              </div>
+            
+
+          </nav>
+
+          
+
+          
+            <div class="links-of-author motion-element">
+                
+                  <span class="links-of-author-item">
+                    <a href="https://github.com/yourname" target="_blank" title="GitHub">
+                      
+                        <i class="fa fa-fw fa-github"></i></a>
+                  </span>
+                
+                  <span class="links-of-author-item">
+                    <a href="mailto:miracle960118@gmail.com" target="_blank" title="E-Mail">
+                      
+                        <i class="fa fa-fw fa-envelope"></i></a>
+                  </span>
+                
+                  <span class="links-of-author-item">
+                    <a href="https://www.instagram.com" target="_blank" title="Instagram">
+                      
+                        <i class="fa fa-fw fa-instagram"></i></a>
+                  </span>
+                
+            </div>
+          
+
+          
+          
+
+          
+          
+
+          
+
+        </div>
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#多线程"><span class="nav-number">1.</span> <span class="nav-text">多线程</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#线程的创建和结束"><span class="nav-number">1.1.</span> <span class="nav-text">线程的创建和结束</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#线程的属性"><span class="nav-number">1.2.</span> <span class="nav-text">线程的属性</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#多线程同步"><span class="nav-number">1.3.</span> <span class="nav-text">多线程同步</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#互斥锁"><span class="nav-number">1.3.1.</span> <span class="nav-text">互斥锁</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#条件变量"><span class="nav-number">1.3.2.</span> <span class="nav-text">条件变量</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#读写锁"><span class="nav-number">1.3.3.</span> <span class="nav-text">读写锁</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#信号量"><span class="nav-number">1.3.4.</span> <span class="nav-text">信号量</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#多线程可重入"><span class="nav-number">1.4.</span> <span class="nav-text">多线程可重入</span></a></li></ol></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; <span itemprop="copyrightYear">2019</span>
+  <span class="with-love">
+    <i class="fa fa-Whitney"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">WhitneyLu</span>
+
+  
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item-icon">
+      <i class="fa fa-area-chart"></i>
+    </span>
+    
+      <span class="post-meta-item-text">Site words total count&#58;</span>
+    
+    <span title="Site words total count">46.3k</span>
+  
+</div>
+
+
+
+
+
+
+
+        
+<div class="busuanzi-count">
+  <script async src="https://dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+  
+    <span class="site-uv">
+      <i class="fa fa-user"></i>
+      <span class="busuanzi-value" id="busuanzi_value_site_uv"></span>
+      
+    </span>
+  
+
+  
+    <span class="site-pv">
+      <i class="fa fa-eye"></i>
+      <span class="busuanzi-value" id="busuanzi_value_site_pv"></span>
+      
+    </span>
+  
+</div>
+
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+          <span id="scrollpercent"><span>0</span>%</span>
+        
+      </div>
+    
+
+    
+      <div id="needsharebutton-float">
+        <span class="btn">
+          <i class="fa fa-share-alt" aria-hidden="true"></i>
+        </span>
+      </div>
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.4"></script>
+
+
+
+  
+  
+
+
+  <script type="text/javascript" src="/js/src/affix.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/schemes/pisces.js?v=5.1.4"></script>
+
+
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.4"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+  
+  
+  <link rel="stylesheet" href="/lib/needsharebutton/needsharebutton.css">
+
+  
+  
+  <script src="/lib/needsharebutton/needsharebutton.js"></script>
+
+  <script>
+    
+      pbOptions = {};
+      
+          pbOptions.iconStyle = "default";
+      
+          pbOptions.boxForm = "horizontal";
+      
+          pbOptions.position = "bottomCenter";
+      
+          pbOptions.networks = "Weibo,Wechat,Douban,QQZone,Twitter,Facebook";
+      
+      new needShareButton('#needsharebutton-postbottom', pbOptions);
+    
+    
+      flOptions = {};
+      
+          flOptions.iconStyle = "default";
+      
+          flOptions.boxForm = "vertical";
+      
+          flOptions.position = "topRight";
+      
+          flOptions.networks = "Weibo,Wechat,Douban,QQZone,Twitter,Facebook";
+      
+      new needShareButton('#needsharebutton-float', flOptions);
+    
+  </script>
+
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>
