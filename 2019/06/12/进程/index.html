@@ -94,7 +94,7 @@
 
 
 
-  <meta name="keywords" content="计算机网络,">
+  <meta name="keywords" content="操作系统,">
 
 
 
@@ -105,18 +105,20 @@
 
 
 
-<meta name="description" content="应用层协议 HTTP">
-<meta name="keywords" content="计算机网络">
+<meta name="description" content="进程-程序和进程的关系和区别、进程的创建和结束、孤儿进程、僵尸进程、守护进程">
+<meta name="keywords" content="操作系统">
 <meta property="og:type" content="article">
-<meta property="og:title" content="HTTP协议">
-<meta property="og:url" content="https://whitneylu.github.io/2019/05/15/HTTP/index.html">
+<meta property="og:title" content="进程">
+<meta property="og:url" content="https://whitneylu.github.io/2019/06/12/进程/index.html">
 <meta property="og:site_name" content="Whitney&#39;s coding note">
-<meta property="og:description" content="应用层协议 HTTP">
+<meta property="og:description" content="进程-程序和进程的关系和区别、进程的创建和结束、孤儿进程、僵尸进程、守护进程">
 <meta property="og:locale" content="default">
-<meta property="og:updated_time" content="2019-05-29T06:50:47.176Z">
+<meta property="og:image" content="https://whitneylu.github.io/image/程序执行.png">
+<meta property="og:updated_time" content="2019-06-13T03:54:39.040Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="HTTP协议">
-<meta name="twitter:description" content="应用层协议 HTTP">
+<meta name="twitter:title" content="进程">
+<meta name="twitter:description" content="进程-程序和进程的关系和区别、进程的创建和结束、孤儿进程、僵尸进程、守护进程">
+<meta name="twitter:image" content="https://whitneylu.github.io/image/程序执行.png">
 
 
 
@@ -146,13 +148,13 @@
 
 
 
-  <link rel="canonical" href="https://whitneylu.github.io/2019/05/15/HTTP/">
+  <link rel="canonical" href="https://whitneylu.github.io/2019/06/12/进程/">
 
 
 
 
 
-  <title>HTTP协议 | Whitney's coding note</title>
+  <title>进程 | Whitney's coding note</title>
   
 
 
@@ -279,7 +281,7 @@
   
   
   <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="https://whitneylu.github.io/2019/05/15/HTTP/">
+    <link itemprop="mainEntityOfPage" href="https://whitneylu.github.io/2019/06/12/进程/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="name" content="WhitneyLu">
@@ -296,7 +298,7 @@
 
         
         
-          <h1 class="post-title" itemprop="name headline">HTTP协议</h1>
+          <h1 class="post-title" itemprop="name headline">进程</h1>
         
 
         <div class="post-meta">
@@ -308,8 +310,8 @@
               
                 <span class="post-meta-item-text">Posted on</span>
               
-              <time title="Post created" itemprop="dateCreated datePublished" datetime="2019-05-15T00:00:00+08:00">
-                2019-05-15
+              <time title="Post created" itemprop="dateCreated datePublished" datetime="2019-06-12T00:00:00+08:00">
+                2019-06-12
               </time>
             
 
@@ -331,8 +333,8 @@
               
               
                 <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/HTTP/" itemprop="url" rel="index">
-                    <span itemprop="name">HTTP</span>
+                  <a href="/categories/进程/" itemprop="url" rel="index">
+                    <span itemprop="name">进程</span>
                   </a>
                 </span>
 
@@ -367,7 +369,7 @@
                   <span class="post-meta-item-text">Words count in article&#58;</span>
                 
                 <span title="Words count in article">
-                  1.1k
+                  1.7k
                 </span>
               
 
@@ -383,7 +385,7 @@
                   <span class="post-meta-item-text">Reading time &asymp;</span>
                 
                 <span title="Reading time">
-                  3
+                  6
                 </span>
               
             </div>
@@ -391,7 +393,7 @@
 
           
               <div class="post-description">
-                  应用层协议 HTTP
+                  进程-程序和进程的关系和区别、进程的创建和结束、孤儿进程、僵尸进程、守护进程
               </div>
           
 
@@ -408,33 +410,63 @@
       
 
       
-        <h2 id="应用层协议-HTTP"><a href="#应用层协议-HTTP" class="headerlink" title="应用层协议 HTTP"></a>应用层协议 HTTP</h2><ol>
-<li>Web的应用层协议是HTTP</li>
-<li>HTTP由两个程序实现：客户程序和服务器程序</li>
-<li>HTTP使用TCP作为支撑运输协议，HTTP客户首先发起一个与服务器的TCP连接，连接建立起来之后，浏览器和服务器进程就可以通过套接字接口访问TCP，TCP为HTTP提供可靠的数据传输服务</li>
-<li>服务器向客户发送被请求的文件，而不存储任何关于该客户的状态信息，所以HTTP是一个无状态协议</li>
-<li>HTTP默认持续连接，但是HTTP客户和服务器可以被配置成非持续连接</li>
-<li><strong>非持续连接：</strong>每个TCP连接服务器发送一个对象后关闭，每个TCP连接只传输一个请求报文和一个响应报文</li>
-<li>浏览器可以打开5-10个并行的TCP连接，<strong>并行连接</strong>可以缩短响应时间</li>
-<li><strong>往返时间RTT</strong>，是指一个短分组从客户到服务器然后再返回客户所花的时间。一次TCP连接涉及三次握手过程，三次握手的前两个部分消耗时间占用了一个RTT。客户结合第三部分向TCP连接发送一个HTTP请求报文，请求报文到达服务器，服务器就在该TCP连接上发送HTML文件，这个HTTP请求/响应用去了另一个RTT</li>
-<li><strong>持续连接的HTTP：</strong>服务器在发送响应后保持该TCP连接打开，在相同的用户和服务器之间，后续的响应的请求报文能够通过相同的连接进行传送</li>
-<li>在持续连接中，一个完整的Web页面可以通过单个持续的TCP连接完成</li>
-<li>如果一条连接经过一段时间间隔没有被使用，HTTP服务器就关闭该连接</li>
+        <h2 id="进程"><a href="#进程" class="headerlink" title="进程"></a>进程</h2><h3 id="程序和进程"><a href="#程序和进程" class="headerlink" title="程序和进程"></a>程序和进程</h3><ol>
+<li>进程是程序运行的实例，程序是可执行的二进制代码文件，将文件加载到内存中运行就得到一个进程，同一个程序文件家在多次称为不同的进程</li>
+<li>进程包括三个部分：代码段、数据段、堆栈段。</li>
 </ol>
-<h3 id="cookie"><a href="#cookie" class="headerlink" title="cookie"></a>cookie</h3><ol>
-<li>cookie有四个组件分别在请求报文、响应报文、用户端系统、Web站点的后端服务器中保存</li>
-<li>cookie用于标识一个客户，Web站点为每一个客户分配一个唯一的标识码，作为索引后端数据中的表项</li>
-<li>cookie允许对用户进行追踪或根据访问信息投放广告，被人为是侵犯用户隐私的</li>
+<ul>
+<li>代码段就是程序的代码数据，如果有多个进程运行同一个程序，则可以使用同一个代码段</li>
+<li>数据段存放程序的全局变量、常量和静态变量</li>
+<li>堆栈段中的栈用于函数调用，存放函数的参数、函数内部定义的局部变量。堆栈段还包括进程控制块(PCB)</li>
+</ul>
+<ol start="4">
+<li>PCB处于进程核心堆栈的底部，PCB是进程存在的唯一标识</li>
+<li>每个进程在系统中通过PID唯一的标识</li>
 </ol>
-<h3 id="Web缓存"><a href="#Web缓存" class="headerlink" title="Web缓存"></a>Web缓存</h3><ol>
-<li>Web缓存器又称为代理服务器</li>
-<li>Web缓存器既是服务器又是客户，浏览器请求对象，Web缓存器先检查本地有没有这个对象，如果有就返回这个对象，如果没有就向对象的初始服务器打开TCP连接，Web缓存器在本地保存对象的副本，然后向客户的浏览器用HTTP响应报文发送副本</li>
-<li>Web缓存器可以减少客户请求的响应时间，可以减少一个机构的接入链路到因特网的通信量，改善所有用户的性能</li>
-<li>通过使用内容分发网络，Web缓存器在因特网中发挥着巨大作用</li>
+<h3 id="进程的创建和结束"><a href="#进程的创建和结束" class="headerlink" title="进程的创建和结束"></a>进程的创建和结束</h3><ol>
+<li>进程创建有两种方式：由操作系统创建、由父进程创建</li>
+<li>init()函数在内核态运行，是内核代码</li>
+<li>init进程是内核启动并运行的第一个用户进程，运行在用户态下</li>
+<li>init函数调用execve()从文件/etc/inittab中加载可执行程序init并执行，这个过程没有调用do_fork()</li>
 </ol>
-<h3 id="HTTP请求报文和响应报文"><a href="#HTTP请求报文和响应报文" class="headerlink" title="HTTP请求报文和响应报文"></a>HTTP请求报文和响应报文</h3><p><strong>报文由普通ASCII码书写</strong></p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">#HTTP请求报文</span><br><span class="line">GET /somedir/page.html HTTP/1.1 #请求行由三个字段组成：方法字段，URL字段和HTTP版本字段</span><br><span class="line">#下面是首部行</span><br><span class="line">Host: www.someschool.edu #指明了对象所在的主机</span><br><span class="line">Connection:  close #表示使用非持续连接</span><br><span class="line">User-agent: #指明向服务器发送请求的浏览器的类型</span><br><span class="line">Accept-language: #表示用户得到该对象的语言版本</span><br><span class="line">#实体体 使用GET方法时，实体体为空，使用户POST时，才能使用实体体</span><br></pre></td></tr></table></figure>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">#HTTP响应报文</span><br><span class="line">HTTP/1.1 200 OK #初始状态行有三个字段，HTTP协议版本，状态码和响应的状态信息</span><br><span class="line">#200 OK 请求成功 301 Moved Permanently 请求对象已经被永久转移了 ...</span><br><span class="line">#下面是6个首部行</span><br><span class="line">Connection: close #发送完报文后关闭TCP连接</span><br><span class="line">Date: Tue, 18 Aug 2015 15:44:04 GMT</span><br><span class="line">Sever: Apache/2.2.3 (CentOS) #指示产生报文的服务器</span><br><span class="line">Last-Modified: Tue, 18 Aug 2015 15:11:03 GMT</span><br><span class="line">Content-Length: 6821 #被发送对象的字节数</span><br><span class="line">Content-Type: text/html #指示实体体中的对象是HTML文件</span><br><span class="line"></span><br><span class="line">(data data data...) #实体体</span><br></pre></td></tr></table></figure>
+<h4 id="进程创建-fork-函数"><a href="#进程创建-fork-函数" class="headerlink" title="进程创建 fork()函数"></a>进程创建 fork()函数</h4><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">#include &lt;unistd.h&gt;</span><br><span class="line"></span><br><span class="line">pid_t fork(void);</span><br><span class="line">//对于父进程，函数返回新创建的子进程的PID，对于子进程，创建成功则返回0</span><br><span class="line">//创建失败返回-1</span><br></pre></td></tr></table></figure>
+<ol>
+<li>调用fork()函数的就是父进程，新创建的进程就是子进程</li>
+<li>为新创建的子进程分配进程空间，将父进程的空间中的内容复制到子进程的进程空间，包括数据段和堆栈段，两者共用代码段</li>
+<li><code>getpid()</code>获得当前进程的PID，<code>getppid()</code>获得父进程的PID</li>
+</ol>
+<h4 id="进程结束-exit-函数"><a href="#进程结束-exit-函数" class="headerlink" title="进程结束 exit()函数"></a>进程结束 exit()函数</h4><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">#include &lt;stdlib.h&gt;</span><br><span class="line"></span><br><span class="line">void exit(int status);</span><br><span class="line">//status是一个整型状态值，表示进程的退出状态，保存在全局变量$?中</span><br><span class="line">//$?保存main函数的返回值，或者程序运行中调用exit的status的值，或者异常出错的错误号</span><br></pre></td></tr></table></figure>
+<ol>
+<li>exit()是一个函数，执行完成后将控制权交给系统，而return完成后将控制权交给调用函数</li>
+<li>exit是正常终止，abort是异常终止</li>
+<li>exit在stdlib.h中声明，_exit在unistd.h中声明</li>
+<li>exit参数为0表示进程正常终止，如果是其他值则表示执行过程中有错误发生</li>
+<li>_exit在执行后立即返回给内核，会关闭所有的文件描述符，清理内存以及其他一些内核清理函数，但是不会刷新流。exit()要先执行一些清除操作，然后才将控制权交给内核，是在_exit函数基础上的一个封装，会在调用_exit函数之前先刷新流数据，有利于将缓冲区的数据正确写入文件，如printf()函数就是一个使用缓冲IO的方式</li>
+</ol>
+<h3 id="僵尸进程"><a href="#僵尸进程" class="headerlink" title="僵尸进程"></a>僵尸进程</h3><ol>
+<li>孤儿进程是指，父进程退出后，有子进程还在运行，这些子进程就是孤儿进程，这些进程将会被init进程（进程号PID=1）的进程收养</li>
+<li>僵尸进程，是指进程使用fork创建紫禁城，如果子进程退出，而父进程没有调用wait或者waitpid获取子进程的状态信息，则子进程的进程描述符仍然保存在系统中，这种进程称为僵尸进程</li>
+<li>孤儿进程是子进程未退出，父进程已退出。僵尸进程是子进程已退出，父进程未退出</li>
+<li>调用wait函数，可以自动分析当前进程的某个子进程已经退出，wait可以回收子进程，销毁后返回，如果没有这样的子进程wait就会一直阻塞在这里，直到有一个出现<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">#include &lt;sys/tyoes.h&gt;</span><br><span class="line">#include &lt;sys/wait.h&gt;</span><br><span class="line"></span><br><span class="line">pid_t wait(int *status);</span><br><span class="line">//wait会暂时停止目前进程的执行明知道有信号或者子进程结束</span><br><span class="line">/*如果在调用wait时已经有子进程结束，则wait会立即返回子进程结束状态值，子进程结束状态值由参数status返回，子进程的进程识别码也会一起返回，如果不需要结束状态值，则参数status可以设为NULL*/</span><br><span class="line">//执行成功则返回子进程识别码PID，如果错误返回-1，并将错误原因存在errno</span><br></pre></td></tr></table></figure>
+</li>
+</ol>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br></pre></td><td class="code"><pre><span class="line">#include &lt;sys/types.h&gt;</span><br><span class="line">#include &lt;sys/wait.h&gt;</span><br><span class="line">#include &lt;unistd.h&gt;</span><br><span class="line">#include &lt;stdlib.h&gt;</span><br><span class="line">#include &lt;stdio.h&gt;</span><br><span class="line"></span><br><span class="line">int main() &#123;</span><br><span class="line">    pid_t pid=fork();</span><br><span class="line"></span><br><span class="line">    if(pid&lt;0)</span><br><span class="line">    &#123;</span><br><span class="line">        perror(&quot;fork error\n&quot;);</span><br><span class="line">        return 0;</span><br><span class="line">    &#125;</span><br><span class="line">    else if(pid&gt;0)</span><br><span class="line">    &#123;</span><br><span class="line">        printf(&quot;Parent process\n&quot;);</span><br><span class="line">        int status=-1;</span><br><span class="line">        pid_t pr=wait(&amp;status); //等待子进程？</span><br><span class="line">        if(WIFEXITED(status))</span><br><span class="line">        &#123;</span><br><span class="line">            //sleep(10);</span><br><span class="line">            printf(&quot;the child process %d exit normally.\n&quot;, pr);</span><br><span class="line">            printf(&quot;the return code is %d.\n&quot;, WEXITSTATUS(status));</span><br><span class="line">        &#125;</span><br><span class="line">        else</span><br><span class="line">        &#123;</span><br><span class="line">            printf(&quot;the child process %d exit abnormally.\n&quot;, pr);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    else if(pid==0)</span><br><span class="line">    &#123;</span><br><span class="line">        printf(&quot;Sub-process, PID: %u, PPID: %u\n&quot;, getpid(), getppid());</span><br><span class="line">        exit(3); //WIFEXITSTATUS(status)返回5</span><br><span class="line">    &#125;</span><br><span class="line">    return 0;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p><img src="/image/程序执行.png" alt></p>
+<ol start="5">
+<li>waitpid是wait的封装，多出两个可由用户控制的参数pid和options<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line">#include &lt;sys/types.h&gt;</span><br><span class="line">#include &lt;sys/wait.h&gt;</span><br><span class="line"></span><br><span class="line">pid_t waitpid(pid_t pid, int *status, int options);</span><br><span class="line">//暂时停止目前进程的执行，直到有信号来到或子进程结束</span><br><span class="line">//pid是等待的子进程的识别码，pid&lt;-1等待进程组识别码为pid绝对值的任何子进程</span><br><span class="line">//pid=-1等待任何子进程，相当于wait</span><br><span class="line">//pid=0等待进程组识别码与目前进程相同的任何子进程</span><br><span class="line">//pid&gt;0等待任何子进程识别码为pid的子进程</span><br><span class="line">//options=WNOHANG及时没有子进程退出，立即返回</span><br><span class="line">//options=WUNTRACED，子进程进入暂停则马上返回，结束状态不予理会</span><br><span class="line">//正常返回时返回收集到的子进程的进程ID</span><br><span class="line">//如果设置了WNOHANG，调用中waitpid发现没有已退出的子进程可手机则返回0</span><br><span class="line">//如果调用中出错，则返回-1，errno被设置成相应的值指示错误</span><br><span class="line">//pid指示的子进程不存在，若进程存在，但不是调用进程的子进程，waitpid就会出错返回，errno被设置成ECHILD？</span><br></pre></td></tr></table></figure>
+</li>
+</ol>
+<h3 id="守护进程"><a href="#守护进程" class="headerlink" title="守护进程"></a>守护进程</h3><ol>
+<li>守护进程是脱离终端并且在后台运行的进程</li>
+<li>创建简单的守护进程：</li>
+</ol>
+<ul>
+<li>创建子进程，父进程退出</li>
+<li>在子进程中创建新会话，使用系统函数setsid创建一个新会话，并担任会话组组长setsid()</li>
+<li>改当前目录为根目录chdir()</li>
+<li>重设文件权限位掩码为0，用umask(0)</li>
+<li>关闭文件描述符</li>
+</ul>
 
       
     </div>
@@ -461,7 +493,7 @@
       
         <div class="post-tags">
           
-            <a href="/tags/计算机网络/" rel="tag"><i class="fa fa-tag"></i> 计算机网络</a>
+            <a href="/tags/操作系统/" rel="tag"><i class="fa fa-tag"></i> 操作系统</a>
           
         </div>
       
@@ -489,8 +521,8 @@
         <div class="post-nav">
           <div class="post-nav-next post-nav-item">
             
-              <a href="/2019/05/05/计算网络基础1/" rel="next" title="计算机网络基础1">
-                <i class="fa fa-chevron-left"></i> 计算机网络基础1
+              <a href="/2019/06/11/多线程/" rel="next" title="多线程">
+                <i class="fa fa-chevron-left"></i> 多线程
               </a>
             
           </div>
@@ -499,8 +531,8 @@
 
           <div class="post-nav-prev post-nav-item">
             
-              <a href="/2019/05/25/TCP/" rel="prev" title="TCP">
-                TCP <i class="fa fa-chevron-right"></i>
+              <a href="/2019/06/13/进程间通信/" rel="prev" title="进程间通信">
+                进程间通信 <i class="fa fa-chevron-right"></i>
               </a>
             
           </div>
@@ -659,7 +691,7 @@
             
 
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#应用层协议-HTTP"><span class="nav-number">1.</span> <span class="nav-text">应用层协议 HTTP</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#cookie"><span class="nav-number">1.1.</span> <span class="nav-text">cookie</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Web缓存"><span class="nav-number">1.2.</span> <span class="nav-text">Web缓存</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#HTTP请求报文和响应报文"><span class="nav-number">1.3.</span> <span class="nav-text">HTTP请求报文和响应报文</span></a></li></ol></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#进程"><span class="nav-number">1.</span> <span class="nav-text">进程</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#程序和进程"><span class="nav-number">1.1.</span> <span class="nav-text">程序和进程</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#进程的创建和结束"><span class="nav-number">1.2.</span> <span class="nav-text">进程的创建和结束</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#进程创建-fork-函数"><span class="nav-number">1.2.1.</span> <span class="nav-text">进程创建 fork()函数</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#进程结束-exit-函数"><span class="nav-number">1.2.2.</span> <span class="nav-text">进程结束 exit()函数</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#僵尸进程"><span class="nav-number">1.3.</span> <span class="nav-text">僵尸进程</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#守护进程"><span class="nav-number">1.4.</span> <span class="nav-text">守护进程</span></a></li></ol></li></ol></div>
             
 
           </div>
