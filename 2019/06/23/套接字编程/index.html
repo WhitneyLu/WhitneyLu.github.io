@@ -1,0 +1,1019 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next gemini use-motion" lang>
+<head><meta name="generator" content="Hexo 3.8.0">
+  <meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform">
+<meta http-equiv="Cache-Control" content="no-siteapp">
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css">
+
+
+
+
+  
+  
+  
+  
+
+  
+    
+    
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+    
+    
+    <link href="https://fonts.cat.net/css?family=Roboto Slab:300,300italic,400,400italic,700,700italic&subset=latin,latin-ext" rel="stylesheet" type="text/css">
+  
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css">
+
+<link href="/css/main.css?v=5.1.4" rel="stylesheet" type="text/css">
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=5.1.4">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=5.1.4" color="#222">
+
+
+
+
+
+  <meta name="keywords" content="计算机网络,">
+
+
+
+
+
+
+
+
+
+
+<meta name="description" content="各类套接字函数">
+<meta name="keywords" content="计算机网络">
+<meta property="og:type" content="article">
+<meta property="og:title" content="套接字编程">
+<meta property="og:url" content="https://whitneylu.github.io/2019/06/23/套接字编程/index.html">
+<meta property="og:site_name" content="Whitney&#39;s coding note">
+<meta property="og:description" content="各类套接字函数">
+<meta property="og:locale" content="default">
+<meta property="og:updated_time" content="2019-06-23T15:19:18.013Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="套接字编程">
+<meta name="twitter:description" content="各类套接字函数">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Gemini',
+    version: '5.1.4',
+    sidebar: {"position":"left","display":"post","offset":12,"b2t":false,"scrollpercent":true,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    duoshuo: {
+      userId: '0',
+      author: 'Author'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="https://whitneylu.github.io/2019/06/23/套接字编程/">
+
+
+
+
+
+  <title>套接字编程 | Whitney's coding note</title>
+  
+
+
+
+
+
+
+
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="default">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">Whitney's coding note</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle">Study as if you were going to live forever.</p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br>
+            
+            Home
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br>
+            
+            Tags
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br>
+            
+            Categories
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br>
+            
+            Archives
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="https://whitneylu.github.io/2019/06/23/套接字编程/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="WhitneyLu">
+      <meta itemprop="description" content>
+      <meta itemprop="image" content="/images/nessa.png">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Whitney's coding note">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">套接字编程</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">Posted on</span>
+              
+              <time title="Post created" itemprop="dateCreated datePublished" datetime="2019-06-23T00:00:00+08:00">
+                2019-06-23
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category">
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">In</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Unix网络编程/" itemprop="url" rel="index">
+                    <span itemprop="name">Unix网络编程</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+            <span class="post-meta-divider">|</span>
+            <span class="page-pv"><i class="fa fa-file-o"></i>
+            <span class="busuanzi-value" id="busuanzi_value_page_pv"></span>
+            </span>
+          
+
+          
+            <div class="post-wordcount">
+              
+                
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-file-word-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">Words count in article&#58;</span>
+                
+                <span title="Words count in article">
+                  2.9k
+                </span>
+              
+
+              
+                <span class="post-meta-divider">|</span>
+              
+
+              
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-clock-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">Reading time &asymp;</span>
+                
+                <span title="Reading time">
+                  11
+                </span>
+              
+            </div>
+          
+
+          
+              <div class="post-description">
+                  各类套接字函数
+              </div>
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <h2 id="套接字编程"><a href="#套接字编程" class="headerlink" title="套接字编程"></a>套接字编程</h2><h3 id="套接字地址结构"><a href="#套接字地址结构" class="headerlink" title="套接字地址结构"></a>套接字地址结构</h3><ol>
+<li><p>IPv4套接字地址结构</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">struct in_addr&#123;</span><br><span class="line">	in_addr_s_addr; //32位IPv4套接字地址</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line">struct sockaddr_in&#123;</span><br><span class="line">	uint8_t sin_len; //结构体长度</span><br><span class="line">	sa_family_t sin_family; //类型</span><br><span class="line">	in_port_t sin_port; //端口号</span><br><span class="line">	struct in_addr sin_addr; //32位IPv4地址</span><br><span class="line">	char sin_zero[8];</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>访问IPv4地址，使用<code>serv.sin_addr</code>引用</p>
+</li>
+<li><p>通用套接字地址结构，可以作为套接字函数的一个参数，通用套接字地址结构用来对特定于协议的套接字地址结构的指针执行类型强制转换</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">struct sockaddr&#123;</span><br><span class="line">	uint8_t sa_len;</span><br><span class="line">	sa_family_t sa_family;</span><br><span class="line">	char sa_data[14];</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>IPv6套接字地址结构</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line">struct in6_addr&#123;</span><br><span class="line">	uint8_t s6_addr[16];</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line">#define SIN6_LEN </span><br><span class="line">//如果系统支持套接字地址结构的长度字段，SIN6_LEN必须定义</span><br><span class="line"></span><br><span class="line">struct sockaddr_in6&#123;</span><br><span class="line">	uint8_t sin6_len; //</span><br><span class="line">	sa_family_t sin6_family;</span><br><span class="line">	in_port_t sin6_port;</span><br><span class="line">	</span><br><span class="line">	uint32_t sin6_flowinfo; //分为两个字段，低20位是流标，高12位保留</span><br><span class="line">	struct in6_addr sin6_addr;</span><br><span class="line">	</span><br><span class="line">	uint32_t sin6_scope_id; //标识具备范围的地址，最常见的是链路局部地址的接口索引</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>新的通用套接字地址结构</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">//满足对其要求，且足够大能够容纳系统支持的任何套接字地址结构</span><br><span class="line">//必须强制类型转换成或复制到合适与ss_family字段给出的地址类型的套接字地址结构中，才能访问其他字段</span><br><span class="line">struct sockaddr_storage&#123;</span><br><span class="line">	uint_t ss_len;</span><br><span class="line">	sa_family_t ss_family;</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
+</li>
+</ol>
+<h3 id="key-value参数"><a href="#key-value参数" class="headerlink" title="key-value参数"></a>key-value参数</h3><ol>
+<li><p>从进程到内核传递套接字地址结构的函数有三个：bind、connect、sendto，这些函数的第一个参数是指向某个套接字地址结构的指针，另一个参数是该结构的整数大小</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">struct sockaddr_in serv;</span><br><span class="line">connect(sockfd, (SA *) &amp;serv, sizeof(serv));</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>从内核到进程传递套接字地址结构的函数有四个：accept、recvfrom、getsockname、getpeername，有两个参数分别是指向某个套接字地址结构的指针和指向表示该结构大小的整型指针</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">struct  sockaddr_un cli;</span><br><span class="line">socklen_t len;</span><br><span class="line">len=sizeof(cli);</span><br><span class="line">getpeername(unixfd, (SA *) &amp;cli, &amp;len);</span><br></pre></td></tr></table></figure>
+</li>
+</ol>
+<h3 id="字节排序函数"><a href="#字节排序函数" class="headerlink" title="字节排序函数"></a>字节排序函数</h3><ol>
+<li>字符串CPU_VENDOR_OS是GNU的autoconf程序在配置本书的软件时确定的</li>
+<li>主机字节序和网络字节序之间互转函数<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">#include &lt;netinet/in.h&gt;</span><br><span class="line">//返回网络字节序的值</span><br><span class="line">uint16_t htons(uint16_t host16bitvalue);</span><br><span class="line">uint32_t htonl(uint32_t host32bitvalue);</span><br><span class="line">//返回主机字节序的值</span><br><span class="line">uint16_t ntohs(uint16_t net16bitvalue);</span><br><span class="line">uint32_t ntohl(uint32_t net32bitvalue);</span><br></pre></td></tr></table></figure>
+</li>
+</ol>
+<h3 id="字节操纵函数"><a href="#字节操纵函数" class="headerlink" title="字节操纵函数"></a>字节操纵函数</h3><ol>
+<li>以空字符结尾的C字符串在&lt;string.h&gt;中定义<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">#include &lt;strings.h&gt;</span><br><span class="line"></span><br><span class="line">void bzero(void (*dest, size_t nbytes); //将制定数目的字节置为0，经常用来将一个套接字地址结构初始化为0</span><br><span class="line">void bcopy(const void *src, void *dest, size_t nbytes); </span><br><span class="line">//将制定数目的字节源字节串移到目标字节串，可以处理字节串重叠</span><br><span class="line">int bcmp(const void *ptrl, const void *ptr2, size_t nbytes); //比较两个任意的字节串，相同返回0</span><br><span class="line"></span><br><span class="line">#include &lt;string.h&gt;</span><br><span class="line"></span><br><span class="line">void *menset(void *dest, int c, size_len); //目标字节串指定数目的字节置为值c</span><br><span class="line">void *memcpy(void *dest, const void *src, size_t nbytes); //源字节串和目标字节串重叠需要调用memmove</span><br><span class="line">int memcmp(const void *ptrl, const void *ptr2, size_t nbytes); //比较两个字符串</span><br></pre></td></tr></table></figure>
+</li>
+</ol>
+<h3 id="地址转换函数"><a href="#地址转换函数" class="headerlink" title="地址转换函数"></a>地址转换函数</h3><ol>
+<li><p>在ASCII字符串与网络字节序的二进制之间转换网际地址</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">#include &lt;arap/inet.h&gt;</span><br><span class="line"></span><br><span class="line">int inet_aton(const char *strptr, struct in_addr *addrptr); </span><br><span class="line">//将strptr所指的C字符串转换为一个32位的网络字节序的二进制，通过指针addrptr来存储，成功返回1</span><br><span class="line">in_addr_t inet_addr(const char *strptr); //作用同上，出错时函数返回INADDR_NONE</span><br><span class="line">char *inet_ntoa(struct in_addr inaddr); </span><br><span class="line">//将32位网络字节序二进制地址转换成相应的点分十进制数串</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>同时使用IPv4和IPv6的函数</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">#include &lt;arap/inet.h&gt;</span><br><span class="line"></span><br><span class="line">/*family参数可以是AF_INET也可以是AF_INET6，如果是不支持的地址组被作为参数，返回错误将errno置为eafnosupport*/</span><br><span class="line">int inet_pton(int family, const char *strptr, void *addrptr);</span><br><span class="line">//将strptr所指的C字符串转换为一个32位的网络字节序的二进制，通过指针addrptr来存储，成功返回1</span><br><span class="line">const char *inet_ntop(int family, const void *addrptr, char *strptr, size_t len);</span><br><span class="line">/*从数值格式转换到表达格式，len参数是目标存储单元的大小，定义如下，如果len太小不足以容纳表达式结果，则返回空指针，errno置为ENOSPC*/</span><br><span class="line"></span><br><span class="line">#include &lt;netinet/in.h&gt;</span><br><span class="line">#define INET_ADDRSTRLEN 16</span><br><span class="line">#define INET6_ADDRSTRLEN 46</span><br></pre></td></tr></table></figure>
+</li>
+<li><p><code>char *sock_ntop(const struct sockaddr *sockaddr, socklen_t addrlen);</code><br>查看套接字地址的指针为参数，查看结构的内部，然后调用适当的函数返回地址的表达格式</p>
+</li>
+<li>readline函数每读一个字节就要调用一次系统read函数，非常低效。如果为了解决这个问题改用标准I/O函数库十分危险，不能检查网络数据传送的错误也不能修正和恢复</li>
+</ol>
+<h2 id="基于TCP的套接字编程"><a href="#基于TCP的套接字编程" class="headerlink" title="基于TCP的套接字编程"></a>基于TCP的套接字编程</h2><h3 id="socket函数"><a href="#socket函数" class="headerlink" title="socket函数"></a>socket函数</h3><ol>
+<li>进程必须做的第一件事就是调用socket函数，指定通信协议类型<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">#include &lt;sys/socket.h&gt;</span><br><span class="line">//成功返回非负套接字描述符sockfd，出错返回-1</span><br><span class="line">int socket(int family, int type, int protocol);</span><br><span class="line">//family参数指明协议族，type指明套接字类型，protocol指明协议类型常值</span><br><span class="line">//若protocol设为0，选择给定family和type组合的系统默认值</span><br></pre></td></tr></table></figure>
+</li>
+</ol>
+<h3 id="connect函数"><a href="#connect函数" class="headerlink" title="connect函数"></a>connect函数</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">#include &lt;sys/socket.h&gt;</span><br><span class="line">//connect函数建立与TCP服务器的连接，成功返回0，出错返回-1</span><br><span class="line">int connect(int sockfd, const struct sockaddr *servaddr, socklen_t addrlen);</span><br><span class="line">//sockfd是socket套接字描述符，*servaddr指向套接字地址结构，addrlen是这个结构的大小</span><br><span class="line">//套接字地址结构必须包含服务器的IP地址和端口号</span><br></pre></td></tr></table></figure>
+<ol>
+<li>connect函数将会激发TCP的三次握手</li>
+<li>如果三次握手中TCP客户端没有接收到SYN分节，返回ETIMEOUT</li>
+<li>若是对客户的SYN响应是RST，马上返回ECONNREFUSED</li>
+</ol>
+<ul>
+<li>目的端口的SYN到达，端口上没有正在监听的服务器</li>
+<li>TCP想要取消一个已有连接</li>
+<li>TCP接收到一个根本不存在的连接上的分节</li>
+</ul>
+<ol start="4">
+<li>如果客户发出的SYN在中间的某个路由器引发一个ICMP错误，客户主机内核保存该消息，按照一定的时间间隔继续发送SYN，在规定时间后仍未收到回应，将保存的信息作为EHOSTUNREACH或ENETUREACH错误返回给进程</li>
+</ol>
+<h3 id="bind函数"><a href="#bind函数" class="headerlink" title="bind函数"></a>bind函数</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line">#include &lt;sys/socket.h&gt;</span><br><span class="line">//函数将协议地址赋给一个套接字，协议地址是套接字端口号和IP地址类型的组合</span><br><span class="line">int bind(int sockfd, const struct sockaddr *myaddr, socklen_t addrlen);</span><br><span class="line">//*myaddr是指向协议的地址结构的指针，addrlen是该地址结构的长度</span><br><span class="line"></span><br><span class="line">//如果指定端口号为0，内核在bind被调用时，选择一个临时端口</span><br><span class="line">//如果指定IP地址为通配地址，内核等到套接字已连接或套接字发送数据报时才选择一个本地IP地址</span><br><span class="line"></span><br><span class="line">struct sockaddr_in servaddr;</span><br><span class="line">servaddr.sin_addr.s_addr=htonl(INAADR_ANY);</span><br><span class="line">//IPv4通配地址由常值INAADR_ANY指定</span><br><span class="line"></span><br><span class="line">struct soackaddr_in6 serv;</span><br><span class="line">serv.sin6_addr=in6addr_any;</span><br><span class="line">//系统预先分配in6addr_any变量，并将其初始化为常值IN6ADDR_ANY_INIT，头文件&lt;netinet/in.h&gt;中包含in6addr_any的extern声明</span><br></pre></td></tr></table></figure>
+<ol>
+<li>如果内核为套接字选择一个临时端口号，函数bind不返回所选择的临时端口，必须调用getsockname来返回协议地址以得到内核选择的临时端口值</li>
+</ol>
+<h3 id="listen函数"><a href="#listen函数" class="headerlink" title="listen函数"></a>listen函数</h3><ol>
+<li><p>当socket创建一个套接字时，被假设为一个主动套接字，listen函数把一个未连接套接字转换成一个被动套接字</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">#include &lt;sys/socket.h&gt;</span><br><span class="line">int listen(int sockfd, int backlog);</span><br><span class="line">//第二个参数规定内核为相应套接字排队的最大连接数，防止套接字接受新的连接</span><br><span class="line">//成功返回0，出错返回-1</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>调用listen函数导致套接字从CLOSED到LISTEN</p>
+</li>
+<li>参数backlog参数被规定为两个队列（未完成连接队列和已完成队列）总和的最大值，可以给这个参数添加一个模糊因子，不能设为0</li>
+<li>未完成链接的队列的分节存留的时间是RTT</li>
+<li>三次握手完成之后，在服务器调用accept之前到达的数据应由服务器TCP排队，最大数据量为相应已连接套接字的接收缓冲区大小</li>
+</ol>
+<h3 id="accept函数"><a href="#accept函数" class="headerlink" title="accept函数"></a>accept函数</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">#include &lt;sys/socket.h&gt;</span><br><span class="line">//从已完成连接队列的列头返回下一个已完成连接，如果队列为空，进程投入睡眠</span><br><span class="line">int accept(int sockfd, struct sockaddr *cliaddr, socklen_t *addrlen);</span><br><span class="line">//*important*第一个参数是监听套接字描述符，返回值是已连接套接字描述符</span><br><span class="line">//调用前将addrlen参数置为cliaddr所指的套接字地址结构的长度，返回时整数值即为内核存放该套接字地址结构内的确切字节数</span><br><span class="line">//调用成功返回非负描述符，出错返回-1</span><br><span class="line">//返回的非负描述符代表客户的TCP连接，</span><br></pre></td></tr></table></figure>
+<h3 id="fork和exec函数"><a href="#fork和exec函数" class="headerlink" title="fork和exec函数"></a>fork和exec函数</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">#include &lt;unistd.h&gt;</span><br><span class="line">pid_t fork(void); //</span><br></pre></td></tr></table></figure>
+<ol>
+<li>调用fork函数在父进程中返回一次，返回值是子进程的进程ID，子进程中返回0，返回值的作用是告诉子进程当前进程是子进程还是父进程</li>
+<li>子进程可以调用getppid获得父进程的进程ID，而父进程可以有很多子进程，无法一一查验子进程ID</li>
+<li>fork函数有两个用法：</li>
+</ol>
+<ul>
+<li>进程创建当前进程的副本即子进程</li>
+<li>进程想要执行另一个程序，则调用fork创建一个新进程，然后其中一个副本调用exec将自身体换成新的程序</li>
+</ul>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">#include &lt;unistd.h&gt;</span><br><span class="line">int execl(const char *pathname, const char *arg0, ..., /*(char *) 0*/);</span><br><span class="line">int execv(const char *pathname, char *const *argv[]);</span><br><span class="line">int execle(const char *pathname, const char *arg0, ..., /*(char *) 0, char *const envp[]*/);</span><br><span class="line">int execve(const char *pathname, char *const argv[], char *const envp[]);</span><br><span class="line">//execve函数是内核的系统调用，其他五个都是库函数</span><br><span class="line">int execlp(const char *pathname, const char *arg0, ..., /*(char *) 0*/);</span><br><span class="line">int execvp(const char *pathname, char *const argv[]);</span><br></pre></td></tr></table></figure>
+<ol start="4">
+<li>这些函数只有在出错时才返回到调用者</li>
+<li>待处理程序文件是由文件名或是路径名指定的</li>
+<li>程序的参数是一一列出还是由一个指针数组来引用的</li>
+<li>把调用进程的环境传递给新程序还是给新程序指定新的环境</li>
+</ol>
+<h3 id="并发服务器"><a href="#并发服务器" class="headerlink" title="并发服务器"></a>并发服务器</h3><ol>
+<li>一个新的连接建立，accept返回，服务器接着调用fork，然后由子程序服务客户（已连接套接字connfd），父进程关闭已连接套接字，此时父进程通过监听套接字listenfd等待下一个连接</li>
+</ol>
+<h3 id="close函数"><a href="#close函数" class="headerlink" title="close函数"></a>close函数</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">#include &lt;unistd.h&gt;</span><br><span class="line">int close(sockfd);</span><br></pre></td></tr></table></figure>
+<ol>
+<li>close函数关闭套接字，当套接字描述符的引用计数大于1，则调用close的作用是将引用计数-1，直到引用计数为0，关闭套接字</li>
+<li>如果确定要关闭套接字，可以使用shutdown来代替close关闭套接字</li>
+</ol>
+<h3 id="getsockname函数和getpeername函数"><a href="#getsockname函数和getpeername函数" class="headerlink" title="getsockname函数和getpeername函数"></a>getsockname函数和getpeername函数</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">#include &lt;sys/socket.h&gt;</span><br><span class="line">//返回套接字关联的本地协议地址或者返回套接字关联的外地协议地址</span><br><span class="line">int getsockname(int sockfd, struct sockaddr *localaddr, socklen_t *addrlen);</span><br><span class="line">int getpeername(int sockfd, struct sockaddr *peeraddr, socklen_t *addrlen);</span><br><span class="line">//返回客户的IP地址和端口号</span><br></pre></td></tr></table></figure>
+<ol>
+<li>在没有调用bind的TCP客户上，connect成功返回后，getsockname用于返回由内核赋予该连接的本地IP地址和本地端口号</li>
+<li>以端口号0调用bind后，getsockname用于返回有内核赋予的本地端口号</li>
+<li>用通配IP地址调用bind的TCP服务器，getsockname函数返回由内核赋予该连接的本地IP地址</li>
+<li>当服务器是由调用过accept的进程通过调用exec执行程序时，能够获取客户身份的唯一途径就是通过getpeername</li>
+</ol>
+
+      
+    </div>
+    
+    
+    
+
+    
+      <div>
+        <div id="wechat_subscriber" style="display: block; padding: 10px 0; margin: 20px auto; width: 100%; text-align: center">
+    <img id="wechat_subscriber_qcode" src="/images/wechat.jpg" alt="WhitneyLu wechat" style="width: 200px; max-width: 100%;">
+    <div>Contact me by scanning my public WeChat QR code</div>
+</div>
+
+
+      </div>
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/计算机网络/" rel="tag"><i class="fa fa-tag"></i> 计算机网络</a>
+          
+        </div>
+      
+
+      
+      
+        <div class="post-widgets">
+        
+
+        
+
+        
+          
+          <div id="needsharebutton-postbottom">
+            <span class="btn">
+              <i class="fa fa-share-alt" aria-hidden="true"></i>
+            </span>
+          </div>
+        
+        </div>
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2019/06/13/进程间通信/" rel="next" title="进程间通信">
+                <i class="fa fa-chevron-left"></i> 进程间通信
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+<script type="text/javascript" src="https://me.idealli.com/images/load.gif" data-src="/js/src/love.js"></script>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            Table of Contents
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            Overview
+          </li>
+        </ul>
+      
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <img class="site-author-image" itemprop="image" src="/images/nessa.png" alt="WhitneyLu">
+            
+              <p class="site-author-name" itemprop="name">WhitneyLu</p>
+              <p class="site-description motion-element" itemprop="description"></p>
+          </div>
+
+          <nav class="site-state motion-element">
+
+            
+              <div class="site-state-item site-state-posts">
+              
+                <a href="/archives/">
+              
+                  <span class="site-state-item-count">18</span>
+                  <span class="site-state-item-name">posts</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-categories">
+                <a href="/categories/index.html">
+                  <span class="site-state-item-count">14</span>
+                  <span class="site-state-item-name">categories</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-tags">
+                <a href="/tags/index.html">
+                  <span class="site-state-item-count">3</span>
+                  <span class="site-state-item-name">tags</span>
+                </a>
+              </div>
+            
+
+          </nav>
+
+          
+
+          
+            <div class="links-of-author motion-element">
+                
+                  <span class="links-of-author-item">
+                    <a href="https://github.com/yourname" target="_blank" title="GitHub">
+                      
+                        <i class="fa fa-fw fa-github"></i></a>
+                  </span>
+                
+                  <span class="links-of-author-item">
+                    <a href="mailto:miracle960118@gmail.com" target="_blank" title="E-Mail">
+                      
+                        <i class="fa fa-fw fa-envelope"></i></a>
+                  </span>
+                
+                  <span class="links-of-author-item">
+                    <a href="https://www.instagram.com" target="_blank" title="Instagram">
+                      
+                        <i class="fa fa-fw fa-instagram"></i></a>
+                  </span>
+                
+            </div>
+          
+
+          
+          
+
+          
+          
+
+          
+
+        </div>
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#套接字编程"><span class="nav-number">1.</span> <span class="nav-text">套接字编程</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#套接字地址结构"><span class="nav-number">1.1.</span> <span class="nav-text">套接字地址结构</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#key-value参数"><span class="nav-number">1.2.</span> <span class="nav-text">key-value参数</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#字节排序函数"><span class="nav-number">1.3.</span> <span class="nav-text">字节排序函数</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#字节操纵函数"><span class="nav-number">1.4.</span> <span class="nav-text">字节操纵函数</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#地址转换函数"><span class="nav-number">1.5.</span> <span class="nav-text">地址转换函数</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#基于TCP的套接字编程"><span class="nav-number">2.</span> <span class="nav-text">基于TCP的套接字编程</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#socket函数"><span class="nav-number">2.1.</span> <span class="nav-text">socket函数</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#connect函数"><span class="nav-number">2.2.</span> <span class="nav-text">connect函数</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#bind函数"><span class="nav-number">2.3.</span> <span class="nav-text">bind函数</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#listen函数"><span class="nav-number">2.4.</span> <span class="nav-text">listen函数</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#accept函数"><span class="nav-number">2.5.</span> <span class="nav-text">accept函数</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#fork和exec函数"><span class="nav-number">2.6.</span> <span class="nav-text">fork和exec函数</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#并发服务器"><span class="nav-number">2.7.</span> <span class="nav-text">并发服务器</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#close函数"><span class="nav-number">2.8.</span> <span class="nav-text">close函数</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#getsockname函数和getpeername函数"><span class="nav-number">2.9.</span> <span class="nav-text">getsockname函数和getpeername函数</span></a></li></ol></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; <span itemprop="copyrightYear">2019</span>
+  <span class="with-love">
+    <i class="fa fa-Whitney"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">WhitneyLu</span>
+
+  
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item-icon">
+      <i class="fa fa-area-chart"></i>
+    </span>
+    
+      <span class="post-meta-item-text">Site words total count&#58;</span>
+    
+    <span title="Site words total count">54.3k</span>
+  
+</div>
+
+
+
+
+
+
+
+        
+<div class="busuanzi-count">
+  <script async src="https://dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+  
+    <span class="site-uv">
+      <i class="fa fa-user"></i>
+      <span class="busuanzi-value" id="busuanzi_value_site_uv"></span>
+      
+    </span>
+  
+
+  
+    <span class="site-pv">
+      <i class="fa fa-eye"></i>
+      <span class="busuanzi-value" id="busuanzi_value_site_pv"></span>
+      
+    </span>
+  
+</div>
+
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+          <span id="scrollpercent"><span>0</span>%</span>
+        
+      </div>
+    
+
+    
+      <div id="needsharebutton-float">
+        <span class="btn">
+          <i class="fa fa-share-alt" aria-hidden="true"></i>
+        </span>
+      </div>
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.4"></script>
+
+
+
+  
+  
+
+
+  <script type="text/javascript" src="/js/src/affix.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/schemes/pisces.js?v=5.1.4"></script>
+
+
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.4"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+  
+  
+  <link rel="stylesheet" href="/lib/needsharebutton/needsharebutton.css">
+
+  
+  
+  <script src="/lib/needsharebutton/needsharebutton.js"></script>
+
+  <script>
+    
+      pbOptions = {};
+      
+          pbOptions.iconStyle = "default";
+      
+          pbOptions.boxForm = "horizontal";
+      
+          pbOptions.position = "bottomCenter";
+      
+          pbOptions.networks = "Weibo,Wechat,Douban,QQZone,Twitter,Facebook";
+      
+      new needShareButton('#needsharebutton-postbottom', pbOptions);
+    
+    
+      flOptions = {};
+      
+          flOptions.iconStyle = "default";
+      
+          flOptions.boxForm = "vertical";
+      
+          flOptions.position = "topRight";
+      
+          flOptions.networks = "Weibo,Wechat,Douban,QQZone,Twitter,Facebook";
+      
+      new needShareButton('#needsharebutton-float', flOptions);
+    
+  </script>
+
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>
