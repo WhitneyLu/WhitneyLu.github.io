@@ -113,7 +113,7 @@
 <meta property="og:site_name" content="Whitney&#39;s coding note">
 <meta property="og:description" content="网络IO模型-四种网络IO模型、select/poll/epoll基本原理和异同点以及各自的优缺点">
 <meta property="og:locale" content="default">
-<meta property="og:updated_time" content="2019-06-10T06:43:51.655Z">
+<meta property="og:updated_time" content="2019-07-02T15:24:13.019Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="网络IO模型">
 <meta name="twitter:description" content="网络IO模型-四种网络IO模型、select/poll/epoll基本原理和异同点以及各自的优缺点">
@@ -367,7 +367,7 @@
                   <span class="post-meta-item-text">Words count in article&#58;</span>
                 
                 <span title="Words count in article">
-                  2k
+                  2.9k
                 </span>
               
 
@@ -383,7 +383,7 @@
                   <span class="post-meta-item-text">Reading time &asymp;</span>
                 
                 <span title="Reading time">
-                  7
+                  10
                 </span>
               
             </div>
@@ -412,6 +412,7 @@
 <li><strong>同步I/O</strong>是必须等待IO操作完成后，控制权才返回用户进程</li>
 <li><strong>异步I/O</strong>是无需等待IO操作完成就将控制权返回给用户进程</li>
 <li>一个网络IO涉及两个系统对象，当一个read操作发生时，会经历两个阶段：等待数据准备；将数据从内核拷贝到进程中</li>
+<li>常见的五种I/O模型如下所示</li>
 </ol>
 <h3 id="阻塞IO模型"><a href="#阻塞IO模型" class="headerlink" title="阻塞IO模型"></a>阻塞IO模型</h3><ol>
 <li>Linux中默认情况下，所有的socket都是默认阻塞的，大部分socket接口都是阻塞的</li>
@@ -420,9 +421,10 @@
 <li>使用pthread_creat()创建新线程，使用fork()创建新进程</li>
 <li>服务器实现一对多连接，主进程持续等待客户端的连接请求，如果有连接创建新线程</li>
 <li>使用线程池降低创建和销毁线程的频率，维持一定数量的线程</li>
+<li>如UDP，UDP数据准备好读取的概念比较简单，数据报已经收到或者没有</li>
 </ol>
 <h3 id="非阻塞IO模型"><a href="#非阻塞IO模型" class="headerlink" title="非阻塞IO模型"></a>非阻塞IO模型</h3><ol>
-<li>使用非阻塞模型来提高使用效率</li>
+<li>使用非阻塞模型来提高使用效率，应用进程对非阻塞描述符循环调用recv函数称为<strong>轮询</strong></li>
 <li><code>fcntl(fd, F_SETFL, O_NONBLOCK);</code></li>
 <li>recv()函数在被调用后立即返回</li>
 </ol>
@@ -440,20 +442,52 @@
 <li>writefds和exceptfds应该标记所有需要检测的可写数据和错误时间的的标记，使用FD_SET()</li>
 <li>用FD_ISSET()检查所有的标记位</li>
 <li>select不适合用来实现事件驱动</li>
+<li>select可以等待多个描述符就绪</li>
+</ol>
+<h3 id="信号驱动式I-O模型"><a href="#信号驱动式I-O模型" class="headerlink" title="信号驱动式I/O模型"></a>信号驱动式I/O模型</h3><ol>
+<li>内核在描述符就绪时发送SIGIO信号通知我们，然后可以启动一个I/O操作</li>
+<li>等待数据报到达期间，进程不被阻塞</li>
 </ol>
 <h3 id="异步IO模型"><a href="#异步IO模型" class="headerlink" title="异步IO模型"></a>异步IO模型</h3><ol>
 <li>用户发起read操作之后，开始做其他事，从内核的角度当他收到一个异步的read操作之后，立即返回，不会对用户进程产生任何阻塞，内核等待数据准备完成后，然后将数据拷贝到用户内存中，内核给用户进程发送一个信号，返回read操作已完成的信息</li>
+<li>异步I/O通知我们I/O操作已经完成了</li>
+<li>调用aio_read函数向内核传递描述符、缓冲区指针、缓冲区大小和文件偏移，并告诉内核当整个操作完成时怎么通知我们</li>
 </ol>
-<h3 id="select"><a href="#select" class="headerlink" title="select"></a>select</h3><figure class="highlight plain"><figcaption><span>select(int maxfdp, fd_set *readfds, fd_set *writefds, </span></figcaption><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">				fd_set *errorfds, struct timeval *timeout);</span><br><span class="line">				</span><br><span class="line">	/*fd_set是文件描述符集合*/</span><br><span class="line">	/*timeval有两个成员，一个是秒数，一个是毫秒数*/</span><br><span class="line">	/*maxfds是一个整数值，是集合中所有文件描述符的范围*/</span><br><span class="line">	/*readfds是指向fd_set结构的指针，如果集合中有一个文件可读，select就会返回一个大于0的值，如果没有可读文件的，根据timeout参数判断是否超时，如果超时返回0，如果发生错误返回负值*/</span><br><span class="line">	/*wretefds是指向fd_set结构的指针，监视文件描述符的写变化，如果集合中有文件可写，返回一个大于0的值，如果没有，根据timeout参数判断是否超时，如果超时返回0，如果发生错误返回负值*/</span><br><span class="line">	/*timeout是select的超时时间，如果引入NULL以形参传入，表示不传入时间结构，将select置为阻塞状态，知道文件集中的某个文件描述符发生变化位置</span><br><span class="line">	/*若将时间值设为0，变成非阻塞函数，不管文件描述符如何变化都立即返回，无变化返回0，有变化返回一个正值</span><br><span class="line">如果将timeout大于0，select在等待时间内阻塞，超时时间内有事件到来后返回，否则在超时后返回，超时返回0，出错返回-1*/</span><br></pre></td></tr></table></figure>
+<h3 id="select"><a href="#select" class="headerlink" title="select"></a>select</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br></pre></td><td class="code"><pre><span class="line">#include &lt;sys/select.h&gt;</span><br><span class="line">//头文件中的定义的FD_SETSIZE常值是数据类型fd_set中的描述符总数</span><br><span class="line">//函数的返回值是跨所有描述符集的已就绪的总位数</span><br><span class="line">int select(int maxfdp, fd_set *readfds, fd_set *writefds, </span><br><span class="line">				fd_set *errorfds, const struct timeval *timeout);</span><br><span class="line">				</span><br><span class="line">	/*fd_set是文件描述符集合*/</span><br><span class="line">	/*timeval有两个成员，一个是秒数，一个是毫秒数*/</span><br><span class="line">	/*maxfds是一个整数值，是集合中所有文件描述符的范围*/</span><br><span class="line">	/*readfds是指向fd_set结构的指针，如果集合中有一个文件可读，select就会返回一个大于0的值，如果没有可读文件的，根据timeout参数判断是否超时，如果超时返回0，如果发生错误返回负值*/</span><br><span class="line">	/*writefds是指向fd_set结构的指针，监视文件描述符的写变化，如果集合中有文件可写，返回一个大于0的值，如果没有，根据timeout参数判断是否超时，如果超时返回0，如果发生错误返回负值*/</span><br><span class="line">	/*errorfds指定异常条件描述符，套接字的带外数据到达，*/</span><br><span class="line">	/*timeout是select的超时时间，如果引入NULL以形参传入，表示不传入时间结构，将select置为阻塞状态，直到文件集中的某个文件描述符发生变化位置</span><br><span class="line">	/*若将时间值设为0，变成非阻塞函数，不管文件描述符如何变化都立即返回，无变化返回0，有变化返回一个正。如果将timeout大于0，select在等待时间内阻塞，超时时间内有事件到来后返回，否则在超时后返回，超时返回0，出错返回-1*/</span><br><span class="line"></span><br><span class="line">struct timeval&#123;</span><br><span class="line">	long tv_sec;</span><br><span class="line">	long tv_usec;</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line">/*select使用描述符集，通常是整数数组，所有的实现细节隐藏在宏和fd_set中，分配一个fd_set的描述符集，用一下的宏设置或者测试*/</span><br><span class="line">void FD_ZERO(fd_set *fdset);</span><br><span class="line">void FD_SET(int fd, fd_set *fdset);</span><br><span class="line">void FD_CLR(int fd, fd_set *fdset);</span><br><span class="line">void FD_ISSET(int fd, fd_set *fdset);</span><br></pre></td></tr></table></figure>
+<ol>
+<li>套接字准备好读：</li>
+</ol>
+<ul>
+<li>套接字接收缓冲区中的数据字节数大于等于套接字接收缓冲区低水位标记的当前大小，使用SO_RCVLOWAT套接字选项设置下限</li>
+<li>连接读的半部分关闭</li>
+<li>监听套接字的已完成连接数不为0</li>
+<li>套接字错误待处理</li>
+</ul>
+<ol start="2">
+<li>套接字准备好写：</li>
+</ol>
+<ul>
+<li>套接字接收缓冲区中的数据字节数大于等于套接字接收缓冲区低水位标记的当前大小并且该套接字已连接或不需要连接， 则将这个套接字设置为非阻塞</li>
+<li>连接的写操作的半个部分关闭</li>
+<li>使用非阻塞的connect的套接字已建立连接，或者connect以失败告终</li>
+<li>有套接字错误待处理</li>
+</ul>
+<ol start="3">
+<li>综合1、2，当套接字上发生错误时，select标记即可读又可写</li>
+<li>select的最大描述符数<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">#include &lt;sys/seclect.h&gt;</span><br><span class="line"></span><br><span class="line">#ifndefine FD_SETSIZE</span><br><span class="line">#define FD_SETSIZE 256</span><br><span class="line">#endif</span><br></pre></td></tr></table></figure>
+</li>
+</ol>
+<p>现在的Unix系统可以包含无线数目的描述符，而如果要是seclect适用，则需要修改FD_SIZE的值，需要重新编译</p>
 <h3 id="poll"><a href="#poll" class="headerlink" title="poll"></a>poll</h3><ol>
 <li><p>poll也能用来执行多路复用</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">#include &lt;poll.h&gt;</span><br><span class="line">int poll(struct pollfd *fds, unsigned int nfds, int timeout);</span><br><span class="line">		//timeout指定等待的毫秒数，无论IO是否准备好，poll都会返回</span><br><span class="line">		//timeout指定为负数值时，表示无限超时，poll一直挂起知道某件事发生</span><br><span class="line">		//timeout为0表示poll调用立即返回，并列出准备好IO的文件描述符</span><br><span class="line">		//调用成功，函数返回revents域中国不为0的文件描述符的个数</span><br><span class="line">		//如果在超时前没有任何事件发生，返回0，失败返回-1，并设置errno</span><br><span class="line">struct pollfd&#123;</span><br><span class="line">	int fd;</span><br><span class="line">	short events; //监视文件描述符的时间掩码，由用户来设置这个域的属性</span><br><span class="line">	short revents; //文件描述符的操作结果事件掩码，内核在调用返回时设置这个域</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line">#include &lt;poll.h&gt;</span><br><span class="line">int poll(struct pollfd *fds, unsigned int nfds, int timeout);</span><br><span class="line">		//timeout指定等待的毫秒数，无论IO是否准备好，poll都会返回</span><br><span class="line">		//timeout指定为负数值时，表示无限超时，poll一直挂起知道某件事发生</span><br><span class="line">		//timeout为0表示poll调用立即返回，并列出准备好IO的文件描述符</span><br><span class="line">		/*调用成功，函数返回revents域中国不为0的文件描述符的个数，在timeout等待时间结束，没有套接准备好返回0，调用失败返回-1*/</span><br><span class="line">		//如果在超时前没有任何事件发生，返回0，失败返回-1，并设置errno</span><br><span class="line">		//第一个参数是指向结构数组第一个元素的指针</span><br><span class="line">		//结构数组中的元素个数是由nfds参数指定的</span><br><span class="line">		//timeout指定poll函数返回前等待的时间，INFTIM表示永远等待（定义在&lt;pool.h&gt;中）</span><br><span class="line"></span><br><span class="line">struct pollfd&#123;</span><br><span class="line">	int fd;</span><br><span class="line">	short events; //监视文件描述符的时间掩码，由用户来设置这个域的属性</span><br><span class="line">	short revents; //文件描述符的操作结果事件掩码，内核在调用返回时设置这个域</span><br><span class="line">	//要测试的条件由events成员指定，函数在相应的revents成员中返回该描述符的状态</span><br><span class="line"></span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
 </li>
 <li><p>每个pollfd结构体指定一个被监视的文件描述符，可以传递多个结构体只是poll()监视多个文件描述符</p>
 </li>
 <li>在events域中请求的事件都有可能在revents中返回</li>
 <li>poll不需要显式的请求异常情况报告</li>
 <li>select所用的描述符集合是fd_set的结构体中，poll的描述符存放在pollfd数组中</li>
+<li>分配一个pollfd结构数组的并把数组中元素的数目通知内核是调用者的责任，内核不在需要一个fd_set固定值</li>
 </ol>
 <h3 id="epoll"><a href="#epoll" class="headerlink" title="epoll"></a>epoll</h3><ol>
 <li>epoll使用户一个文件描述符管理多个描述符，将用户关系的文件描述符的事件存放到内核的一个事件表中</li>
@@ -471,6 +505,16 @@
 <li>epoll优点：支持进程打开大数目的socket描述符，IO效率不随socket描述符的增加而线性下降，因为epoll只对活跃的socket进行操作，使用mmp加速内核与用户空间的信息传递，内核通过内核与用户空间mmap处于同一块内存实现的</li>
 <li>poll将用户传入的pollfd数组拷贝到内核空间的拷贝操作和数组长度相关，是O(n)操作，像用户空间拷贝数据和剥离等待队列等操作的时间也是O(0)</li>
 </ol>
+<h3 id="I-O复用"><a href="#I-O复用" class="headerlink" title="I/O复用"></a>I/O复用</h3><ol>
+<li>I/O复用的典型网络应用场景：</li>
+</ol>
+<ul>
+<li>客户处理多个描述符</li>
+<li>一个客户处理多个套接字</li>
+<li>TCP服务器既要处理监听套接字，又要处理已连接套接字</li>
+<li>服务器既要处理TCP又要处理UDP</li>
+<li>服务器要处理多个服务或者多个协议</li>
+</ul>
 
       
     </div>
@@ -695,7 +739,7 @@
             
 
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#网络IO模型"><span class="nav-number">1.</span> <span class="nav-text">网络IO模型</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#阻塞IO模型"><span class="nav-number">1.1.</span> <span class="nav-text">阻塞IO模型</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#非阻塞IO模型"><span class="nav-number">1.2.</span> <span class="nav-text">非阻塞IO模型</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#多路IO复用模型"><span class="nav-number">1.3.</span> <span class="nav-text">多路IO复用模型</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#异步IO模型"><span class="nav-number">1.4.</span> <span class="nav-text">异步IO模型</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#select"><span class="nav-number">1.5.</span> <span class="nav-text">select</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#poll"><span class="nav-number">1.6.</span> <span class="nav-text">poll</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#epoll"><span class="nav-number">1.7.</span> <span class="nav-text">epoll</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#select、poll和epoll的区别和各自的优缺点"><span class="nav-number">1.8.</span> <span class="nav-text">select、poll和epoll的区别和各自的优缺点</span></a></li></ol></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#网络IO模型"><span class="nav-number">1.</span> <span class="nav-text">网络IO模型</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#阻塞IO模型"><span class="nav-number">1.1.</span> <span class="nav-text">阻塞IO模型</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#非阻塞IO模型"><span class="nav-number">1.2.</span> <span class="nav-text">非阻塞IO模型</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#多路IO复用模型"><span class="nav-number">1.3.</span> <span class="nav-text">多路IO复用模型</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#信号驱动式I-O模型"><span class="nav-number">1.4.</span> <span class="nav-text">信号驱动式I/O模型</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#异步IO模型"><span class="nav-number">1.5.</span> <span class="nav-text">异步IO模型</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#select"><span class="nav-number">1.6.</span> <span class="nav-text">select</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#poll"><span class="nav-number">1.7.</span> <span class="nav-text">poll</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#epoll"><span class="nav-number">1.8.</span> <span class="nav-text">epoll</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#select、poll和epoll的区别和各自的优缺点"><span class="nav-number">1.9.</span> <span class="nav-text">select、poll和epoll的区别和各自的优缺点</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#I-O复用"><span class="nav-number">1.10.</span> <span class="nav-text">I/O复用</span></a></li></ol></li></ol></div>
             
 
           </div>
@@ -729,7 +773,7 @@
     
       <span class="post-meta-item-text">Site words total count&#58;</span>
     
-    <span title="Site words total count">55.4k</span>
+    <span title="Site words total count">56.3k</span>
   
 </div>
 
