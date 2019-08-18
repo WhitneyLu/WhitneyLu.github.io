@@ -78,6 +78,17 @@
       </tags>
   </entry>
   <entry>
+    <title><![CDATA[归并排序]]></title>
+    <url>%2F2019%2F05%2F30%2F%E5%BD%92%E5%B9%B6%E6%8E%92%E5%BA%8F%2F</url>
+    <content type="text"><![CDATA[归并排序 将两个已经排序的数组合并为顺序数组 如果两个数组没有排序，则使用分治法完成排序 分治法，将数组不断分为1/2，直到数组元素为1，则左右两段数组都是已排序 可以运行的归并排序代码123456789101112131415161718192021222324252627282930313233343536373839404142434445464748495051525354555657585960616263646566676869707172737475#include &lt;iostream&gt;#include &lt;vector&gt;using namespace std;void merge(vector&lt;int&gt;&amp; num, int M, int L, int R)&#123;int LEFT_SIZE=M-L;int RIGHT_SIZE=R-M+1;vector&lt;int&gt; left;vector&lt;int&gt; right;for(int i=L; i&lt;M; ++i)left.push_back(num[i]);for(int j=M; j&lt;=R; ++j)right.push_back(num[j]);int i=0;int j=0;int k=L;while(i&lt;LEFT_SIZE &amp;&amp; j&lt;RIGHT_SIZE)&#123;if(left[i]&lt;right[j])&#123;num[k]=left[i];++i;++k;&#125;else&#123;num[k]=right[j];++j;++k;&#125;&#125;while(i&lt;LEFT_SIZE)&#123;num[k]=left[i];++i;++k;&#125;while(j&lt;RIGHT_SIZE)&#123;num[k]=right[j];++j;++k;&#125;&#125;void merge_sort(vector&lt;int&gt;&amp; num, int L, int R)&#123;if(L==R)return;else&#123;int M=(L+R)/2;merge_sort(num,L,M);merge_sort(num,M+1,R);merge(num,M+1,L,R);&#125;&#125;int main()&#123;vector&lt;int&gt; num&#123;2,5,7,9,3,6,8,9&#125;;int L=0;int R=num.size()-1;merge_sort(num,L,R);for(auto c:num)cout&lt;&lt;c&lt;&lt;&quot; &quot;;cout&lt;&lt;endl;return 0;&#125;]]></content>
+      <categories>
+        <category>排序算法</category>
+      </categories>
+      <tags>
+        <tag>数据结构</tag>
+      </tags>
+  </entry>
+  <entry>
     <title><![CDATA[TCP和UDP的区别]]></title>
     <url>%2F2019%2F05%2F28%2FTCP%E5%92%8CUDP%E7%9A%84%E5%8C%BA%E5%88%AB%2F</url>
     <content type="text"><![CDATA[TCP和UDP的区别]]></content>
