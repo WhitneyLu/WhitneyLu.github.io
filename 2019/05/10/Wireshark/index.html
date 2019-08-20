@@ -94,7 +94,7 @@
 
 
 
-  <meta name="keywords" content="C++,技术，代码">
+  <meta name="keywords" content="计算机网络,">
 
 
 
@@ -105,13 +105,26 @@
 
 
 
-<meta property="og:type" content="website">
-<meta property="og:title" content="Whitney&#39;s coding note">
-<meta property="og:url" content="https://whitneylu.github.io/archives/page/2/index.html">
+<meta name="description" content="基本操作，以及通过Wireshark抓包简单分析ARP协议和TCP协议">
+<meta name="keywords" content="计算机网络">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Wireshark">
+<meta property="og:url" content="https://whitneylu.github.io/2019/05/10/Wireshark/index.html">
 <meta property="og:site_name" content="Whitney&#39;s coding note">
+<meta property="og:description" content="基本操作，以及通过Wireshark抓包简单分析ARP协议和TCP协议">
 <meta property="og:locale" content="default">
+<meta property="og:image" content="https://whitneylu.github.io/image/RTT-wireshark.png">
+<meta property="og:image" content="https://whitneylu.github.io/Users/luxinwei/Wireshark/I:O%20garph.png">
+<meta property="og:image" content="https://whitneylu.github.io/image/Flow.png">
+<meta property="og:image" content="https://whitneylu.github.io/image/ARP协议广播.png">
+<meta property="og:image" content="https://whitneylu.github.io/image/ARP响应.png">
+<meta property="og:image" content="https://whitneylu.github.io/image/TCP端口号.png">
+<meta property="og:image" content="https://whitneylu.github.io/image/TCP三次握手.png">
+<meta property="og:updated_time" content="2019-08-20T11:43:47.977Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="Whitney&#39;s coding note">
+<meta name="twitter:title" content="Wireshark">
+<meta name="twitter:description" content="基本操作，以及通过Wireshark抓包简单分析ARP协议和TCP协议">
+<meta name="twitter:image" content="https://whitneylu.github.io/image/RTT-wireshark.png">
 
 
 
@@ -141,13 +154,13 @@
 
 
 
-  <link rel="canonical" href="https://whitneylu.github.io/archives/page/2/">
+  <link rel="canonical" href="https://whitneylu.github.io/2019/05/10/Wireshark/">
 
 
 
 
 
-  <title>Archive | Whitney's coding note</title>
+  <title>Wireshark | Whitney's coding note</title>
   
 
 
@@ -166,7 +179,7 @@
     
   
 
-  <div class="container sidebar-position-left page-archive">
+  <div class="container sidebar-position-left page-post-detail">
     <div class="headband"></div>
 
     <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
@@ -260,391 +273,275 @@
           <div id="content" class="content">
             
 
-  
-  
-  
-  <div class="post-block archive">
-    <div id="posts" class="posts-collapse">
-      <span class="archive-move-on"></span>
+  <div id="posts" class="posts-expand">
+    
 
-      <span class="archive-page-counter">
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="https://whitneylu.github.io/2019/05/10/Wireshark/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="WhitneyLu">
+      <meta itemprop="description" content>
+      <meta itemprop="image" content="/images/nessa.png">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Whitney's coding note">
+    </span>
+
+    
+      <header class="post-header">
+
         
         
+          <h1 class="post-title" itemprop="name headline">Wireshark</h1>
         
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">Posted on</span>
+              
+              <time title="Post created" itemprop="dateCreated datePublished" datetime="2019-05-10T00:00:00+08:00">
+                2019-05-10
+              </time>
+            
+
+            
+
+            
+          </span>
+
           
-        
-        Um..! 25 posts in total. Keep on posting.
-      </span>
+            <span class="post-category">
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">In</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Wireshark/" itemprop="url" rel="index">
+                    <span itemprop="name">Wireshark</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+            <span class="post-meta-divider">|</span>
+            <span class="page-pv"><i class="fa fa-file-o"></i>
+            <span class="busuanzi-value" id="busuanzi_value_page_pv"></span>
+            </span>
+          
+
+          
+            <div class="post-wordcount">
+              
+                
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-file-word-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">Words count in article&#58;</span>
+                
+                <span title="Words count in article">
+                  534
+                </span>
+              
+
+              
+                <span class="post-meta-divider">|</span>
+              
+
+              
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-clock-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">Reading time &asymp;</span>
+                
+                <span title="Reading time">
+                  1
+                </span>
+              
+            </div>
+          
+
+          
+              <div class="post-description">
+                  基本操作，以及通过Wireshark抓包简单分析ARP协议和TCP协议
+              </div>
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
 
       
+      
 
+      
+        <h3 id="Wireshark"><a href="#Wireshark" class="headerlink" title="Wireshark"></a>Wireshark</h3><ol>
+<li>首先选择本地连接或者WiFi连接，获得抓包</li>
+<li><code>ip.addr==</code>筛选IP地址</li>
+<li><code>tcp.port==</code>筛选TCP连接的端口号</li>
+<li><code>!tcp</code>筛选所有非TCP连接</li>
+<li><code>frame.len&lt;=150</code>筛选数据包长度不超过150的</li>
+<li>获取三种不同的图形，查看RTT、抓包数量、协议信息等<br><img src="/image/RTT-wireshark.png" alt><br><img src="/Users/luxinwei/Wireshark/I:O garph.png" alt><br><img src="/image/Flow.png" alt></li>
+</ol>
+<h4 id="ARP协议"><a href="#ARP协议" class="headerlink" title="ARP协议"></a>ARP协议</h4><ol>
+<li>地址解析协议，将IP地址解析成MAC物理地址。完成链路层和网络层之间的通信</li>
+<li>IP地址位于网络层，MAC位于链路层</li>
+<li>请求方主机广播ARP请求，所有接收方都核对自己的IP地址，核对一致的主机将请求方的IP地址和MAC地址添加到自己的缓存列表里面，通过单播的形式将MAC地址和ARP响应消息返回到请求方，请求方将争取的IP地址和MAC地址添加到自己的缓存列表。其他主机丢弃请求</li>
+<li>ARP广播<br><img src="/image/ARP协议广播.png" alt><br>从上往下依次是：</li>
+</ol>
+<ul>
+<li>广播地址</li>
+<li>以太网源地址</li>
+<li>硬件类型</li>
+<li>协议类型</li>
+<li>硬件长度</li>
+<li>协议长度</li>
+<li>request(1)表示请求数据包</li>
+<li>发送方和接收方的的IP和MAC地址，未知目标的MAC地址以全0的形式显示</li>
+</ul>
+<ol start="5">
+<li>ARP响应<br><img src="/image/ARP响应.png" alt><br>对比广播，MAC地址已经确定了，reply(2)对应request表示响应</li>
+<li>免费ARP发送到主机中，强制使用新的MAC地址和IP地址映射来更新缓存。这种情况通常发生在系统引导期间进行接口配置和IP地址变化时的更新缓存</li>
+</ol>
+<h4 id="TCP"><a href="#TCP" class="headerlink" title="TCP"></a>TCP</h4><ol>
+<li>端口号<br><img src="/image/TCP端口号.png" alt></li>
+<li>三次握手<br><img src="/image/TCP三次握手.png" alt></li>
+<li>seq的值是前一个数据包的seq+len</li>
+<li>ACK确认号，也表示下一个要接收的seq的值</li>
+<li>TCP滑动窗口大小win</li>
+<li>ACK也可以更新要接收的数据包的大小，可以用来在服务器发生故障时设置客户端不在发送数据包，但是保持连接，客户端不断发送len=0的保活数据包进行检测，在服务器恢复之后可以重新发送数据</li>
+<li>TCP三次握手和TCP数据传输<a href="https://github.com/WhitneyLu/Wireshark.git" target="_blank" rel="noopener">https://github.com/WhitneyLu/Wireshark.git</a></li>
+</ol>
+
+      
+    </div>
+    
+    
+    
+
+    
+      <div>
+        <div id="wechat_subscriber" style="display: block; padding: 10px 0; margin: 20px auto; width: 100%; text-align: center">
+    <img id="wechat_subscriber_qcode" src="/images/wechat.jpg" alt="WhitneyLu wechat" style="width: 200px; max-width: 100%;">
+    <div>Contact me by scanning my public WeChat QR code</div>
+</div>
+
+
+      </div>
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/计算机网络/" rel="tag"><i class="fa fa-tag"></i> 计算机网络</a>
+          
+        </div>
+      
+
+      
+      
+        <div class="post-widgets">
         
-        
+
         
 
         
           
-          <div class="collection-title">
-            <h1 class="archive-year" id="archive-year-2019">2019</h1>
+          <div id="needsharebutton-postbottom">
+            <span class="btn">
+              <i class="fa fa-share-alt" aria-hidden="true"></i>
+            </span>
           </div>
         
-        
-
-        
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-    <header class="post-header">
-
-      <h2 class="post-title">
-        
-            <a class="post-title-link" href="/2019/05/25/TCP/" itemprop="url">
-              
-                <span itemprop="name">TCP</span>
-              
-            </a>
-        
-      </h2>
-
-      <div class="post-meta">
-        <time class="post-time" itemprop="dateCreated" datetime="2019-05-25T00:00:00+08:00" content="2019-05-25">
-          05-25
-        </time>
-      </div>
-
-    </header>
-  </article>
-
-
-
+        </div>
+      
       
 
-        
-        
-        
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2019/05/05/计算网络基础1/" rel="next" title="计算机网络基础1">
+                <i class="fa fa-chevron-left"></i> 计算机网络基础1
+              </a>
+            
+          </div>
 
-        
-        
+          <span class="post-nav-divider"></span>
 
-        
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-    <header class="post-header">
-
-      <h2 class="post-title">
-        
-            <a class="post-title-link" href="/2019/05/25/二叉树及完全二叉树实现的堆排序/" itemprop="url">
-              
-                <span itemprop="name">二叉树</span>
-              
-            </a>
-        
-      </h2>
-
-      <div class="post-meta">
-        <time class="post-time" itemprop="dateCreated" datetime="2019-05-25T00:00:00+08:00" content="2019-05-25">
-          05-25
-        </time>
-      </div>
-
-    </header>
-  </article>
-
-
-
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2019/05/15/HTTP/" rel="prev" title="HTTP协议">
+                HTTP协议 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
       
 
-        
-        
-        
-
-        
-        
-
-        
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-    <header class="post-header">
-
-      <h2 class="post-title">
-        
-            <a class="post-title-link" href="/2019/05/21/排序算法/" itemprop="url">
-              
-                <span itemprop="name">排序算法</span>
-              
-            </a>
-        
-      </h2>
-
-      <div class="post-meta">
-        <time class="post-time" itemprop="dateCreated" datetime="2019-05-21T00:00:00+08:00" content="2019-05-21">
-          05-21
-        </time>
-      </div>
-
-    </header>
-  </article>
-
-
-
       
-
-        
-        
-        
-
-        
-        
-
-        
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-    <header class="post-header">
-
-      <h2 class="post-title">
-        
-            <a class="post-title-link" href="/2019/05/15/HTTP/" itemprop="url">
-              
-                <span itemprop="name">HTTP协议</span>
-              
-            </a>
-        
-      </h2>
-
-      <div class="post-meta">
-        <time class="post-time" itemprop="dateCreated" datetime="2019-05-15T00:00:00+08:00" content="2019-05-15">
-          05-15
-        </time>
-      </div>
-
-    </header>
-  </article>
-
-
-
       
-
-        
-        
-        
-
-        
-        
-
-        
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-    <header class="post-header">
-
-      <h2 class="post-title">
-        
-            <a class="post-title-link" href="/2019/05/10/Wireshark/" itemprop="url">
-              
-                <span itemprop="name">Wireshark</span>
-              
-            </a>
-        
-      </h2>
-
-      <div class="post-meta">
-        <time class="post-time" itemprop="dateCreated" datetime="2019-05-10T00:00:00+08:00" content="2019-05-10">
-          05-10
-        </time>
-      </div>
-
-    </header>
-  </article>
-
-
-
-      
-
-        
-        
-        
-
-        
-        
-
-        
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-    <header class="post-header">
-
-      <h2 class="post-title">
-        
-            <a class="post-title-link" href="/2019/05/05/计算网络基础1/" itemprop="url">
-              
-                <span itemprop="name">计算机网络基础1</span>
-              
-            </a>
-        
-      </h2>
-
-      <div class="post-meta">
-        <time class="post-time" itemprop="dateCreated" datetime="2019-05-05T00:00:00+08:00" content="2019-05-05">
-          05-05
-        </time>
-      </div>
-
-    </header>
-  </article>
-
-
-
-      
-
-        
-        
-        
-
-        
-        
-
-        
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-    <header class="post-header">
-
-      <h2 class="post-title">
-        
-            <a class="post-title-link" href="/2019/04/28/Effective_C++_2/" itemprop="url">
-              
-                <span itemprop="name">Effective C++ 2</span>
-              
-            </a>
-        
-      </h2>
-
-      <div class="post-meta">
-        <time class="post-time" itemprop="dateCreated" datetime="2019-04-28T00:00:00+08:00" content="2019-04-28">
-          04-28
-        </time>
-      </div>
-
-    </header>
-  </article>
-
-
-
-      
-
-        
-        
-        
-
-        
-        
-
-        
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-    <header class="post-header">
-
-      <h2 class="post-title">
-        
-            <a class="post-title-link" href="/2019/04/22/Effective_C++_1/" itemprop="url">
-              
-                <span itemprop="name">Effective C++ 1</span>
-              
-            </a>
-        
-      </h2>
-
-      <div class="post-meta">
-        <time class="post-time" itemprop="dateCreated" datetime="2019-04-22T00:00:00+08:00" content="2019-04-22">
-          04-22
-        </time>
-      </div>
-
-    </header>
-  </article>
-
-
-
-      
-
-        
-        
-        
-
-        
-        
-
-        
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-    <header class="post-header">
-
-      <h2 class="post-title">
-        
-            <a class="post-title-link" href="/2019/04/20/程序间交互和通信/" itemprop="url">
-              
-                <span itemprop="name">程序间交互和通信</span>
-              
-            </a>
-        
-      </h2>
-
-      <div class="post-meta">
-        <time class="post-time" itemprop="dateCreated" datetime="2019-04-20T00:00:00+08:00" content="2019-04-20">
-          04-20
-        </time>
-      </div>
-
-    </header>
-  </article>
-
-
-
-      
-
-        
-        
-        
-
-        
-        
-
-        
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-    <header class="post-header">
-
-      <h2 class="post-title">
-        
-            <a class="post-title-link" href="/2019/04/12/Linux内存系统/" itemprop="url">
-              
-                <span itemprop="name">Intel Core i7/Linux内存系统</span>
-              
-            </a>
-        
-      </h2>
-
-      <div class="post-meta">
-        <time class="post-time" itemprop="dateCreated" datetime="2019-04-12T00:00:00+08:00" content="2019-04-12">
-          04-12
-        </time>
-      </div>
-
-    </header>
-  </article>
-
-
-
-      
-
-    </div>
+    </footer>
   </div>
   
   
   
+  </article>
 
-  
-  <nav class="pagination">
-    <a class="extend prev" rel="prev" href="/archives/"><i class="fa fa-angle-left"></i></a><a class="page-number" href="/archives/">1</a><span class="page-number current">2</span><a class="page-number" href="/archives/page/3/">3</a><a class="extend next" rel="next" href="/archives/page/3/"><i class="fa fa-angle-right"></i></a>
-  </nav>
+<script type="text/javascript" src="https://me.idealli.com/images/load.gif" data-src="/js/src/love.js"></script>
 
 
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
 
 
           </div>
@@ -652,6 +549,10 @@
 
 
           
+
+  
+
+
 
         </div>
         
@@ -672,8 +573,17 @@
       
 
       
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            Table of Contents
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            Overview
+          </li>
+        </ul>
+      
 
-      <section class="site-overview-wrap sidebar-panel sidebar-panel-active">
+      <section class="site-overview-wrap sidebar-panel">
         <div class="site-overview">
           <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
             
@@ -757,6 +667,22 @@
         </div>
       </section>
 
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#Wireshark"><span class="nav-number">1.</span> <span class="nav-text">Wireshark</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#ARP协议"><span class="nav-number">1.1.</span> <span class="nav-text">ARP协议</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#TCP"><span class="nav-number">1.2.</span> <span class="nav-text">TCP</span></a></li></ol></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
       
 
       
@@ -926,6 +852,10 @@
 
 
   
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.4"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.4"></script>
+
+
 
   
 
