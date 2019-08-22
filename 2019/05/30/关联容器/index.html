@@ -105,18 +105,18 @@
 
 
 
-<meta name="description" content="快速排序">
+<meta name="description" content="map、set、multimap、multiset、unodered_map">
 <meta name="keywords" content="数据结构">
 <meta property="og:type" content="article">
-<meta property="og:title" content="快速排序">
-<meta property="og:url" content="https://whitneylu.github.io/2019/05/31/快速排序/index.html">
+<meta property="og:title" content="关联容器">
+<meta property="og:url" content="https://whitneylu.github.io/2019/05/30/关联容器/index.html">
 <meta property="og:site_name" content="Whitney&#39;s coding note">
-<meta property="og:description" content="快速排序">
+<meta property="og:description" content="map、set、multimap、multiset、unodered_map">
 <meta property="og:locale" content="default">
-<meta property="og:updated_time" content="2019-08-18T08:37:03.876Z">
+<meta property="og:updated_time" content="2019-08-22T15:31:07.826Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="快速排序">
-<meta name="twitter:description" content="快速排序">
+<meta name="twitter:title" content="关联容器">
+<meta name="twitter:description" content="map、set、multimap、multiset、unodered_map">
 
 
 
@@ -146,13 +146,13 @@
 
 
 
-  <link rel="canonical" href="https://whitneylu.github.io/2019/05/31/快速排序/">
+  <link rel="canonical" href="https://whitneylu.github.io/2019/05/30/关联容器/">
 
 
 
 
 
-  <title>快速排序 | Whitney's coding note</title>
+  <title>关联容器 | Whitney's coding note</title>
   
 
 
@@ -279,7 +279,7 @@
   
   
   <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="https://whitneylu.github.io/2019/05/31/快速排序/">
+    <link itemprop="mainEntityOfPage" href="https://whitneylu.github.io/2019/05/30/关联容器/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="name" content="WhitneyLu">
@@ -296,7 +296,7 @@
 
         
         
-          <h1 class="post-title" itemprop="name headline">快速排序</h1>
+          <h1 class="post-title" itemprop="name headline">关联容器</h1>
         
 
         <div class="post-meta">
@@ -308,8 +308,8 @@
               
                 <span class="post-meta-item-text">Posted on</span>
               
-              <time title="Post created" itemprop="dateCreated datePublished" datetime="2019-05-31T00:00:00+08:00">
-                2019-05-31
+              <time title="Post created" itemprop="dateCreated datePublished" datetime="2019-05-30T00:00:00+08:00">
+                2019-05-30
               </time>
             
 
@@ -331,8 +331,8 @@
               
               
                 <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/排序算法/" itemprop="url" rel="index">
-                    <span itemprop="name">排序算法</span>
+                  <a href="/categories/关联容器/" itemprop="url" rel="index">
+                    <span itemprop="name">关联容器</span>
                   </a>
                 </span>
 
@@ -367,7 +367,7 @@
                   <span class="post-meta-item-text">Words count in article&#58;</span>
                 
                 <span title="Words count in article">
-                  216
+                  1.1k
                 </span>
               
 
@@ -383,7 +383,7 @@
                   <span class="post-meta-item-text">Reading time &asymp;</span>
                 
                 <span title="Reading time">
-                  1
+                  4
                 </span>
               
             </div>
@@ -391,7 +391,7 @@
 
           
               <div class="post-description">
-                  快速排序
+                  map、set、multimap、multiset、unodered_map
               </div>
           
 
@@ -408,16 +408,43 @@
       
 
       
-        <h3 id="快速排序"><a href="#快速排序" class="headerlink" title="快速排序"></a>快速排序</h3><ol>
-<li>选取数组的最后一个数为pivot，使数组的前半部分数都比pivot小，后半部分都比pivot大，在前后两个部分再进行排序</li>
-<li>快速排序的时间复杂度：</li>
+        <h2 id="关联容器"><a href="#关联容器" class="headerlink" title="关联容器"></a>关联容器</h2><h3 id="map"><a href="#map" class="headerlink" title="map"></a>map</h3><ol>
+<li>map类型通常被称为关联数组，关联数组下标不必是整数</li>
+<li>map下标运算符都支持一个索引，如果关键字不在map中，会为他创建一个元素并插入到map中，关联值进行值初始化</li>
+<li>关联容器也是模板，定义map必须指定关键字和值的类型</li>
+<li>定义map时，使用map的key需要定义operator&lt;</li>
+<li>map不允许两个元素拥有同样的键值</li>
+<li><p>map的所有元素都会根据键值自动排序，map的所有元素都是pair，从map中提取一个元素时，得到一个pair类型的对象，pair是一个模板类型，保存两个名为first和second的共有数据成员，map使用的pair用first保存关键字，second保存对应的值</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">//经典的使用关联数组的例子是单词计数程序</span><br><span class="line">map&lt;string,size_t&gt; word_count; //map word_count关键字类型是string，值得类型是size_t</span><br><span class="line">string word;</span><br><span class="line">while(cin&gt;&gt;word)</span><br><span class="line">    ++word_count[word];//提取word的计数器，并将其+1，使用string作为下标</span><br><span class="line">for(const suto &amp;w:word_count)//遍历map中的每个元素</span><br><span class="line">    cout&lt;&lt;w.first&lt;&lt;&quot;occurs&quot;&lt;&lt;w.second</span><br><span class="line">        &lt;&lt;((w.second&gt;1)?&quot;times&quot;:&quot;time&quot;)&lt;&lt;endl;</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>map底层是以红黑树数据结构实现的，根据中序遍历得到有序遍历</p>
+</li>
+<li>插入操作insert函数，调用红黑树的insert_unique函数，函数返回值类型pair&lt;iterator,bool&gt;，迭代器指向被插入的元素bool表明插入与否</li>
+<li>不重复容器find和count差不多</li>
+<li>对于包含不重复关键字的容器，添加单一元素的insert和emplace版本返回一个pair</li>
+<li>递增计数器：++ret.first-&gt;second//等价于++((ret.first)-&gt;second)</li>
+<li>通过传递给erase一个迭代器或者一个迭代器对来删除一个元素和一个元素范围，另一种erase操作，接受一个key_type参数，删除所有匹配给定关键字的元素，返回实际删除的元素的数量</li>
+<li>对于保存不重复关键字的容器，erase的返回值总是0或者1，若返回值为0，表示想要删除的元素不在容器内，对于允许重复关键字的容器，删除元素可能大于1</li>
+<li>允许重复的容器multimap，equal_range接受一个关键字，返回一个迭代器pair，first指向第一个元素，second指向最后一个匹配元素之后的位置（和lower_bond和upper_bond作用一样）</li>
 </ol>
-<ul>
-<li>平均：O(nlog2n)</li>
-<li>最有情况：O(nlogn)</li>
-<li>最坏情况：O(n^2)</li>
-</ul>
-<h4 id="可以运行的快速排序代码"><a href="#可以运行的快速排序代码" class="headerlink" title="可以运行的快速排序代码"></a>可以运行的快速排序代码</h4><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br></pre></td><td class="code"><pre><span class="line">#include &lt;iostream&gt;</span><br><span class="line">#include &lt;vector&gt;</span><br><span class="line">using namespace std;</span><br><span class="line"></span><br><span class="line">void quick_sort(vector&lt;int&gt;&amp; num, int beg, int end)</span><br><span class="line">&#123;</span><br><span class="line">if(beg&gt;=end)</span><br><span class="line">return;</span><br><span class="line"></span><br><span class="line">int key=num[end];</span><br><span class="line">int i=beg;</span><br><span class="line">int j=end;</span><br><span class="line">while(i!=j)</span><br><span class="line">&#123;</span><br><span class="line">while(num[i]&lt;=key &amp;&amp; i&lt;j)</span><br><span class="line">++i;</span><br><span class="line">swap(num[i],num[j]);</span><br><span class="line">while(num[j]&gt;=key &amp;&amp; i&lt;j)</span><br><span class="line">--j;</span><br><span class="line">swap(num[i],num[j]);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">quick_sort(num,beg,i-1);</span><br><span class="line">quick_sort(num,i+1,end);</span><br><span class="line">&#125;</span><br><span class="line">int main()</span><br><span class="line">&#123;</span><br><span class="line">vector&lt;int&gt; num&#123;2,1,7,9,3,6,8,5&#125;;</span><br><span class="line">quick_sort(num,0,7);</span><br><span class="line"></span><br><span class="line">for(auto c:num)</span><br><span class="line">cout&lt;&lt;c&lt;&lt;&quot; &quot;;</span><br><span class="line">cout&lt;&lt;endl;</span><br><span class="line">return 0;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h3 id="set"><a href="#set" class="headerlink" title="set"></a>set</h3><ol>
+<li>set所有元素会根据元素的键值自动排序</li>
+<li>set键值就是实值，实值就是键值，set类型不支持下标</li>
+<li>set不允许两个元素有两个相同的键值</li>
+<li>标准的STL set是以红黑树为低层机制</li>
+<li>set的关键字也是const，使用set迭代器不能修改元素的值</li>
+<li>multiset允许多个元素具有相同的关键字</li>
+<li>允许重复的容器使用count计数，如果不需要计数用find<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">//扩展单词计数程序，忽略常见单词</span><br><span class="line">map&lt;string,size_t&gt; word_count;</span><br><span class="line">set&lt;string&gt; exclude=&#123;&quot;The&quot;,&quot;But&quot;,&quot;And&quot;,&quot;Or&quot;,&quot;An&quot;,&quot;A&quot;,&quot;the&quot;,&quot;but&quot;,&quot;and&quot;,&quot;or&quot;,&quot;an&quot;,&quot;a&quot;&#125;;</span><br><span class="line">string word;</span><br><span class="line">while (cin&gt;&gt;word)</span><br><span class="line">     if(exclude.find(word)==exclude.end())//检查单词是否在忽略列表内</span><br><span class="line">        ++word_count[word];</span><br></pre></td></tr></table></figure>
+</li>
+</ol>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">vector&lt;int&gt; ivec;</span><br><span class="line">for(vector&lt;int&gt;::size_type i=0;i!=10;++i)&#123;</span><br><span class="line">    ivec.push_back(i);</span><br><span class="line">    ivec.push_back(i);</span><br><span class="line">&#125;</span><br><span class="line">set&lt;int&gt; iset(ivec.cbegin(),ivec.cend());//不重复元素</span><br><span class="line">multiset&lt;int&gt; miset(ivec.cbegin(),ivec.cend());//重复元素</span><br><span class="line">cout&lt;&lt;ivec.size()&lt;&lt;endl;</span><br><span class="line">cout&lt;&lt;iset.size()&lt;&lt;endl;</span><br><span class="line">cout&lt;&lt;miset.size()&lt;&lt;endl;</span><br></pre></td></tr></table></figure>
+<h3 id="unordered-map"><a href="#unordered-map" class="headerlink" title="unordered_map"></a>unordered_map</h3><ol>
+<li>无序映射的关联容器</li>
+<li>记录元素的hash值，根据key的hash值判断元素是否相同</li>
+<li>需要定义hash_value函数并且重载operator==</li>
+<li>leetcode49<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br></pre></td><td class="code"><pre><span class="line">#include &lt;iostream&gt;</span><br><span class="line">#include &lt;string&gt;</span><br><span class="line">#include &lt;vector&gt;</span><br><span class="line">#include &lt;unordered_map&gt;</span><br><span class="line">#include &lt;utility&gt;</span><br><span class="line">using namespace std;</span><br><span class="line"></span><br><span class="line">vector&lt;vector&lt;string&gt;&gt; groupAnagrams(vector&lt;string&gt;&amp; strs);</span><br><span class="line"></span><br><span class="line">int main() &#123;</span><br><span class="line">    vector&lt;string&gt; strs(&#123;&quot;ate&quot;,&quot;eat&quot;,&quot;tea&quot;,&quot;tan&quot;,&quot;nat&quot;,&quot;bat&quot;&#125;);</span><br><span class="line">    auto res=groupAnagrams(strs);</span><br><span class="line">    for(auto c:res)</span><br><span class="line">    &#123;</span><br><span class="line">        for(auto&amp; s:c)</span><br><span class="line">            cout&lt;&lt;s&lt;&lt;&quot; &quot;;</span><br><span class="line">        cout&lt;&lt;endl;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">vector&lt;vector&lt;string&gt;&gt; groupAnagrams(vector&lt;string&gt;&amp; strs) &#123;</span><br><span class="line">    vector&lt;vector&lt;string&gt;&gt; res;</span><br><span class="line">    unordered_map&lt;string,vector&lt;string&gt;&gt; m;</span><br><span class="line">    for(auto s:strs)</span><br><span class="line">    &#123;</span><br><span class="line">        string tmp=s;</span><br><span class="line">        sort(tmp.begin(), tmp.end());</span><br><span class="line">        m[tmp].push_back(s);</span><br><span class="line">    &#125;</span><br><span class="line">    for(auto c:m)</span><br><span class="line">        res.push_back(c.second);</span><br><span class="line">    return res;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+</li>
+</ol>
 
       
     </div>
@@ -472,8 +499,8 @@
         <div class="post-nav">
           <div class="post-nav-next post-nav-item">
             
-              <a href="/2019/05/30/归并排序/" rel="next" title="归并排序">
-                <i class="fa fa-chevron-left"></i> 归并排序
+              <a href="/2019/05/28/堆排序/" rel="next" title="堆排序">
+                <i class="fa fa-chevron-left"></i> 堆排序
               </a>
             
           </div>
@@ -482,8 +509,8 @@
 
           <div class="post-nav-prev post-nav-item">
             
-              <a href="/2019/06/09/网络IO模型/" rel="prev" title="网络IO模型">
-                网络IO模型 <i class="fa fa-chevron-right"></i>
+              <a href="/2019/05/30/归并排序/" rel="prev" title="归并排序">
+                归并排序 <i class="fa fa-chevron-right"></i>
               </a>
             
           </div>
@@ -642,7 +669,7 @@
             
 
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#快速排序"><span class="nav-number">1.</span> <span class="nav-text">快速排序</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#可以运行的快速排序代码"><span class="nav-number">1.1.</span> <span class="nav-text">可以运行的快速排序代码</span></a></li></ol></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#关联容器"><span class="nav-number">1.</span> <span class="nav-text">关联容器</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#map"><span class="nav-number">1.1.</span> <span class="nav-text">map</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#set"><span class="nav-number">1.2.</span> <span class="nav-text">set</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#unordered-map"><span class="nav-number">1.3.</span> <span class="nav-text">unordered_map</span></a></li></ol></li></ol></div>
             
 
           </div>
