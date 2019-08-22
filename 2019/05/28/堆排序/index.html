@@ -94,7 +94,7 @@
 
 
 
-  <meta name="keywords" content="计算机网络,">
+  <meta name="keywords" content="数据结构,">
 
 
 
@@ -105,26 +105,18 @@
 
 
 
-<meta name="description" content="基本操作，以及通过Wireshark抓包简单分析ARP协议和TCP协议">
-<meta name="keywords" content="计算机网络">
+<meta name="description" content="完全二叉树实现的堆排序">
+<meta name="keywords" content="数据结构">
 <meta property="og:type" content="article">
-<meta property="og:title" content="Wireshark">
-<meta property="og:url" content="https://whitneylu.github.io/2019/04/10/Wireshark/index.html">
+<meta property="og:title" content="二叉树2">
+<meta property="og:url" content="https://whitneylu.github.io/2019/05/28/堆排序/index.html">
 <meta property="og:site_name" content="Whitney&#39;s coding note">
-<meta property="og:description" content="基本操作，以及通过Wireshark抓包简单分析ARP协议和TCP协议">
+<meta property="og:description" content="完全二叉树实现的堆排序">
 <meta property="og:locale" content="default">
-<meta property="og:image" content="https://whitneylu.github.io/image/Wireshark/RTT-wireshark.png">
-<meta property="og:image" content="https://whitneylu.github.io/Users/luxinwei/Wireshark/I:O%20garph.png">
-<meta property="og:image" content="https://whitneylu.github.io/image/Wireshark/Flow.png">
-<meta property="og:image" content="https://whitneylu.github.io/image/Wireshark/ARP协议广播.png">
-<meta property="og:image" content="https://whitneylu.github.io/image/Wireshark/ARP响应.png">
-<meta property="og:image" content="https://whitneylu.github.io/image/Wireshark/TCP端口号.png">
-<meta property="og:image" content="https://whitneylu.github.io/image/Wireshark/TCP三次握手.png">
-<meta property="og:updated_time" content="2019-08-20T11:31:08.906Z">
+<meta property="og:updated_time" content="2019-08-22T13:19:46.193Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="Wireshark">
-<meta name="twitter:description" content="基本操作，以及通过Wireshark抓包简单分析ARP协议和TCP协议">
-<meta name="twitter:image" content="https://whitneylu.github.io/image/Wireshark/RTT-wireshark.png">
+<meta name="twitter:title" content="二叉树2">
+<meta name="twitter:description" content="完全二叉树实现的堆排序">
 
 
 
@@ -154,13 +146,13 @@
 
 
 
-  <link rel="canonical" href="https://whitneylu.github.io/2019/04/10/Wireshark/">
+  <link rel="canonical" href="https://whitneylu.github.io/2019/05/28/堆排序/">
 
 
 
 
 
-  <title>Wireshark | Whitney's coding note</title>
+  <title>二叉树2 | Whitney's coding note</title>
   
 
 
@@ -287,7 +279,7 @@
   
   
   <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="https://whitneylu.github.io/2019/04/10/Wireshark/">
+    <link itemprop="mainEntityOfPage" href="https://whitneylu.github.io/2019/05/28/堆排序/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="name" content="WhitneyLu">
@@ -304,7 +296,7 @@
 
         
         
-          <h1 class="post-title" itemprop="name headline">Wireshark</h1>
+          <h1 class="post-title" itemprop="name headline">二叉树2</h1>
         
 
         <div class="post-meta">
@@ -316,8 +308,8 @@
               
                 <span class="post-meta-item-text">Posted on</span>
               
-              <time title="Post created" itemprop="dateCreated datePublished" datetime="2019-04-10T00:00:00+08:00">
-                2019-04-10
+              <time title="Post created" itemprop="dateCreated datePublished" datetime="2019-05-28T00:00:00+08:00">
+                2019-05-28
               </time>
             
 
@@ -339,8 +331,8 @@
               
               
                 <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/Wireshark/" itemprop="url" rel="index">
-                    <span itemprop="name">Wireshark</span>
+                  <a href="/categories/排序算法/" itemprop="url" rel="index">
+                    <span itemprop="name">排序算法</span>
                   </a>
                 </span>
 
@@ -375,7 +367,7 @@
                   <span class="post-meta-item-text">Words count in article&#58;</span>
                 
                 <span title="Words count in article">
-                  534
+                  388
                 </span>
               
 
@@ -391,7 +383,7 @@
                   <span class="post-meta-item-text">Reading time &asymp;</span>
                 
                 <span title="Reading time">
-                  1
+                  2
                 </span>
               
             </div>
@@ -399,7 +391,7 @@
 
           
               <div class="post-description">
-                  基本操作，以及通过Wireshark抓包简单分析ARP协议和TCP协议
+                  完全二叉树实现的堆排序
               </div>
           
 
@@ -416,43 +408,19 @@
       
 
       
-        <h3 id="Wireshark"><a href="#Wireshark" class="headerlink" title="Wireshark"></a>Wireshark</h3><ol>
-<li>首先选择本地连接或者WiFi连接，获得抓包</li>
-<li><code>ip.addr==</code>筛选IP地址</li>
-<li><code>tcp.port==</code>筛选TCP连接的端口号</li>
-<li><code>!tcp</code>筛选所有非TCP连接</li>
-<li><code>frame.len&lt;=150</code>筛选数据包长度不超过150的</li>
-<li>获取三种不同的图形，查看RTT、抓包数量、协议信息等<br><img src="/image/Wireshark/RTT-wireshark.png" alt><br><img src="/Users/luxinwei/Wireshark/I:O garph.png" alt><br><img src="/image/Wireshark/Flow.png" alt></li>
-</ol>
-<h4 id="ARP协议"><a href="#ARP协议" class="headerlink" title="ARP协议"></a>ARP协议</h4><ol>
-<li>地址解析协议，将IP地址解析成MAC物理地址。完成链路层和网络层之间的通信</li>
-<li>IP地址位于网络层，MAC位于链路层</li>
-<li>请求方主机广播ARP请求，所有接收方都核对自己的IP地址，核对一致的主机将请求方的IP地址和MAC地址添加到自己的缓存列表里面，通过单播的形式将MAC地址和ARP响应消息返回到请求方，请求方将争取的IP地址和MAC地址添加到自己的缓存列表。其他主机丢弃请求</li>
-<li>ARP广播<br><img src="/image/Wireshark/ARP协议广播.png" alt><br>从上往下依次是：</li>
+        <h2 id="堆排序"><a href="#堆排序" class="headerlink" title="堆排序"></a>堆排序</h2><ol>
+<li>堆排序的最坏、最好和平均时间复杂度为O(nlogn)</li>
+<li>以数组来描述堆：以子节点求父节点=(i-1)/2，以父节点求子节点=2i+1 2i+2</li>
+<li>堆是完全二叉树</li>
+<li>堆的每个节点的值都大于等于/小于等于其左右子节点的值，a[i]&gt;=a[2i+1]&amp;&amp;a[i]&gt;=a[2i+2]</li>
+<li>堆排序：</li>
 </ol>
 <ul>
-<li>广播地址</li>
-<li>以太网源地址</li>
-<li>硬件类型</li>
-<li>协议类型</li>
-<li>硬件长度</li>
-<li>协议长度</li>
-<li>request(1)表示请求数据包</li>
-<li>发送方和接收方的的IP和MAC地址，未知目标的MAC地址以全0的形式显示</li>
+<li>堆化操作：完成每个子树的堆化</li>
+<li>从倒数第二层开始网上开始做堆化操作</li>
+<li>将堆顶的最大值移到末尾，将树长度-1，循环完成堆排序</li>
 </ul>
-<ol start="5">
-<li>ARP响应<br><img src="/image/Wireshark/ARP响应.png" alt><br>对比广播，MAC地址已经确定了，reply(2)对应request表示响应</li>
-<li>免费ARP发送到主机中，强制使用新的MAC地址和IP地址映射来更新缓存。这种情况通常发生在系统引导期间进行接口配置和IP地址变化时的更新缓存</li>
-</ol>
-<h4 id="TCP"><a href="#TCP" class="headerlink" title="TCP"></a>TCP</h4><ol>
-<li>端口号<br><img src="/image/Wireshark/TCP端口号.png" alt></li>
-<li>三次握手<br><img src="/image/Wireshark/TCP三次握手.png" alt></li>
-<li>seq的值是前一个数据包的seq+len</li>
-<li>ACK确认号，也表示下一个要接收的seq的值</li>
-<li>TCP滑动窗口大小win</li>
-<li>ACK也可以更新要接收的数据包的大小，可以用来在服务器发生故障时设置客户端不在发送数据包，但是保持连接，客户端不断发送len=0的保活数据包进行检测，在服务器恢复之后可以重新发送数据</li>
-<li>TCP三次握手和TCP数据传输<a href="https://github.com/WhitneyLu/Wireshark.git" target="_blank" rel="noopener">https://github.com/WhitneyLu/Wireshark.git</a></li>
-</ol>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br></pre></td><td class="code"><pre><span class="line">#include &lt;iostream&gt;</span><br><span class="line">#include &lt;vector&gt;</span><br><span class="line">using namespace std;</span><br><span class="line"></span><br><span class="line">void heap_sort(vector&lt;int&gt;&amp; tree, int&amp; n);</span><br><span class="line">void heap_build(vector&lt;int&gt;&amp; tree, int&amp; n);</span><br><span class="line">void heapify(vector&lt;int&gt;&amp; tree, int&amp; n, int i);</span><br><span class="line"></span><br><span class="line">int main() &#123;</span><br><span class="line">vector&lt;int&gt; tree&#123;1,4,10,5,8,3,7,2,9&#125;;</span><br><span class="line">int len=tree.size();</span><br><span class="line"></span><br><span class="line">heap_sort(tree,len);</span><br><span class="line"></span><br><span class="line">for(int i=0; i&lt;len; ++i)</span><br><span class="line">cout&lt;&lt;tree[i]&lt;&lt;&quot; &quot;;</span><br><span class="line"></span><br><span class="line">return 0;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">void heapify(vector&lt;int&gt;&amp; tree, int&amp; n, int i)</span><br><span class="line">&#123;</span><br><span class="line">if(i&gt;=n)</span><br><span class="line">return;</span><br><span class="line"></span><br><span class="line">int c1=2*i+1;</span><br><span class="line">int c2=2*i+2;</span><br><span class="line">int maxNum=i;</span><br><span class="line"></span><br><span class="line">if(c1&lt;n &amp;&amp; tree[c1]&gt;tree[maxNum])</span><br><span class="line">maxNum=c1;</span><br><span class="line"></span><br><span class="line">if(c2&lt;n &amp;&amp; tree[c2]&gt;tree[maxNum])</span><br><span class="line">maxNum=c2;</span><br><span class="line"></span><br><span class="line">if(maxNum!=i)</span><br><span class="line">&#123;</span><br><span class="line">swap(tree[maxNum],tree[i]);</span><br><span class="line">heapify(tree, n, maxNum);</span><br><span class="line">&#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">void heap_build(vector&lt;int&gt;&amp; tree, int&amp; n)</span><br><span class="line">&#123;</span><br><span class="line">int parent=(n-1)/2;</span><br><span class="line">for(int i=parent; i&gt;=0; --i)</span><br><span class="line">&#123;</span><br><span class="line">heapify(tree, n, i);</span><br><span class="line">&#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">void heap_sort(vector&lt;int&gt;&amp; tree, int&amp; n)</span><br><span class="line">&#123;</span><br><span class="line">heap_build(tree, n);</span><br><span class="line"></span><br><span class="line">for(int i=n-1; i&gt;=0; --i)</span><br><span class="line">&#123;</span><br><span class="line">swap(tree[i],tree[0]);</span><br><span class="line">heapify(tree, i, 0);</span><br><span class="line">&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 
       
     </div>
@@ -479,7 +447,7 @@
       
         <div class="post-tags">
           
-            <a href="/tags/计算机网络/" rel="tag"><i class="fa fa-tag"></i> 计算机网络</a>
+            <a href="/tags/数据结构/" rel="tag"><i class="fa fa-tag"></i> 数据结构</a>
           
         </div>
       
@@ -507,8 +475,8 @@
         <div class="post-nav">
           <div class="post-nav-next post-nav-item">
             
-              <a href="/2019/04/05/链接/" rel="next" title="链接">
-                <i class="fa fa-chevron-left"></i> 链接
+              <a href="/2019/05/28/TCP和UDP的区别/" rel="next" title="TCP和UDP的区别">
+                <i class="fa fa-chevron-left"></i> TCP和UDP的区别
               </a>
             
           </div>
@@ -517,8 +485,8 @@
 
           <div class="post-nav-prev post-nav-item">
             
-              <a href="/2019/04/10/虚拟内存/" rel="prev" title="虚拟内存">
-                虚拟内存 <i class="fa fa-chevron-right"></i>
+              <a href="/2019/05/30/归并排序/" rel="prev" title="归并排序">
+                归并排序 <i class="fa fa-chevron-right"></i>
               </a>
             
           </div>
@@ -600,7 +568,7 @@
               
                 <a href="/archives/">
               
-                  <span class="site-state-item-count">25</span>
+                  <span class="site-state-item-count">26</span>
                   <span class="site-state-item-name">posts</span>
                 </a>
               </div>
@@ -611,7 +579,7 @@
               
               <div class="site-state-item site-state-categories">
                 <a href="/categories/index.html">
-                  <span class="site-state-item-count">17</span>
+                  <span class="site-state-item-count">18</span>
                   <span class="site-state-item-name">categories</span>
                 </a>
               </div>
@@ -677,7 +645,7 @@
             
 
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#Wireshark"><span class="nav-number">1.</span> <span class="nav-text">Wireshark</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#ARP协议"><span class="nav-number">1.1.</span> <span class="nav-text">ARP协议</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#TCP"><span class="nav-number">1.2.</span> <span class="nav-text">TCP</span></a></li></ol></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#堆排序"><span class="nav-number">1.</span> <span class="nav-text">堆排序</span></a></li></ol></div>
             
 
           </div>
@@ -711,7 +679,7 @@
     
       <span class="post-meta-item-text">Site words total count&#58;</span>
     
-    <span title="Site words total count">62.9k</span>
+    <span title="Site words total count">63.6k</span>
   
 </div>
 

@@ -105,18 +105,25 @@
 
 
 
-<meta name="description" content="二叉树、二叉树四种遍历、二叉搜索树、完全二叉树实现的堆排序">
+<meta name="description" content="二叉树、二叉树四种遍历、二叉搜索树、平衡二叉搜索树、红黑树">
 <meta name="keywords" content="数据结构">
 <meta property="og:type" content="article">
 <meta property="og:title" content="二叉树">
 <meta property="og:url" content="https://whitneylu.github.io/2019/05/25/二叉树及完全二叉树实现的堆排序/index.html">
 <meta property="og:site_name" content="Whitney&#39;s coding note">
-<meta property="og:description" content="二叉树、二叉树四种遍历、二叉搜索树、完全二叉树实现的堆排序">
+<meta property="og:description" content="二叉树、二叉树四种遍历、二叉搜索树、平衡二叉搜索树、红黑树">
 <meta property="og:locale" content="default">
-<meta property="og:updated_time" content="2019-08-18T15:00:54.550Z">
+<meta property="og:image" content="https://whitneylu.github.io/image/单旋转.png">
+<meta property="og:image" content="https://whitneylu.github.io/image/双旋转.png">
+<meta property="og:image" content="https://whitneylu.github.io/image/状况1.png">
+<meta property="og:image" content="https://whitneylu.github.io/image/状况2.png">
+<meta property="og:image" content="https://whitneylu.github.io/image/状况3.png">
+<meta property="og:image" content="https://whitneylu.github.io/image/状况4.png">
+<meta property="og:updated_time" content="2019-08-22T13:17:56.100Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="二叉树">
-<meta name="twitter:description" content="二叉树、二叉树四种遍历、二叉搜索树、完全二叉树实现的堆排序">
+<meta name="twitter:description" content="二叉树、二叉树四种遍历、二叉搜索树、平衡二叉搜索树、红黑树">
+<meta name="twitter:image" content="https://whitneylu.github.io/image/单旋转.png">
 
 
 
@@ -331,8 +338,8 @@
               
               
                 <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/排序算法/" itemprop="url" rel="index">
-                    <span itemprop="name">排序算法</span>
+                  <a href="/categories/二叉树/" itemprop="url" rel="index">
+                    <span itemprop="name">二叉树</span>
                   </a>
                 </span>
 
@@ -367,7 +374,7 @@
                   <span class="post-meta-item-text">Words count in article&#58;</span>
                 
                 <span title="Words count in article">
-                  1.3k
+                  1.6k
                 </span>
               
 
@@ -383,7 +390,7 @@
                   <span class="post-meta-item-text">Reading time &asymp;</span>
                 
                 <span title="Reading time">
-                  6
+                  7
                 </span>
               
             </div>
@@ -391,7 +398,7 @@
 
           
               <div class="post-description">
-                  二叉树、二叉树四种遍历、二叉搜索树、完全二叉树实现的堆排序
+                  二叉树、二叉树四种遍历、二叉搜索树、平衡二叉搜索树、红黑树
               </div>
           
 
@@ -408,18 +415,17 @@
       
 
       
-        <h2 id="树"><a href="#树" class="headerlink" title="树"></a>树</h2><ol>
-<li>一个元素的度指的是孩子的个数</li>
-<li>一个树的度是指元素中度的最大值</li>
-<li>树的高度是树中级的个数</li>
-</ol>
-<h2 id="二叉树"><a href="#二叉树" class="headerlink" title="二叉树"></a>二叉树</h2><ol>
+        <h2 id="二叉树"><a href="#二叉树" class="headerlink" title="二叉树"></a>二叉树</h2><ol>
 <li>二叉树的每个元素都恰好有两颗子树（可以是一颗或者为空）</li>
 <li>二叉树中每个元素的子树是有顺序的，二叉树可以为空</li>
 <li>二叉树有n个元素，有n-1条边</li>
 <li>二叉树的高度是h，则至少有h个元素，至多有2^h-1个数据，此时称为满二叉树</li>
 <li>从二叉树中删除编号为2^h-i个元素，称为完全二叉树</li>
 <li>完全二叉树的重要特性：1）i=1，根；2）2i&gt;n，该元素无左子树；3）2i+1&gt;n，该元素无右子树</li>
+<li>根节点和任一节点之间有唯一路径</li>
+<li>根节点到任一节点的路径长度是该节点的深度，根节点深度永远是0</li>
+<li>节点至最深节点的路径长度是该节点的高度</li>
+<li>根节点的高度就是整棵树的高度</li>
 </ol>
 <h3 id="二叉树有四种遍历方法："><a href="#二叉树有四种遍历方法：" class="headerlink" title="二叉树有四种遍历方法："></a>二叉树有四种遍历方法：</h3><p>中序遍历是我们通常的书写形式，</p>
 <h4 id="前序遍历"><a href="#前序遍历" class="headerlink" title="前序遍历"></a>前序遍历</h4><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">template &lt;class T&gt;</span><br><span class="line">void preOrder(binaryTreeNode&lt;T&gt; *t)</span><br><span class="line">&#123;</span><br><span class="line">	if(t!=NULL)</span><br><span class="line">	&#123;</span><br><span class="line">		visit(t);</span><br><span class="line">		preOrder(t-&gt;leftChild);</span><br><span class="line">		preOrder(t-&gt;rightOrder);</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
@@ -431,20 +437,54 @@
 <li>根节点&gt;左节点 &amp;&amp; 根节点&lt;右节点</li>
 <li>二叉树搜索树的中序遍历可以实现排序 -&gt;amazing!</li>
 </ol>
-<h4 id="可以运行的四种遍历方法、二叉搜索树、获取树的高度和二叉搜索树的最大值"><a href="#可以运行的四种遍历方法、二叉搜索树、获取树的高度和二叉搜索树的最大值" class="headerlink" title="可以运行的四种遍历方法、二叉搜索树、获取树的高度和二叉搜索树的最大值"></a>可以运行的四种遍历方法、二叉搜索树、获取树的高度和二叉搜索树的最大值</h4><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br><span class="line">103</span><br><span class="line">104</span><br><span class="line">105</span><br><span class="line">106</span><br><span class="line">107</span><br><span class="line">108</span><br><span class="line">109</span><br><span class="line">110</span><br><span class="line">111</span><br><span class="line">112</span><br><span class="line">113</span><br><span class="line">114</span><br><span class="line">115</span><br><span class="line">116</span><br><span class="line">117</span><br><span class="line">118</span><br><span class="line">119</span><br><span class="line">120</span><br><span class="line">121</span><br><span class="line">122</span><br><span class="line">123</span><br><span class="line">124</span><br><span class="line">125</span><br><span class="line">126</span><br><span class="line">127</span><br><span class="line">128</span><br><span class="line">129</span><br><span class="line">130</span><br><span class="line">131</span><br><span class="line">132</span><br><span class="line">133</span><br><span class="line">134</span><br><span class="line">135</span><br><span class="line">136</span><br></pre></td><td class="code"><pre><span class="line">#include &lt;iostream&gt;</span><br><span class="line">#include &lt;vector&gt;</span><br><span class="line">#include &lt;stdlib.h&gt;</span><br><span class="line">#include &lt;algorithm&gt;</span><br><span class="line">using namespace std;</span><br><span class="line"></span><br><span class="line">typedef struct node&#123;</span><br><span class="line">    int data;</span><br><span class="line">    struct node* left;</span><br><span class="line">    struct node* right;</span><br><span class="line">&#125; Node;</span><br><span class="line"></span><br><span class="line">typedef struct &#123;</span><br><span class="line">    Node* root;</span><br><span class="line">&#125; Tree;</span><br><span class="line"></span><br><span class="line">//先序遍历</span><br><span class="line">void preOrder(Node* node)</span><br><span class="line">&#123;</span><br><span class="line">    if(node!=NULL)</span><br><span class="line">    &#123;</span><br><span class="line">        cout&lt;&lt;node-&gt;data&lt;&lt;endl;</span><br><span class="line">        preOrder(node-&gt;left);</span><br><span class="line">        preOrder(node-&gt;right);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line">//中序遍历</span><br><span class="line">void inOrder(Node* node)</span><br><span class="line">&#123;</span><br><span class="line">    if(node!=NULL)</span><br><span class="line">    &#123;</span><br><span class="line">        inOrder(node-&gt;left);</span><br><span class="line">        cout&lt;&lt;node-&gt;data&lt;&lt;endl;</span><br><span class="line">        inOrder(node-&gt;right);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">&#125;</span><br><span class="line">//后序遍历</span><br><span class="line">void posOrder(Node* node)</span><br><span class="line">&#123;</span><br><span class="line">    if(node!=NULL)</span><br><span class="line">    &#123;</span><br><span class="line">        posOrder(node-&gt;left);</span><br><span class="line">        posOrder(node-&gt;right);</span><br><span class="line">        cout&lt;&lt;node-&gt;data&lt;&lt;endl;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">void insert(Tree* tree, int value)</span><br><span class="line">&#123;</span><br><span class="line">    //创建一个新的节点</span><br><span class="line">    Node* node=new Node;</span><br><span class="line">    node-&gt;data=value;</span><br><span class="line">    node-&gt;left=NULL;</span><br><span class="line">    node-&gt;right=NULL;</span><br><span class="line"></span><br><span class="line">    if(tree-&gt;root==NULL)</span><br><span class="line">        tree-&gt;root=node;</span><br><span class="line">    else</span><br><span class="line">    &#123;</span><br><span class="line">        Node* temp=tree-&gt;root;</span><br><span class="line">        while(temp!=NULL)</span><br><span class="line">        &#123;</span><br><span class="line">            if(value&lt;temp-&gt;data)</span><br><span class="line">            &#123;</span><br><span class="line">                if(temp-&gt;left==NULL)&#123;</span><br><span class="line">                    temp-&gt;left=node;</span><br><span class="line">                    return;</span><br><span class="line">                &#125;</span><br><span class="line">                else</span><br><span class="line">                &#123;</span><br><span class="line">                    temp=temp-&gt;left;</span><br><span class="line">                &#125;</span><br><span class="line">            &#125; else&#123;</span><br><span class="line">                if(value&gt;temp-&gt;data)</span><br><span class="line">                &#123;</span><br><span class="line">                    if(temp-&gt;right==NULL)</span><br><span class="line">                    &#123;</span><br><span class="line">                        temp-&gt;right=node;</span><br><span class="line">                        return;</span><br><span class="line">                    &#125;</span><br><span class="line">                    else</span><br><span class="line">                        temp=temp-&gt;right;</span><br><span class="line">                &#125;</span><br><span class="line">            &#125;</span><br><span class="line"></span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">//获取二叉树的高度</span><br><span class="line">int get_height(Node* node)</span><br><span class="line">&#123;</span><br><span class="line">    if(node==NULL)</span><br><span class="line">        return 0;</span><br><span class="line"></span><br><span class="line">    else</span><br><span class="line">    &#123;</span><br><span class="line">        int left_height=get_height(node-&gt;left);</span><br><span class="line">        int right_height=get_height(node-&gt;right);</span><br><span class="line">        return max(left_height,right_height)+1;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">//寻找二叉搜索树的最大值，二叉树左边的最大值和右边的最大值之间的最大值</span><br><span class="line">int get_maximum(Node* node)</span><br><span class="line">&#123;</span><br><span class="line">    if(node==NULL)</span><br><span class="line">        return -1;</span><br><span class="line"></span><br><span class="line">    int m1=get_maximum(node-&gt;left);</span><br><span class="line">    int m2=get_maximum(node-&gt;right);</span><br><span class="line">    int m=max(m1,m2);</span><br><span class="line">    return max(m,node-&gt;data);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">int main()</span><br><span class="line">&#123;</span><br><span class="line">    vector&lt;int&gt; num&#123;6,3,8,2,5,1,7&#125;;</span><br><span class="line">    int len=num.size();</span><br><span class="line">    Tree tree;</span><br><span class="line">    tree.root=NULL;</span><br><span class="line"></span><br><span class="line">    for(int i=0; i&lt;len; ++i)</span><br><span class="line">        insert(&amp;tree,num[i]);</span><br><span class="line"></span><br><span class="line">    //inOrder(tree.root);</span><br><span class="line"></span><br><span class="line">    int height=get_height(tree.root);</span><br><span class="line">    cout&lt;&lt;height&lt;&lt;endl;</span><br><span class="line"></span><br><span class="line">    int maximum=get_maximum(tree.root);</span><br><span class="line">    cout&lt;&lt;maximum&lt;&lt;endl;</span><br><span class="line"></span><br><span class="line">    return 0;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<h2 id="堆排序"><a href="#堆排序" class="headerlink" title="堆排序"></a>堆排序</h2><ol>
-<li>堆排序的最坏、最好和平均时间复杂度为O(nlogn)</li>
-<li>以数组来描述堆：以子节点求父节点=(i-1)/2，以父节点求子节点=2i+1 2i+2</li>
-<li>堆是完全二叉树</li>
-<li>堆的每个节点的值都大于等于/小于等于其左右子节点的值，a[i]&gt;=a[2i+1]&amp;&amp;a[i]&gt;=a[2i+2]</li>
-<li>堆排序：</li>
+<h4 id="可以运行的四种遍历方法、二叉搜索树、获取树的高度和二叉搜索树的最大值"><a href="#可以运行的四种遍历方法、二叉搜索树、获取树的高度和二叉搜索树的最大值" class="headerlink" title="可以运行的四种遍历方法、二叉搜索树、获取树的高度和二叉搜索树的最大值"></a>可以运行的四种遍历方法、二叉搜索树、获取树的高度和二叉搜索树的最大值</h4><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br><span class="line">103</span><br><span class="line">104</span><br><span class="line">105</span><br><span class="line">106</span><br><span class="line">107</span><br><span class="line">108</span><br><span class="line">109</span><br><span class="line">110</span><br><span class="line">111</span><br><span class="line">112</span><br><span class="line">113</span><br><span class="line">114</span><br><span class="line">115</span><br><span class="line">116</span><br><span class="line">117</span><br><span class="line">118</span><br><span class="line">119</span><br><span class="line">120</span><br><span class="line">121</span><br><span class="line">122</span><br><span class="line">123</span><br><span class="line">124</span><br><span class="line">125</span><br><span class="line">126</span><br><span class="line">127</span><br><span class="line">128</span><br><span class="line">129</span><br><span class="line">130</span><br><span class="line">131</span><br><span class="line">132</span><br><span class="line">133</span><br><span class="line">134</span><br><span class="line">135</span><br></pre></td><td class="code"><pre><span class="line">#include &lt;iostream&gt;</span><br><span class="line">#include &lt;vector&gt;</span><br><span class="line">#include &lt;stdlib.h&gt;</span><br><span class="line">#include &lt;algorithm&gt;</span><br><span class="line">using namespace std;</span><br><span class="line"></span><br><span class="line">typedef struct node&#123;</span><br><span class="line">    int data;</span><br><span class="line">    struct node* left;</span><br><span class="line">    struct node* right;</span><br><span class="line">&#125; Node;</span><br><span class="line"></span><br><span class="line">typedef struct &#123;</span><br><span class="line">    Node* root;</span><br><span class="line">&#125; Tree;</span><br><span class="line"></span><br><span class="line">//先序遍历</span><br><span class="line">void preOrder(Node* node)</span><br><span class="line">&#123;</span><br><span class="line">    if(node!=NULL)</span><br><span class="line">    &#123;</span><br><span class="line">        cout&lt;&lt;node-&gt;data&lt;&lt;endl;</span><br><span class="line">        preOrder(node-&gt;left);</span><br><span class="line">        preOrder(node-&gt;right);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line">//中序遍历</span><br><span class="line">void inOrder(Node* node)</span><br><span class="line">&#123;</span><br><span class="line">    if(node!=NULL)</span><br><span class="line">    &#123;</span><br><span class="line">        inOrder(node-&gt;left);</span><br><span class="line">        cout&lt;&lt;node-&gt;data&lt;&lt;endl;</span><br><span class="line">        inOrder(node-&gt;right);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">&#125;</span><br><span class="line">//后序遍历</span><br><span class="line">void posOrder(Node* node)</span><br><span class="line">&#123;</span><br><span class="line">    if(node!=NULL)</span><br><span class="line">    &#123;</span><br><span class="line">        posOrder(node-&gt;left);</span><br><span class="line">        posOrder(node-&gt;right);</span><br><span class="line">        cout&lt;&lt;node-&gt;data&lt;&lt;endl;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">void insert(Tree* tree, int value)</span><br><span class="line">&#123;</span><br><span class="line">    //创建一个新的节点</span><br><span class="line">    Node* node=new Node;</span><br><span class="line">    node-&gt;data=value;</span><br><span class="line">    node-&gt;left=NULL;</span><br><span class="line">    node-&gt;right=NULL;</span><br><span class="line"></span><br><span class="line">    if(tree-&gt;root==NULL)</span><br><span class="line">        tree-&gt;root=node;</span><br><span class="line">    else</span><br><span class="line">    &#123;</span><br><span class="line">        Node* temp=tree-&gt;root;</span><br><span class="line">        while(temp!=NULL)</span><br><span class="line">        &#123;</span><br><span class="line">            if(value&lt;temp-&gt;data)</span><br><span class="line">            &#123;</span><br><span class="line">                if(temp-&gt;left==NULL)&#123;</span><br><span class="line">                    temp-&gt;left=node;</span><br><span class="line">                    return;</span><br><span class="line">                &#125;</span><br><span class="line">                else</span><br><span class="line">                &#123;</span><br><span class="line">                    temp=temp-&gt;left;</span><br><span class="line">                &#125;</span><br><span class="line">            &#125; else&#123;</span><br><span class="line">                if(value&gt;temp-&gt;data)</span><br><span class="line">                &#123;</span><br><span class="line">                    if(temp-&gt;right==NULL)</span><br><span class="line">                    &#123;</span><br><span class="line">                        temp-&gt;right=node;</span><br><span class="line">                        return;</span><br><span class="line">                    &#125;</span><br><span class="line">                    else</span><br><span class="line">                        temp=temp-&gt;right;</span><br><span class="line">                &#125;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">//获取二叉树的高度</span><br><span class="line">int get_height(Node* node)</span><br><span class="line">&#123;</span><br><span class="line">    if(node==NULL)</span><br><span class="line">        return 0;</span><br><span class="line"></span><br><span class="line">    else</span><br><span class="line">    &#123;</span><br><span class="line">        int left_height=get_height(node-&gt;left);</span><br><span class="line">        int right_height=get_height(node-&gt;right);</span><br><span class="line">        return max(left_height,right_height)+1;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">//寻找二叉搜索树的最大值，二叉树左边的最大值和右边的最大值之间的最大值</span><br><span class="line">int get_maximum(Node* node)</span><br><span class="line">&#123;</span><br><span class="line">    if(node==NULL)</span><br><span class="line">        return -1;</span><br><span class="line"></span><br><span class="line">    int m1=get_maximum(node-&gt;left);</span><br><span class="line">    int m2=get_maximum(node-&gt;right);</span><br><span class="line">    int m=max(m1,m2);</span><br><span class="line">    return max(m,node-&gt;data);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">int main()</span><br><span class="line">&#123;</span><br><span class="line">    vector&lt;int&gt; num&#123;6,3,8,2,5,1,7&#125;;</span><br><span class="line">    int len=num.size();</span><br><span class="line">    Tree tree;</span><br><span class="line">    tree.root=NULL;</span><br><span class="line"></span><br><span class="line">    for(int i=0; i&lt;len; ++i)</span><br><span class="line">        insert(&amp;tree,num[i]);</span><br><span class="line"></span><br><span class="line">    //inOrder(tree.root);</span><br><span class="line"></span><br><span class="line">    int height=get_height(tree.root);</span><br><span class="line">    cout&lt;&lt;height&lt;&lt;endl;</span><br><span class="line"></span><br><span class="line">    int maximum=get_maximum(tree.root);</span><br><span class="line">    cout&lt;&lt;maximum&lt;&lt;endl;</span><br><span class="line"></span><br><span class="line">    return 0;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h3 id="平衡二叉搜索树"><a href="#平衡二叉搜索树" class="headerlink" title="平衡二叉搜索树"></a>平衡二叉搜索树</h3><ol>
+<li>增加不同的平衡条件，二叉搜索树会表现出不同的效率</li>
+<li>根节点的左子树的左子节点和右子树的右子节点为外侧，左子树的右子节点和右子树的左子节点为内侧 </li>
+<li>插入点位于外侧，可以采用单旋转操作；插入点位于内侧，可以采用双旋转操作<br><img src="/image/单旋转.png" alt><br><img src="/image/双旋转.png" alt></li>
+<li>AVL tree条件：任何节点的左右子树高度最多相差1，即保证对数深度保持平衡</li>
+</ol>
+<h3 id="RB-tree-红黑树"><a href="#RB-tree-红黑树" class="headerlink" title="RB-tree(红黑树)"></a>RB-tree(红黑树)</h3><ol>
+<li>红黑树的规则</li>
 </ol>
 <ul>
-<li>堆化操作：完成每个子树的堆化</li>
-<li>从倒数第二层开始网上开始做堆化操作</li>
-<li>将堆顶的最大值移到末尾，将树长度-1，循环完成堆排序</li>
+<li>根节点是黑色的</li>
+<li>如果节点为红，则子节点必须为黑</li>
+<li>任一节点至树尾端的任何路径，所含的黑节点数必须相同</li>
+<li>新增节点必须为红，新增节点的父节点必须为黑，如果不能符合上述条件就必须调整颜色并旋转数型</li>
+<li>认为NULL节点为黑色</li>
 </ul>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br></pre></td><td class="code"><pre><span class="line">#include &lt;iostream&gt;</span><br><span class="line">#include &lt;vector&gt;</span><br><span class="line">using namespace std;</span><br><span class="line"></span><br><span class="line">void heap_sort(vector&lt;int&gt;&amp; tree, int&amp; n);</span><br><span class="line">void heap_build(vector&lt;int&gt;&amp; tree, int&amp; n);</span><br><span class="line">void heapify(vector&lt;int&gt;&amp; tree, int&amp; n, int i);</span><br><span class="line"></span><br><span class="line">int main() &#123;</span><br><span class="line">	vector&lt;int&gt; tree&#123;1,4,10,5,8,3,7,2,9&#125;;</span><br><span class="line">	int len=tree.size();</span><br><span class="line"></span><br><span class="line">	heap_sort(tree,len);</span><br><span class="line"></span><br><span class="line">	for(int i=0; i&lt;len; ++i)</span><br><span class="line">		cout&lt;&lt;tree[i]&lt;&lt;&quot; &quot;;</span><br><span class="line"></span><br><span class="line">	return 0;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">void heapify(vector&lt;int&gt;&amp; tree, int&amp; n, int i)</span><br><span class="line">&#123;</span><br><span class="line">	if(i&gt;=n)</span><br><span class="line">		return;</span><br><span class="line"></span><br><span class="line">	int c1=2*i+1;</span><br><span class="line">	int c2=2*i+2;</span><br><span class="line">	int maxNum=i;</span><br><span class="line">		</span><br><span class="line">	if(c1&lt;n &amp;&amp; tree[c1]&gt;tree[maxNum])</span><br><span class="line">		maxNum=c1;</span><br><span class="line"></span><br><span class="line">	if(c2&lt;n &amp;&amp; tree[c2]&gt;tree[maxNum])</span><br><span class="line">		maxNum=c2;</span><br><span class="line"></span><br><span class="line">	if(maxNum!=i)</span><br><span class="line">	&#123;</span><br><span class="line">		swap(tree[maxNum],tree[i]);</span><br><span class="line">		heapify(tree, n, maxNum);</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">void heap_build(vector&lt;int&gt;&amp; tree, int&amp; n)</span><br><span class="line">&#123;</span><br><span class="line">	int parent=(n-1)/2;</span><br><span class="line">	for(int i=parent; i&gt;=0; --i)</span><br><span class="line">	&#123;</span><br><span class="line">		heapify(tree, n, i);</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">void heap_sort(vector&lt;int&gt;&amp; tree, int&amp; n)</span><br><span class="line">&#123;</span><br><span class="line">	heap_build(tree, n);</span><br><span class="line"></span><br><span class="line">	for(int i=n-1; i&gt;=0; --i)</span><br><span class="line">	&#123;</span><br><span class="line">		swap(tree[i],tree[0]);</span><br><span class="line">		heapify(tree, i, 0);</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<ol start="2">
+<li>红黑树插入节点<br><img src="/image/状况1.png" alt><br><img src="/image/状况2.png" alt><br><img src="/image/状况3.png" alt><br><img src="/image/状况4.png" alt></li>
+<li>红黑树数据结构中有一个parent指针上溯到父节点</li>
+<li>成员函数</li>
+</ol>
+<ul>
+<li>get_node() 产生一个节点空间</li>
+<li>put_node()</li>
+<li>clone_node() 配置空间构造内容 </li>
+<li>destory_node() 析构内容释放内存</li>
+<li>root() 根节点</li>
+<li>minimum() 求取极小值</li>
+<li>maximum() 求取极大值</li>
+<li>begin() 红黑树最左边最小的节点</li>
+<li>end() 红黑树的终点为header所指处</li>
+<li>empty()</li>
+<li>size()</li>
+<li>max_size() return size_type(-1)</li>
+<li>insert_unique() 将x插入到红黑树中，保持节点独一无二</li>
+<li>insert_equal() 将x插入到红黑树中，允许节点重复</li>
+<li>find() 寻找红黑树中键值为k的节点</li>
+</ul>
+<ol start="5">
+<li><p>红黑树的构造</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">rb_tree&lt;int, int, identity&lt;int&gt;, less&lt;int&gt;&gt; itree; //指定节点的键值、实值大小比较标准</span><br><span class="line">rb_tree(const Compare&amp; comp=Compare()) : node_count(0), key_compare(comp) &#123;init();&#125;</span><br><span class="line">void init() &#123;</span><br><span class="line">	header = get_node();	//产生一个节点空间，令header指向它</span><br><span class="line">	color(header) = __rb_tree_red; //令header为红色</span><br><span class="line">	root=0;</span><br><span class="line">	leftmost()=header;</span><br><span class="line">	rightmost()=header;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>真正执行插入操作的函数<code>__insert(base_ptr x_. base_ptr y_, const Value&amp; v); //x_是新值插入点，参数y_是插入点的父节点，参数v是新值</code></p>
+</li>
+<li>调整红黑树，将树的状态调整到符合红黑树的要求，重新令树形平衡，x是新增节点<br><code>inline void __rb_tree_rebalance(__rb_tree_node_base* x, __rb_tree_node_base*&amp; root)</code></li>
+<li>左旋函数和右旋函数，新增节点必须是红节点，如果插入处的父节点也是红色，需要树形旋转<br><code>inline void __rb_tree_rotate_left(__rb_tree_node_base* x, __rb_tree_node_base*&amp; root);</code><br><code>inline void __rb_tree_rotate_right(__rb_tree_node_base* x, __rb_tree_node_base*&amp; root);</code></li>
+</ol>
 
       
     </div>
@@ -499,8 +539,8 @@
         <div class="post-nav">
           <div class="post-nav-next post-nav-item">
             
-              <a href="/2019/05/21/排序算法/" rel="next" title="排序算法">
-                <i class="fa fa-chevron-left"></i> 排序算法
+              <a href="/2019/05/25/TCP/" rel="next" title="TCP">
+                <i class="fa fa-chevron-left"></i> TCP
               </a>
             
           </div>
@@ -509,8 +549,8 @@
 
           <div class="post-nav-prev post-nav-item">
             
-              <a href="/2019/05/25/TCP/" rel="prev" title="TCP">
-                TCP <i class="fa fa-chevron-right"></i>
+              <a href="/2019/05/28/TCP和UDP的区别/" rel="prev" title="TCP和UDP的区别">
+                TCP和UDP的区别 <i class="fa fa-chevron-right"></i>
               </a>
             
           </div>
@@ -592,7 +632,7 @@
               
                 <a href="/archives/">
               
-                  <span class="site-state-item-count">25</span>
+                  <span class="site-state-item-count">26</span>
                   <span class="site-state-item-name">posts</span>
                 </a>
               </div>
@@ -603,7 +643,7 @@
               
               <div class="site-state-item site-state-categories">
                 <a href="/categories/index.html">
-                  <span class="site-state-item-count">17</span>
+                  <span class="site-state-item-count">18</span>
                   <span class="site-state-item-name">categories</span>
                 </a>
               </div>
@@ -669,7 +709,7 @@
             
 
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#树"><span class="nav-number">1.</span> <span class="nav-text">树</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#二叉树"><span class="nav-number">2.</span> <span class="nav-text">二叉树</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#二叉树有四种遍历方法："><span class="nav-number">2.1.</span> <span class="nav-text">二叉树有四种遍历方法：</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#前序遍历"><span class="nav-number">2.1.1.</span> <span class="nav-text">前序遍历</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#中序遍历"><span class="nav-number">2.1.2.</span> <span class="nav-text">中序遍历</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#后序遍历"><span class="nav-number">2.1.3.</span> <span class="nav-text">后序遍历</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#层次遍历"><span class="nav-number">2.1.4.</span> <span class="nav-text">层次遍历</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#visit函数"><span class="nav-number">2.1.5.</span> <span class="nav-text">visit函数</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#二叉搜索树BST"><span class="nav-number">2.2.</span> <span class="nav-text">二叉搜索树BST</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#可以运行的四种遍历方法、二叉搜索树、获取树的高度和二叉搜索树的最大值"><span class="nav-number">2.2.1.</span> <span class="nav-text">可以运行的四种遍历方法、二叉搜索树、获取树的高度和二叉搜索树的最大值</span></a></li></ol></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#堆排序"><span class="nav-number">3.</span> <span class="nav-text">堆排序</span></a></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#二叉树"><span class="nav-number">1.</span> <span class="nav-text">二叉树</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#二叉树有四种遍历方法："><span class="nav-number">1.1.</span> <span class="nav-text">二叉树有四种遍历方法：</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#前序遍历"><span class="nav-number">1.1.1.</span> <span class="nav-text">前序遍历</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#中序遍历"><span class="nav-number">1.1.2.</span> <span class="nav-text">中序遍历</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#后序遍历"><span class="nav-number">1.1.3.</span> <span class="nav-text">后序遍历</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#层次遍历"><span class="nav-number">1.1.4.</span> <span class="nav-text">层次遍历</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#visit函数"><span class="nav-number">1.1.5.</span> <span class="nav-text">visit函数</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#二叉搜索树BST"><span class="nav-number">1.2.</span> <span class="nav-text">二叉搜索树BST</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#可以运行的四种遍历方法、二叉搜索树、获取树的高度和二叉搜索树的最大值"><span class="nav-number">1.2.1.</span> <span class="nav-text">可以运行的四种遍历方法、二叉搜索树、获取树的高度和二叉搜索树的最大值</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#平衡二叉搜索树"><span class="nav-number">1.3.</span> <span class="nav-text">平衡二叉搜索树</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#RB-tree-红黑树"><span class="nav-number">1.4.</span> <span class="nav-text">RB-tree(红黑树)</span></a></li></ol></li></ol></div>
             
 
           </div>
@@ -703,7 +743,7 @@
     
       <span class="post-meta-item-text">Site words total count&#58;</span>
     
-    <span title="Site words total count">62.9k</span>
+    <span title="Site words total count">63.6k</span>
   
 </div>
 
