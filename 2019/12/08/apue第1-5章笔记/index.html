@@ -1,0 +1,1173 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next gemini use-motion" lang>
+<head><meta name="generator" content="Hexo 3.8.0">
+  <meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+<meta name="theme-color" content="#222">
+<meta name="google-site-verification" content="eaUMXvNaTlS5XY6VQbEb2OQ9XI-jGDm0VQvmNHMz5qI">
+<meta name="baidu-site-verification" content="8GfnZRBeT5">
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform">
+<meta http-equiv="Cache-Control" content="no-siteapp">
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css">
+
+
+
+
+  
+  
+  
+  
+
+  
+    
+    
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+    
+    
+    <link href="https://fonts.cat.net/css?family=Roboto Slab:300,300italic,400,400italic,700,700italic&subset=latin,latin-ext" rel="stylesheet" type="text/css">
+  
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css">
+
+<link href="/css/main.css?v=5.1.4" rel="stylesheet" type="text/css">
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=5.1.4">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=5.1.4" color="#222">
+
+
+
+
+
+  <meta name="keywords" content="操作系统,">
+
+
+
+
+
+
+
+
+
+
+<meta name="description" content="UNIX基础、文件IO、文件和目录、标准IO">
+<meta name="keywords" content="操作系统">
+<meta property="og:type" content="article">
+<meta property="og:title" content="UNIX高级环境编程1-5章笔记">
+<meta property="og:url" content="https://whitneylu.github.io/2019/12/08/apue第1-5章笔记/index.html">
+<meta property="og:site_name" content="Whitney&#39;s coding note">
+<meta property="og:description" content="UNIX基础、文件IO、文件和目录、标准IO">
+<meta property="og:locale" content="default">
+<meta property="og:image" content="https://whitneylu.github.io/image/4.19.png">
+<meta property="og:image" content="https://whitneylu.github.io/image/4.26.png">
+<meta property="og:image" content="https://whitneylu.github.io/image/图5-7.png">
+<meta property="og:image" content="https://whitneylu.github.io/image/图5-8.png">
+<meta property="og:image" content="https://whitneylu.github.io/image/内存流type.png">
+<meta property="og:updated_time" content="2019-12-07T16:25:03.787Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="UNIX高级环境编程1-5章笔记">
+<meta name="twitter:description" content="UNIX基础、文件IO、文件和目录、标准IO">
+<meta name="twitter:image" content="https://whitneylu.github.io/image/4.19.png">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Gemini',
+    version: '5.1.4',
+    sidebar: {"position":"left","display":"post","offset":12,"b2t":false,"scrollpercent":true,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    duoshuo: {
+      userId: '0',
+      author: 'Author'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="https://whitneylu.github.io/2019/12/08/apue第1-5章笔记/">
+
+
+
+
+
+  <title>UNIX高级环境编程1-5章笔记 | Whitney's coding note</title>
+  
+
+
+
+
+
+
+
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="default">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">Whitney's coding note</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle">Study as if you were going to live forever.</p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br>
+            
+            Home
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br>
+            
+            Tags
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br>
+            
+            Categories
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br>
+            
+            Archives
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="https://whitneylu.github.io/2019/12/08/apue第1-5章笔记/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="WhitneyLu">
+      <meta itemprop="description" content>
+      <meta itemprop="image" content="/images/nessa.png">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Whitney's coding note">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">UNIX高级环境编程1-5章笔记</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">Posted on</span>
+              
+              <time title="Post created" itemprop="dateCreated datePublished" datetime="2019-12-08T00:00:00+08:00">
+                2019-12-08
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category">
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">In</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/UNIX高级环境编程/" itemprop="url" rel="index">
+                    <span itemprop="name">UNIX高级环境编程</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+            <span class="post-meta-divider">|</span>
+            <span class="page-pv"><i class="fa fa-file-o"></i>
+            <span class="busuanzi-value" id="busuanzi_value_page_pv"></span>
+            </span>
+          
+
+          
+            <div class="post-wordcount">
+              
+                
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-file-word-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">Words count in article&#58;</span>
+                
+                <span title="Words count in article">
+                  6.1k
+                </span>
+              
+
+              
+                <span class="post-meta-divider">|</span>
+              
+
+              
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-clock-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">Reading time &asymp;</span>
+                
+                <span title="Reading time">
+                  22
+                </span>
+              
+            </div>
+          
+
+          
+              <div class="post-description">
+                  UNIX基础、文件IO、文件和目录、标准IO
+              </div>
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <h2 id="第一章-UNIX基础"><a href="#第一章-UNIX基础" class="headerlink" title="第一章 UNIX基础"></a>第一章 UNIX基础</h2><ol>
+<li>编译命令<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">cc myls.c</span><br></pre></td></tr></table></figure>
+</li>
+</ol>
+<p>在配置了GUN C的编译系统的系统中，C编译器是gcc(1),cc被链接到gcc</p>
+<ol start="2">
+<li>文件描述符是一个小的非负整数</li>
+<li><p>运行程序是，shell打开三个文件描述符，标准输入/标准输出/标准错误，不做特殊处理，这三个描述符都链接向终端，这三个描述符都能重新定向到某个文件</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">ls&gt;file.list//标准输出重新定向到某个文件</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>将程序编译成标准名称的a.out文件</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">./a.out &gt;data //标准输入是终端，标准输出重新定向至文件data，标准错误也是终端</span><br><span class="line">./a.out &lt;inflie&gt; outfile //将名为infile的文件复制到outfile中</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>fgets函数读取完整的行，read函数读取指定的字节数</p>
+</li>
+<li>标准I/O函数是printf，&lt;stdio.h&gt;包含所有标准I/O函数的原型</li>
+<li>getc函数一次读取一个字符，然后putc将此字符写到标准输出，读到输入的最后一个字节时，getc返回常量EOF</li>
+<li>标准IO常量stdin和stdout也在头文件&lt;stdio.h&gt;中定义</li>
+<li>UNIX保证程序进程有唯一的数字标识符，称为进程ID（非负整数）</li>
+<li>一个进程通常只有一个控制线程，如果有多线程解决不同的部分，可以充分利用多处理器系统的并行能力，一个进程的多个线程共享地址空间/文件描述符/栈等等</li>
+<li>线程ID仅在进程内起作用</li>
+<li>UNIX函数出错，通常返回一个负值，整型变量通常被设置为具有特定信息的值，如：整数或者常量字符（0/1/2/EOF/EACCES）</li>
+<li>关于errno：</li>
+</ol>
+<ul>
+<li>如果没有出错，值不会被例程清除</li>
+<li>任何函数都不会将errno的值设为0</li>
+</ul>
+<h2 id="第三章-文件I-O"><a href="#第三章-文件I-O" class="headerlink" title="第三章 文件I/O"></a>第三章 文件I/O</h2><ol>
+<li>I/O文件用到五个函数：open/read/write/lseek/close</li>
+<li>不带缓冲的I/O指的是每个read和write都调用内核中的一个系统调用</li>
+<li>文件描述符：</li>
+</ol>
+<ul>
+<li>所有打开的文件通过文件描述符引用</li>
+<li>open/creat函数将文件描述符作为参数传递给read/write</li>
+<li>文件描述符幻数通常用符号常量替换，符号常量在头文件&lt;unist.d&gt;定义</li>
+<li>文件描述符0与标准输入关联-STDIN_FILENO</li>
+<li>文件描述符1与标准输出关联-STDOUT_FILENO</li>
+<li>文件描述符2与标准错误关联-STDRR_FILENO</li>
+</ul>
+<h2 id="第四章-文件和目录"><a href="#第四章-文件和目录" class="headerlink" title="第四章 文件和目录"></a>第四章 文件和目录</h2><h3 id="stat结构中的成员代表文件的属性"><a href="#stat结构中的成员代表文件的属性" class="headerlink" title="stat结构中的成员代表文件的属性"></a>stat结构中的成员代表文件的属性</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">#include &lt;sys/stat.h&gt;</span><br><span class="line">//buf是一个指向必须提供的结构的指针，结构struct stat&#123;&#125;;</span><br><span class="line">int stat(const char *restrict pathname,struct stat *restrict buf);//pathname文件名</span><br><span class="line">int fstat(int fd,struct stat *buf);//fd是文件描述符</span><br><span class="line">int lstat(const char *restrict pathname,struct stat *restrict buf);//命名的文件是一个符号链接</span><br><span class="line">int fstatat(int fd,const char *restrict pathname,struct stat *restrict buf,int flag);</span><br></pre></td></tr></table></figure>
+<ul>
+<li>stat函数返回pathname有关的信息结构</li>
+<li>fstat在打开文件有关信息</li>
+<li>lstat返回符号链接有关信息</li>
+</ul>
+<h3 id="文件类型"><a href="#文件类型" class="headerlink" title="文件类型"></a>文件类型</h3><ul>
+<li>普通文件</li>
+<li>文件目录</li>
+<li>块特殊文件</li>
+<li>字符特殊文件</li>
+<li>FIFO：用于进程间通信</li>
+<li>套接字：用于进程间网络通信</li>
+<li>符号链接：指向另一个文件</li>
+</ul>
+<h3 id="文件访问权限"><a href="#文件访问权限" class="headerlink" title="文件访问权限"></a>文件访问权限</h3><p>进程打开/创建/删除一个文件时，内核进行文件访问权限测试，根据用户ID和进程组ID进行测试</p>
+<h3 id="函数umask为进程设置文件模式创建屏蔽字"><a href="#函数umask为进程设置文件模式创建屏蔽字" class="headerlink" title="函数umask为进程设置文件模式创建屏蔽字"></a>函数umask为进程设置文件模式创建屏蔽字</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">#include &lt;sys/stat.h&gt;</span><br><span class="line">mode_t umask(mode_t,cmask);</span><br><span class="line">//umask值通常在登录时由shell的启动文件设置一次</span><br><span class="line">//编写创建新文件程序式时，确保任何用户都能读文件(umask为0)，必须在进程运行时修改umask值</span><br></pre></td></tr></table></figure>
+<ul>
+<li>进程创建一个新的文件或者目录的时候，一定会使用文件模式创建屏蔽字</li>
+<li>文件模式创建屏蔽字中为1的位，在文件mode中的相应位一定会被关闭</li>
+</ul>
+<h3 id="函数chmod-fchmod-fchmodat更改现有的访问权限"><a href="#函数chmod-fchmod-fchmodat更改现有的访问权限" class="headerlink" title="函数chmod/fchmod/fchmodat更改现有的访问权限"></a>函数chmod/fchmod/fchmodat更改现有的访问权限</h3><ul>
+<li>chomd在制定的文件上操作</li>
+<li>fchomd对已经打开的文件进行操作</li>
+<li>改变文件权限位，进程的有效用户ID必须是文件所有者ID或者有超级用户权限</li>
+<li>在我自己的例子中不能设置，因为不是超级用户</li>
+</ul>
+<h3 id="粘着位-S-ISVTX"><a href="#粘着位-S-ISVTX" class="headerlink" title="粘着位 S_ISVTX"></a>粘着位 S_ISVTX</h3><ol>
+<li>设置了粘着位之后，文件的正文被保存在交换区，交换区作为连续文件处理，在下次执行该程序时，可以较快的装载入内存</li>
+<li>后来被称为<strong>保存正文位</strong></li>
+<li>现在的Unix系统都配置了虚拟内存系统以及快速文件系统</li>
+<li>允许目录使用粘着位，允许对该目录具有写权限且是一下三种之一的用户来能删除或重命名该目录下的文件，拥有此文件、拥有此目录、超级用户</li>
+<li>在solaris 10中，如果对普通文件设置了粘着位，如果执行位没有任何设置，操作系统不会缓存文件内容</li>
+</ol>
+<h3 id="函数chown，fchown、fchownat、lchown"><a href="#函数chown，fchown、fchownat、lchown" class="headerlink" title="函数chown，fchown、fchownat、lchown"></a>函数chown，fchown、fchownat、lchown</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">#include &lt;unistd.h&gt;</span><br><span class="line">int chown(const char *pathname, uid_t owner, gid_t group);</span><br><span class="line">/*参数fd指向打开的文件的所有者，不能改变符号链接的所有者*/</span><br><span class="line">int fchown(int fd, uid_t owner, gid_t group);</span><br><span class="line">/*如果fd参数设置为打开目录的描述符，且pathname是一个相对路径名，函数计算相对于打开目录的pathname*/</span><br><span class="line">int fchownat(int fd, const char *pathname, uid_t owner, gid_t groupl, int flag);</span><br><span class="line">/*pathname是绝对路径或者fd参数所取的AT_FDCWD而pathname是相对路径，</span><br><span class="line">此时flag参数设置了AT_SYMLINK_NOFOLLOW与lchown函数一样；</span><br><span class="line">如果flag参数清除了AT_SYMLINK_NOFOLLOW标志，则函数和chown行为相同*/</span><br><span class="line">int lchown(const char *pathname, uid_t owner, gid_t group);</span><br></pre></td></tr></table></figure>
+<ol>
+<li>这几个chown函数可以修改文件的用户ID和组ID，如果两个参数owner或group中的任意一个为-1，对应ID不变</li>
+<li>引用的文件是符号链接的情况下，函数lchown和fchwnat设置的AT_SYMLINK_NOFOLLOW更改符号链接本身的所有者而不是符号链接指向的所有者</li>
+<li>_POSIX_CHOWN_RESTRICTED常量定义在头文件<code>&lt;unistd.h&gt;</code>中，设置更改文件的所有者是超级用户还是所有用户，可以通过pathconf或者fpathconf函数进行查询</li>
+<li>若_POSIX_CHOWN_RESTRICTED对指定文件生效，则只有超级用户进程能更改该文件的用户ID；进程拥有该文件，参数owner==-1或文件的用户ID，并且参数group等于进程的有效组ID或进程的附属组ID之一，此时，非超级用户也可更改文件的用户ID</li>
+<li>当_POSIX_CHOWN_RESTRICTED生效时不能更改其他文件的用户ID</li>
+</ol>
+<h3 id="文件长度"><a href="#文件长度" class="headerlink" title="文件长度"></a>文件长度</h3><ol>
+<li>stat结构成员st_size表示以字节为单位的文件长度，只对普通文件，文件目录和符号链接有意义，文件长度不包含结尾的null字节</li>
+<li>对于文件目录，文件长度通常是16或者512的整倍数</li>
+<li>现代UNIX系统提供字段s_blksize文件I/O适合的块长度和st_blocks分配的实际512字节块块数</li>
+<li>不同版本的s_blksize并不都是可移植的，因此使用512是不可移植的</li>
+<li>普通文件可以包含空洞</li>
+<li><code>du -s core</code>Linux中，如果设置了<code>POSIXLY_CORRECT</code>du报告的块的大下是1024，否则就是512</li>
+<li><code>wc -c core</code>看出正常的I/O操作读整个文件长度，如果使用实用程序复制整个文件，<code>cat core &gt; core.copy</code>所有实际数据字节被填写为0，所有空洞都被填满</li>
+</ol>
+<h3 id="文件截断"><a href="#文件截断" class="headerlink" title="文件截断"></a>文件截断</h3><ol>
+<li>打开文件时使用O_TRUNC可以将文件截断为0<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">/*截断文件可以调用一下两个函数*/</span><br><span class="line">/*将现有文件长度截断为length，如果以前长度没有length则增加到length多的为0也可以是在文件中创建一个空洞*/</span><br><span class="line">#include &lt;unsitd.h&gt;</span><br><span class="line">int truncate(const char *pathname, off_t length);</span><br><span class="line">int ftruncate(int fd, off_t length);</span><br></pre></td></tr></table></figure>
+</li>
+</ol>
+<h3 id="文件系统"><a href="#文件系统" class="headerlink" title="文件系统"></a>文件系统</h3><ol>
+<li>大部分unix文件系统支持大小写敏感的文件名，HFS是大小写保留的且是大小写不敏感的</li>
+<li>将磁盘多个区分为不同的文件系统，i节点是固定长度的记录项包含文件的大部分信息</li>
+<li>多个目录项指向i节点，每个i节点都有一个链接计数，当链接计数至少为0时才能删除文件，解除文件链接并不代表删除文件</li>
+<li>删除目录项的函数unlink，在stat结构中链接计数记录在st_nlink成员中，基本数据类型时nlink_t，这种链接称为<strong>硬链接</strong></li>
+<li>LINK_MAX指明一个文件链接数的最大值</li>
+<li>另一种类型是<strong>符号链接</strong>，符号链接文件的实际内容在数据块中，包含了符号链接所指向的文件的名字</li>
+<li>i节点的文件类型是S_IFLINK系统知道这是一个文件链接</li>
+<li>i节点包含文件有关的所有信息：文件类型、文件访问权限位、文件长度和指向文件的数据块的指针</li>
+<li>stat结构中的大多数信息都取自i节点</li>
+<li>目录项中的两个重要数据：文件名和i节点编号，i节点编号的数据类型是ino_t</li>
+<li>目录项中的i节点编号指向<strong>同一个文件系统的i节点</strong>，<code>ln</code>构造一个指向现有文件的新目录，不能跨越文件系统</li>
+<li>在不更换文件系统的情况下给文件重命名，则文件内容不会移动，这是<code>mv</code>的操作方式</li>
+<li>在工作目录中构造一个新的目录<code>mkdir testdir</code></li>
+<li>任何一个叶目录（不包含其他目录的目录），父目录中每一个目录都使得父目录的链接计数+1</li>
+</ol>
+<h3 id="函数link、linkat、unlink、unlinkat、remove"><a href="#函数link、linkat、unlink、unlinkat、remove" class="headerlink" title="函数link、linkat、unlink、unlinkat、remove"></a>函数link、linkat、unlink、unlinkat、remove</h3><ol>
+<li><p>创建一个指向现有文件的链接的方法，使用link函数或linkat函数</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">#include &lt;unistd.h&gt;</span><br><span class="line">/*创建新目录项newpath，引用现有文件existingpath，如果newpath已经存在，则返回出错*/</span><br><span class="line">int link(const char *existingpath, const char newpath);</span><br><span class="line">/*现有文件通过efd和existingpath参数指定的，新的路径名是nfd和newpath*/</span><br><span class="line">int linkat(int efd, const char *existingpath, int nfd, const char *newpath, int flag);</span><br><span class="line">/*1）如果两个路径名中有任意一个是相对路径，通过对应的文件描述符进行计算</span><br><span class="line">2）如果两个文件描述符中的任一设置为AT_FDCWD，路径名就相对于当前目录进行计算</span><br><span class="line">3）如果任一路径是绝对路径，则相对的文件描述符就会被忽略</span><br><span class="line">现有文件是符号链接时，flag参数控制linkat函数，</span><br><span class="line">如果flag被设置了AT_SYMLINK_FOLLOW标志位，则创建符号链接的目标的链接，</span><br><span class="line">如果这个标志被清除了，则创建符号链接本身的连接*/</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>创建新目录项和增加链接计数应该是原子操作</p>
+</li>
+<li><p>很多文件系统实现不允许对于目录的硬链接</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">#include &lt;unistd.h&gt;</span><br><span class="line">/*删除现有的目录项可以调用unlink函数*/</span><br><span class="line">/*删除目录项并将pathname引用的文件链接计数-1，如果出错则不对文件进行修改*/</span><br><span class="line">/*要解除对文件的链接必须要包含该目录项的目录具有写和执行的权限*/</span><br><span class="line">/*进程打开或者链接计数大于0则文件不能删除*/</span><br><span class="line">int unlink(const char *path);</span><br><span class="line">/*pathname是相对路径名，函数计算fd文件描述符参数表示的目录的路径名</span><br><span class="line">如果fd被设置为AT_FDCWD，调用进程当前工作目录来计算路径名</span><br><span class="line">如果pathname是绝对路径，fd参数被忽略*/</span><br><span class="line">/*flag参数设置标志位AT_REMOVEDIR，函数unlinkat像rmdir一样删除目录，如果标志被移除，unlinkat和unlink操作一致*/</span><br><span class="line">int unlinkat(int fd, const char *pathname, int flag);</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>使用remove来解除对一个文件或者目录的链接，对于目录，remove和rmdir功能一致</p>
+</li>
+</ol>
+<h3 id="函数rename和renameat"><a href="#函数rename和renameat" class="headerlink" title="函数rename和renameat"></a>函数rename和renameat</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">#include &lt;stdio.h&gt;</span><br><span class="line">/*参数oldname可以是文件、目录和符号链接*/</span><br><span class="line">int rename(const char *oldname, const char *newname);</span><br><span class="line">int renameat(int oldfd, const char *oldname, int newfd, const char *newname);</span><br></pre></td></tr></table></figure>
+<h3 id="符号链接"><a href="#符号链接" class="headerlink" title="符号链接"></a>符号链接</h3><ol>
+<li>使用符号链接可以避开硬链接要求链接和文件处于同一个文件系统下，只有超级用户才能创建一个指向目录的硬链接，</li>
+<li>函数是否处理符号链接，第四章中跟随符号链接的函数：access/chdir/chmod/creat/exec/link/open/opendir/pathconf/stat/truncate</li>
+<li>link函数不允许构造指向目录的硬链接</li>
+</ol>
+<h3 id="创建和读取符号链接"><a href="#创建和读取符号链接" class="headerlink" title="创建和读取符号链接"></a>创建和读取符号链接</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">/*可以用symlink或symlinkat函数创建一个符号链接*/</span><br><span class="line">#include &lt;unistd.h&gt;</span><br><span class="line">/*函数创建一个指向actualpath的新目录项sympath，不要求actualpath已经存在*/</span><br><span class="line">int symlink(const char *actualpath, const char *sympath);</span><br><span class="line">/*由fd指定的相当目录计算sympath参数*/</span><br><span class="line">int symlinkat(const char *actualpath, int fd, const char *sympath);</span><br><span class="line"></span><br><span class="line">/*打开链接并读链接中的名字*/</span><br><span class="line">/*如果成功则返回读入buf中的字节数，在buf中返回的符号链接内容不以null字节终止*/</span><br><span class="line">ssize_t readlink(const char *restrict pathname, char *restrict buf, size_t bufsize);</span><br><span class="line">ssize_t readlinkat(int fd, const char *restrict pathname, char *restrict buf, size_t bufsize);</span><br></pre></td></tr></table></figure>
+<h3 id="文件的时间"><a href="#文件的时间" class="headerlink" title="文件的时间"></a>文件的时间</h3><p><img src="/image/4.19.png" alt></p>
+<ol>
+<li>每个文件维护三个时间字段</li>
+<li>影响i节点的操作：更改文件的访问权限、更改用户ID、更改链接</li>
+<li>access和stat函数并不更改这三个时间中的另一个</li>
+<li>find命令用来对一定范围内按访问时间归档的的文件进行操作</li>
+<li><code>ls -l或ls -t</code>系统默认对文件修改时间进行排序，<code>ls -u</code>按照访问时间进行排序，<code>ls -c</code>按状态修改时间进行排序</li>
+<li>读写一个文件只影响该文件的i节点，对目录无影响</li>
+</ol>
+<h3 id="函数futimens、utimesat和utimes"><a href="#函数futimens、utimesat和utimes" class="headerlink" title="函数futimens、utimesat和utimes"></a>函数futimens、utimesat和utimes</h3><ol>
+<li>指定纳秒精度的时间戳<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line">#include &lt;sys/stat.h&gt;</span><br><span class="line">/*time[0]包含访问时间，times[1]包含修改时间*/</span><br><span class="line">/*执行这些函数的优先权取决于times参数的值*/</span><br><span class="line">/*futimes需要打开文件来修改时间*/</span><br><span class="line">int futimens(int fd, const struct timespec times[2]);</span><br><span class="line">/*utimesat使用文件名更改文件时间，flag参数可以修改默认行为，可以设置文件跟随符号链接的时间*/</span><br><span class="line">int utimensat(int fd, const char *path, const struct timespec times[2]);</span><br><span class="line">/*对路径名进行操作，times*/</span><br><span class="line">int utimes(const char *pathname, const struct timeval times[2]);</span><br><span class="line">/*不能对st_ctim指定一个值，调用utimes函数时，字段会自动更新*/</span><br><span class="line">struct timeval&#123;</span><br><span class="line">	time_t tv_sec;</span><br><span class="line">	long tv_usec;</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
+</li>
+</ol>
+<h3 id="函数mkdir、mkdirat和rmdir"><a href="#函数mkdir、mkdirat和rmdir" class="headerlink" title="函数mkdir、mkdirat和rmdir"></a>函数mkdir、mkdirat和rmdir</h3><ol>
+<li>用mkdir和mkdirat创建目录，用rmdir函数删除目录<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">#include &lt;sys/stat.h&gt;</span><br><span class="line">/*函数创建一个新的空目录，访问权限mode由进程的文件模式创建屏蔽修改*/</span><br><span class="line">int mkdir(const char *pathname, mode_t mode);</span><br><span class="line">int mkdirat(int fd, const char *pathname, mode_t mode);</span><br><span class="line"></span><br><span class="line">#include &lt;unistd.h&gt;</span><br><span class="line">int rmdir(const char *pathname);</span><br><span class="line">/*如果调用此函数使目录的链接计数成为0，并且没有其他进程打开此目录，释放此目录占用的空间</span><br><span class="line">如果链接计数为0，在函数返回前必须删除最后一个链接及.和..*/</span><br></pre></td></tr></table></figure>
+</li>
+</ol>
+<h3 id="读目录"><a href="#读目录" class="headerlink" title="读目录"></a>读目录</h3><ol>
+<li>对目录有访问权限的用户都可以读目录，但是只有内核才能写目录</li>
+</ol>
+<h3 id="函数chdir、fchdir和getcwd"><a href="#函数chdir、fchdir和getcwd" class="headerlink" title="函数chdir、fchdir和getcwd"></a>函数chdir、fchdir和getcwd</h3><ol>
+<li>每个进程都有一个当前工作目录，是所有搜索相对目录的起点</li>
+<li>当前工作目录是进程的一个属性，起始目录是登录名的一个属性</li>
+<li>进程调用chdir和fchdir更改当前工作目录</li>
+</ol>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">#include &lt;unistd.h&gt;</span><br><span class="line">/*用pathname或者文件描述符fd来指定当前工作目录*/</span><br><span class="line">int chdir(const char *pathname);</span><br><span class="line">int fchdir(int fd);</span><br><span class="line"></span><br><span class="line">/*进程调用getcwd函数，找到当前目录的完整路径名*/</span><br><span class="line">char getcwd(char *buf, size_t size);</span><br><span class="line">/*两个参数一个是缓冲区地址buf，另一个是缓冲区长度*/</span><br></pre></td></tr></table></figure>
+<h3 id="设备特殊文件"><a href="#设备特殊文件" class="headerlink" title="设备特殊文件"></a>设备特殊文件</h3><ol>
+<li>文件系统的存储设备由主次设备号表示，主设备号标识设备驱动程序，次设备号标识特定的子设备</li>
+<li>使用两个宏：major和minor来访问主次设备号</li>
+<li>系统与每个文件名相关的st_dev值是文件系统的设备号，文件系统包含文件名以及对应的i节点</li>
+<li>只有字符特殊文件和块特殊文件才有st_rdev值，包含实际设备的设备号</li>
+<li>文件访问权限位<br><img src="/image/4.26.png" alt></li>
+</ol>
+<h2 id="第五章-标准I-O库"><a href="#第五章-标准I-O库" class="headerlink" title="第五章 标准I/O库"></a>第五章 标准I/O库</h2><h3 id="流和FILE对象"><a href="#流和FILE对象" class="headerlink" title="流和FILE对象"></a>流和FILE对象</h3><ol>
+<li>前面所有I/O函数都是围绕文件描述符的，打开一个文件时返回一个文件描述符，此后所有操作都和文件描述符有关</li>
+<li>标准I/O库，围绕流进行，<strong>流的定向</strong>决定了所读、写的字符是单字节还是多字节的</li>
+<li>流在创建时没有定向，两个函数改变流的定向，freopen和fwide<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">#include &lt;stdio.h&gt;</span><br><span class="line">#include &lt;wchar.h&gt;</span><br><span class="line">/*根据mode的不同值，fwide执行不同的工作</span><br><span class="line">mode参数值为负，函数指定流是字节定向的</span><br><span class="line">mode参数值为证，函数指定流是宽定向的</span><br><span class="line">mode参数值为0，函数不设置流的定向，返回标识该流定向的值</span><br><span class="line">函数不改变已定向流的定向*/</span><br><span class="line">int fwide(FILE *fp, int mode);</span><br></pre></td></tr></table></figure>
+</li>
+</ol>
+<h3 id="标准输入、标准输出和标准错误"><a href="#标准输入、标准输出和标准错误" class="headerlink" title="标准输入、标准输出和标准错误"></a>标准输入、标准输出和标准错误</h3><p>三个标准I/O流通过预定义文件指针stdin、stdout和stderr加以引用，这三个指针定义在头文件&lt;stdio.h&gt;中</p>
+<h3 id="缓冲"><a href="#缓冲" class="headerlink" title="缓冲"></a>缓冲</h3><ol>
+<li><strong>全缓冲</strong>填满标准I/O缓冲区后才进行实际I/O操作，驻留在磁盘上的</li>
+<li><strong>行缓冲</strong>在输入和输出中遇到换行符，标准I/O库执行I/O操作</li>
+<li><strong>不带缓冲</strong>不对字符进行缓冲存储，字符能够立即输出，通常标准错误流stderr不带缓冲</li>
+<li>通常标准输出是不带缓冲的，指向终端设备的流是行缓冲的，否则就是全缓冲的</li>
+<li>可以调用函数setbuf/setvbuf来更改缓冲类型，一定要在流打开后调用</li>
+</ol>
+<h3 id="打开流"><a href="#打开流" class="headerlink" title="打开流"></a>打开流</h3><ol>
+<li>函数如page118所示</li>
+<li>字符b是参数type的一部分，标准I/O系统可以区分文本文件和二进制文件</li>
+<li>用读和写类型打开一个文件，如果中间没有fflush/fseek/fsetpos/rewind，在输出的后面不能直接跟随输入；如果中间没有fseek/fsetpos/rewind或者输入操作没有到达文件尾，则输出之后不能直接跟随输出</li>
+<li>使用函数fclose关闭打开的流，在文件关闭之前，冲洗缓冲中的输出数据，缓冲区中的任何输入数据被丢弃</li>
+<li>进程正常终止，exit或者在main中返回，所有带未写缓冲数据的标准I/O流被冲洗，所有打开的标准I/O被关闭</li>
+</ol>
+<h3 id="读和写流"><a href="#读和写流" class="headerlink" title="读和写流"></a>读和写流</h3><ol>
+<li>三个输入函数getc/fgetc/getchar，三个函数在返回下一个字符前，将unsigned char类型转换为int类型，返回结果要和EOF等值比较不能是字符类型的</li>
+<li>调用ferror或者feof函数来区分函数出错还是到达文件尾端</li>
+<li>每个流在FILE对象中维护两个标志：出错标志和文件结束标志，可以调用clearerr函数来清除这两个标志</li>
+<li>从流中读出数据后还可以通过ungetc将字符再压送回流中，压送回流后再读字符的顺序和压送回的顺序相反，因为每次只实现一个字符的压送</li>
+<li>不能回送EOF，一次成功的ugetc调用会清除该流的文件结束标志</li>
+</ol>
+<h3 id="每次一行I-O"><a href="#每次一行I-O" class="headerlink" title="每次一行I/O"></a>每次一行I/O</h3><ol>
+<li>gets从标准输入读，不指定行的长度，有可能会造成缓冲区溢出，不将换行符存入缓冲区</li>
+<li>fgets从指定的流读，指定缓冲长度为n一直读到下一个换行符位置，且长度不超过n-1，缓冲区以null为结尾，下一次调用会继续该行</li>
+<li>函数fputs将一个以null字节终止的字符串写到指定的流，尾端终止符null不写出</li>
+<li>puts将换行符写到标准输出</li>
+</ol>
+<h3 id="二进制I-O"><a href="#二进制I-O" class="headerlink" title="二进制I/O"></a>二进制I/O</h3><ol>
+<li>fread和fwrite函数执行二进制I/O操作，读或者写一个二进制数组，读或写一个结构</li>
+<li>返回读或写的对象数，读的返回可以少于nobj是到达文件尾端或是出错，写的返回少于nobj是出错</li>
+<li>二进制I/O只能用于同一个文件系统，在同一个结构中，同一个成员的偏移量可能随编译程序和系统的不同而不同，用来存储多字节整数和浮点值的二进制格式在不同的系统结构之间可能不同</li>
+</ol>
+<h3 id="格式化输出"><a href="#格式化输出" class="headerlink" title="格式化输出"></a>格式化输出</h3><ol>
+<li>由5个printf函数来处理</li>
+<li>一个转换说明有4个可选的部分:<code>%[flags][fldwidth][precision][lenmodifier]convtype</code></li>
+<li>flags标志<br><img src="/image/图5-7.png" alt></li>
+<li>fldwidth最小字符宽度</li>
+<li>precision整型转换后最少输出数字位数、浮点数转换后小数点后的最小位数、字符串转换后最大字节数，<code>.6</code></li>
+<li>宽度和精度皆可为*，整型参数指定宽度或者精度的值</li>
+<li>lenmodifier说明参数长度<br><img src="/image/图5-8.png" alt></li>
+<li>convtype不是可选的，控制如何解释参数</li>
+</ol>
+<h4 id="格式化输入"><a href="#格式化输入" class="headerlink" title="格式化输入"></a><strong>格式化输入</strong></h4><ol>
+<li>由三个scanf函数处理</li>
+<li><code>%[*][fidwidth][m][lenmodifier]convtype</code></li>
+<li>*用于抑制转换，按照转换说明的其余部分对输入进行转换</li>
+<li>lenmodifier转换结果赋值的参数大小</li>
+<li>m是赋值分配符，可以用%c/%s等破事内存缓冲区分配空间接纳转换字符串</li>
+</ol>
+<h3 id="实现细节"><a href="#实现细节" class="headerlink" title="实现细节"></a>实现细节</h3><ol>
+<li>每个I/O流都有一个与其相关联的文件描述符，可以对一个流调用fileno函数获得描述符</li>
+</ol>
+<h3 id="临时文件"><a href="#临时文件" class="headerlink" title="临时文件"></a>临时文件</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">#include&lt;stdio.h&gt;</span><br><span class="line">char* tmpnam(char* ptr);</span><br><span class="line">FILE* tmpfile(void);</span><br></pre></td></tr></table></figure>
+<ol>
+<li>tmpnam产生一个与现有文件名不同的有效路径字符串，每次调用他都产生不同的路径名，最多调用次数TMP_MAX，定义在头文件&lt;stdio.h&gt;</li>
+<li>如果ptr是NULL每次调用tmpnam都会重写静态区，因此如果要调用这个函数多次，应该保存路径名的副本而不是指针的副本，如果ptr不是NULL，则指针指向的长度至少是L_tmpnam个字符的数量，产生的路径名存放在这个数组中，ptr作为返回值返回</li>
+<li>tmpfile创建一个临时的二进制文件，关闭文件或者进程结束时，自动删除这种文件</li>
+</ol>
+<h3 id="内存流"><a href="#内存流" class="headerlink" title="内存流"></a>内存流</h3><ol>
+<li>所有的IO都是通过缓冲区和主存之间来回传送字节来完成的<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">#include &lt;stdio.h&gt;</span><br><span class="line">FILE *fmemopen(void *restrict buf, size_t size, const char *restrict type);</span><br><span class="line">//buf指定了缓冲区开始的位置，size指定了缓冲区大小的字节数，type参数控制如何使用流</span><br><span class="line">//如果bud参数为空，fmenopen函数分配size字节数的缓冲区，流关闭时缓冲区释放</span><br></pre></td></tr></table></figure>
+</li>
+</ol>
+<p><img src="/image/内存流type.png" alt></p>
+<ol start="2">
+<li>其他两个函数<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">#include &lt;stdio.h&gt;</span><br><span class="line">FILE *open_menstream(char **bufp, size_t *sizep);</span><br><span class="line">//面向字节的函数</span><br><span class="line"></span><br><span class="line">#include &lt;wchar.h&gt;</span><br><span class="line">FILE *open_wmemstream(wchat_t **bufp, size_t sizep);</span><br><span class="line">//面向宽字节的函数</span><br></pre></td></tr></table></figure>
+</li>
+</ol>
+<ul>
+<li>这两个函数创建的流只能写打开</li>
+<li>不能指定缓冲区，分别通过bufp和sizep来访问缓冲区地址和大小</li>
+<li>关闭流之后需要自行释放缓冲区</li>
+<li>对流添加字节会增加缓冲区大小</li>
+</ul>
+<ol start="3">
+<li>任何时候需要增加缓冲区中的数据量以及调用fclose、fflush、fseek、fseeko以及fsetpos时都会在当前位置写入一个null字节</li>
+<li>缓冲区地址和大小的使用必须遵循的规则</li>
+</ol>
+<ul>
+<li>缓冲区地址和长度只有在调用fclose或fflush后才有效</li>
+<li>这些值只有在下一次流写入或调用fclose前有效</li>
+<li>缓冲区可能会需要重新分配，如果出现这种状况，缓冲区的内存地址值在下一次调用fclose或fflush时会改变</li>
+</ul>
+<ol start="5">
+<li>内存流能够避免缓冲区溢出，非常适合用来创建字符串。内存流只访问主存，不访问磁盘上的文件，所以对于使用标准IO流作为参数用于临时文件的函数来说性能会有很大的提升</li>
+</ol>
+
+      
+    </div>
+    
+    
+    
+
+    
+      <div>
+        <div id="wechat_subscriber" style="display: block; padding: 10px 0; margin: 20px auto; width: 100%; text-align: center">
+    <img id="wechat_subscriber_qcode" src="/images/wechat.jpg" alt="WhitneyLu wechat" style="width: 200px; max-width: 100%;">
+    <div>Contact me by scanning my public WeChat QR code</div>
+</div>
+
+
+      </div>
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/操作系统/" rel="tag"><i class="fa fa-tag"></i> 操作系统</a>
+          
+        </div>
+      
+
+      
+      
+        <div class="post-widgets">
+        
+
+        
+
+        
+          
+          <div id="needsharebutton-postbottom">
+            <span class="btn">
+              <i class="fa fa-share-alt" aria-hidden="true"></i>
+            </span>
+          </div>
+        
+        </div>
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2019/09/15/虚函数实现多态/" rel="next" title="虚函数实现多态">
+                <i class="fa fa-chevron-left"></i> 虚函数实现多态
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+<script type="text/javascript" src="https://me.idealli.com/images/load.gif" data-src="/js/src/love.js"></script>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            Table of Contents
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            Overview
+          </li>
+        </ul>
+      
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <img class="site-author-image" itemprop="image" src="/images/nessa.png" alt="WhitneyLu">
+            
+              <p class="site-author-name" itemprop="name">WhitneyLu</p>
+              <p class="site-description motion-element" itemprop="description"></p>
+          </div>
+
+          <nav class="site-state motion-element">
+
+            
+              <div class="site-state-item site-state-posts">
+              
+                <a href="/archives/">
+              
+                  <span class="site-state-item-count">32</span>
+                  <span class="site-state-item-name">posts</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-categories">
+                <a href="/categories/index.html">
+                  <span class="site-state-item-count">23</span>
+                  <span class="site-state-item-name">categories</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-tags">
+                <a href="/tags/index.html">
+                  <span class="site-state-item-count">7</span>
+                  <span class="site-state-item-name">tags</span>
+                </a>
+              </div>
+            
+
+          </nav>
+
+          
+
+          
+            <div class="links-of-author motion-element">
+                
+                  <span class="links-of-author-item">
+                    <a href="https://github.com/yourname" target="_blank" title="GitHub">
+                      
+                        <i class="fa fa-fw fa-github"></i></a>
+                  </span>
+                
+                  <span class="links-of-author-item">
+                    <a href="mailto:miracle960118@gmail.com" target="_blank" title="E-Mail">
+                      
+                        <i class="fa fa-fw fa-envelope"></i></a>
+                  </span>
+                
+                  <span class="links-of-author-item">
+                    <a href="https://www.instagram.com" target="_blank" title="Instagram">
+                      
+                        <i class="fa fa-fw fa-instagram"></i></a>
+                  </span>
+                
+            </div>
+          
+
+          
+          
+
+          
+          
+
+          
+
+        </div>
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#第一章-UNIX基础"><span class="nav-number">1.</span> <span class="nav-text">第一章 UNIX基础</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#第三章-文件I-O"><span class="nav-number">2.</span> <span class="nav-text">第三章 文件I/O</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#第四章-文件和目录"><span class="nav-number">3.</span> <span class="nav-text">第四章 文件和目录</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#stat结构中的成员代表文件的属性"><span class="nav-number">3.1.</span> <span class="nav-text">stat结构中的成员代表文件的属性</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#文件类型"><span class="nav-number">3.2.</span> <span class="nav-text">文件类型</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#文件访问权限"><span class="nav-number">3.3.</span> <span class="nav-text">文件访问权限</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#函数umask为进程设置文件模式创建屏蔽字"><span class="nav-number">3.4.</span> <span class="nav-text">函数umask为进程设置文件模式创建屏蔽字</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#函数chmod-fchmod-fchmodat更改现有的访问权限"><span class="nav-number">3.5.</span> <span class="nav-text">函数chmod/fchmod/fchmodat更改现有的访问权限</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#粘着位-S-ISVTX"><span class="nav-number">3.6.</span> <span class="nav-text">粘着位 S_ISVTX</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#函数chown，fchown、fchownat、lchown"><span class="nav-number">3.7.</span> <span class="nav-text">函数chown，fchown、fchownat、lchown</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#文件长度"><span class="nav-number">3.8.</span> <span class="nav-text">文件长度</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#文件截断"><span class="nav-number">3.9.</span> <span class="nav-text">文件截断</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#文件系统"><span class="nav-number">3.10.</span> <span class="nav-text">文件系统</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#函数link、linkat、unlink、unlinkat、remove"><span class="nav-number">3.11.</span> <span class="nav-text">函数link、linkat、unlink、unlinkat、remove</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#函数rename和renameat"><span class="nav-number">3.12.</span> <span class="nav-text">函数rename和renameat</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#符号链接"><span class="nav-number">3.13.</span> <span class="nav-text">符号链接</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#创建和读取符号链接"><span class="nav-number">3.14.</span> <span class="nav-text">创建和读取符号链接</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#文件的时间"><span class="nav-number">3.15.</span> <span class="nav-text">文件的时间</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#函数futimens、utimesat和utimes"><span class="nav-number">3.16.</span> <span class="nav-text">函数futimens、utimesat和utimes</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#函数mkdir、mkdirat和rmdir"><span class="nav-number">3.17.</span> <span class="nav-text">函数mkdir、mkdirat和rmdir</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#读目录"><span class="nav-number">3.18.</span> <span class="nav-text">读目录</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#函数chdir、fchdir和getcwd"><span class="nav-number">3.19.</span> <span class="nav-text">函数chdir、fchdir和getcwd</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#设备特殊文件"><span class="nav-number">3.20.</span> <span class="nav-text">设备特殊文件</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#第五章-标准I-O库"><span class="nav-number">4.</span> <span class="nav-text">第五章 标准I/O库</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#流和FILE对象"><span class="nav-number">4.1.</span> <span class="nav-text">流和FILE对象</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#标准输入、标准输出和标准错误"><span class="nav-number">4.2.</span> <span class="nav-text">标准输入、标准输出和标准错误</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#缓冲"><span class="nav-number">4.3.</span> <span class="nav-text">缓冲</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#打开流"><span class="nav-number">4.4.</span> <span class="nav-text">打开流</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#读和写流"><span class="nav-number">4.5.</span> <span class="nav-text">读和写流</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#每次一行I-O"><span class="nav-number">4.6.</span> <span class="nav-text">每次一行I/O</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#二进制I-O"><span class="nav-number">4.7.</span> <span class="nav-text">二进制I/O</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#格式化输出"><span class="nav-number">4.8.</span> <span class="nav-text">格式化输出</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#格式化输入"><span class="nav-number">4.8.1.</span> <span class="nav-text">格式化输入</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#实现细节"><span class="nav-number">4.9.</span> <span class="nav-text">实现细节</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#临时文件"><span class="nav-number">4.10.</span> <span class="nav-text">临时文件</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#内存流"><span class="nav-number">4.11.</span> <span class="nav-text">内存流</span></a></li></ol></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; <span itemprop="copyrightYear">2019</span>
+  <span class="with-love">
+    <i class="fa fa-Whitney"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">WhitneyLu</span>
+
+  
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item-icon">
+      <i class="fa fa-area-chart"></i>
+    </span>
+    
+      <span class="post-meta-item-text">Site words total count&#58;</span>
+    
+    <span title="Site words total count">73.7k</span>
+  
+</div>
+
+
+
+
+
+
+
+        
+<div class="busuanzi-count">
+  <script async src="https://dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+  
+    <span class="site-uv">
+      <i class="fa fa-user"></i>
+      <span class="busuanzi-value" id="busuanzi_value_site_uv"></span>
+      
+    </span>
+  
+
+  
+    <span class="site-pv">
+      <i class="fa fa-eye"></i>
+      <span class="busuanzi-value" id="busuanzi_value_site_pv"></span>
+      
+    </span>
+  
+</div>
+
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+          <span id="scrollpercent"><span>0</span>%</span>
+        
+      </div>
+    
+
+    
+      <div id="needsharebutton-float">
+        <span class="btn">
+          <i class="fa fa-share-alt" aria-hidden="true"></i>
+        </span>
+      </div>
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.4"></script>
+
+
+
+  
+  
+
+
+  <script type="text/javascript" src="/js/src/affix.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/schemes/pisces.js?v=5.1.4"></script>
+
+
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.4"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+  
+  
+  <link rel="stylesheet" href="/lib/needsharebutton/needsharebutton.css">
+
+  
+  
+  <script src="/lib/needsharebutton/needsharebutton.js"></script>
+
+  <script>
+    
+      pbOptions = {};
+      
+          pbOptions.iconStyle = "default";
+      
+          pbOptions.boxForm = "horizontal";
+      
+          pbOptions.position = "bottomCenter";
+      
+          pbOptions.networks = "Weibo,Wechat,Douban,QQZone,Twitter,Facebook";
+      
+      new needShareButton('#needsharebutton-postbottom', pbOptions);
+    
+    
+      flOptions = {};
+      
+          flOptions.iconStyle = "default";
+      
+          flOptions.boxForm = "vertical";
+      
+          flOptions.position = "topRight";
+      
+          flOptions.networks = "Weibo,Wechat,Douban,QQZone,Twitter,Facebook";
+      
+      new needShareButton('#needsharebutton-float', flOptions);
+    
+  </script>
+
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>
