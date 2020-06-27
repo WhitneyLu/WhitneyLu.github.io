@@ -1,6 +1,17 @@
 <?xml version="1.0" encoding="utf-8"?>
 <search>
   <entry>
+    <title><![CDATA[Qt Creator入门笔记1]]></title>
+    <url>%2F2020%2F06%2F27%2FCreator%E5%85%A5%E9%97%A8%E7%AC%94%E8%AE%B01%2F</url>
+    <content type="text"><![CDATA[创建有窗口类：myWidget 基类有三种选择：QWidget/QMainWidget/QDialog，窗口/有菜单栏窗口/对话框 1234567int main(int argc, char *argv[]) //argc命令行变量的数量，argv命令行变量数组&#123; QApplication a(argc, argv); //在QT中应用程序对象有且仅有一个 MainWindow w; //窗口对象 w.show(); //显示对象 return a.exec(); //代码阻塞到当前行&#125; pro工程文件 123456789101112131415QT += core gui #Qt包含的模块，核心和图形，如udp和tcp在network中 greaterThan(QT_MAJOR_VERSION, 4): QT += widgets #大于4版本的Qt包含Widget模块CONFIG += c++11SOURCES += \ #源文件 main.cpp \ mainwindow.cpp HEADERS += \ #头文件 mainwindow.hFORMS += \ mainwindow.ui 自动对齐command+i，切换同名.cpp和.h F4 按钮控件头文件`#include 设置按钮和窗口大小与标题 1234567891011121314151617181920212223#include &quot;widget.h&quot;#include &quot;ui_widget.h&quot;#include &lt;QPushButton&gt;Widget::Widget(QWidget *parent) : QWidget(parent), ui(new Ui::Widget)&#123; ui-&gt;setupUi(this); QPushButton * b1 = new QPushButton; //b1-&gt;show(); //以顶层的方式弹出窗口控件 b1-&gt;setParent(this); //按钮依赖于当前Widget窗口 b1-&gt;setText(&quot;new button1&quot;); QPushButton * b2 = new QPushButton(&quot;new button2&quot;, this); b2-&gt;move(100, 100); //移动按钮，坐标 b2-&gt;resize(1,1);//按钮重置大小 resize(800,600); //设置窗口大小 setFixedSize(800,600); //固定窗口大小 setWindowTitle(&quot;the First Window&quot;); //命名窗口标题&#125;Widget::~Widget()&#123; delete ui;&#125; 按钮控件常用api 123setParent(this);//设置父亲setText(&quot;123&quot;);设置文本move() 对象数模型 创建对象时，这个对象会自动添加到其父对象的children()列表 当父对象析构时，会清除掉列表中的所有对象都会被析构 当创建的对象在堆区的时候，如果指定的父亲是QObject派生下来的类，或者是QObject子类派生下来的类，可以不用管理释放操作，将对象放入对象树中 信号和槽 信号槽松散耦合，信号端和接收端没有关联，通过connect函数连接 信号函数 1234567void clicked() //点击void pressed() //按下void released() //松开void toggled(bool checked) //状态改变//connect(信号发送端,信号函数地址,信号接收端,信号函数地址);connect(myBtn, &amp;QPushButton::clicked, this, &amp;QWidget::close); //点击按钮关闭窗口disconnect(t, teacherSingal, s, studentSlot); //断开信号 自定义信号写在signals下，返回值为void，可以有参数，只需要声明，不需要实现 触发自定义信号 emit 一个信号可以连接多个槽函数，多个信号可以连接同一个槽函数 信号和槽的参数类型类型必须一一对应，信号参数的个数可以多余槽函数的参数个数]]></content>
+      <categories>
+        <category>Qt Creator从入门到实践</category>
+      </categories>
+      <tags>
+        <tag>Python</tag>
+      </tags>
+  </entry>
+  <entry>
     <title><![CDATA[Python编程从入门到实践 1]]></title>
     <url>%2F2020%2F05%2F04%2FPython%E7%BC%96%E7%A8%8B%E4%BB%8E%E5%85%A5%E9%97%A8%E5%88%B0%E5%AE%9E%E8%B7%B51%2F</url>
     <content type="text"><![CDATA[变量和简单数据类型字符串 由定义的数据类型判断变量的类型，查看数据类型 12a=10print(type(a)) 字符串用引号括起来，可以用单引号也可以用双引号 函数title()首字母大写显式每个单词 函数upper()单词全部大写 函数lower()单词全部小写 1234567891011name1 = &apos;ada&apos;name2 = &apos;ADA&apos;print(name1.title())print(name1.upper())print(name2.lower())#结果#Ada#ADA#ada 输出多个变量用,分隔 合并字串用加号 制表符\t 删除字符串结尾的空白rstrip()，删除结果是暂时的，要永久删除，必须将删除结果重新存入到变量中 123name = ’ name ‘name.rstrip()name=name.rstrip() 删除字符串尾部的空白lstrip()，字符串首尾两端的空白strip() Python将单引号和撇号之间的内容视为字符串，撇号后面的内容作为代码，因此要将撇号置于两个双引号之间 数字 指数运算符**左侧是底数右侧是指数 忽略小数点后的小数位，只保留整数// 函数str()，使得非字符串值变化为字符串值 注释用# 多行注释用’’’ ‘’’ 列表 用[]来表示列表，使用逗号来分隔元素 使用方括号下标的方式来访问列表元素 函数append(&#39;aaa&#39;)将元素添加在列表末尾 在列表中添加元素insert(0, &#39;aaa&#39;)在位置0处插入元素，并将之后的元素全部后移 在列表中删除元素del list1[0]删除列表中位置0的元素 删除列表最后一个元素，并且能够得到最后的值a = list.pop()，在括号中标明索引即可删除任意位置的元素 根据删除元素的值删除元素list1.remove(&#39;aaa&#39;)，也可以继续使用它的值 排序函数sort()，按照字典序永久排序，在sort中传递参数reverse=True则按照字典序反向排序 临时排序函数sorted() 反转列表元素reserve() 列表长度len() 索引-1表示列表的最后一个元素，若列表为空则索引-1出错 12345678910111213141516171819202122232425262728293031323334353637383940414243list1 = []list1.append(&apos;hello&apos;)list1.append(&apos;world&apos;)print(list1)list1.insert(0, &apos;new&apos;)print(list1)del list1[0]print(list1)a = list1.pop()print(a)print(list1)list1.remove(&apos;hello&apos;)print(list)list2 = [&apos;banana&apos;, &apos;peach&apos;, &apos;milk&apos;, &apos;cat&apos;, &apos;apple&apos;]print(sorted(list2))print(list2)list2.sort()print(list2)list2.sort(reverse=True)print(list2)list3 = [&apos;banana&apos;, &apos;peach&apos;, &apos;milk&apos;, &apos;cat&apos;, &apos;apple&apos;]list3.reverse()print(list3)print(len(list3))#运行结果[&apos;hello&apos;, &apos;world&apos;][&apos;new&apos;, &apos;hello&apos;, &apos;world&apos;][&apos;hello&apos;, &apos;world&apos;]world[&apos;hello&apos;]&lt;class &apos;list&apos;&gt;[&apos;apple&apos;, &apos;banana&apos;, &apos;cat&apos;, &apos;milk&apos;, &apos;peach&apos;][&apos;banana&apos;, &apos;peach&apos;, &apos;milk&apos;, &apos;cat&apos;, &apos;apple&apos;][&apos;apple&apos;, &apos;banana&apos;, &apos;cat&apos;, &apos;milk&apos;, &apos;peach&apos;][&apos;peach&apos;, &apos;milk&apos;, &apos;cat&apos;, &apos;banana&apos;, &apos;apple&apos;][&apos;apple&apos;, &apos;cat&apos;, &apos;milk&apos;, &apos;peach&apos;, &apos;banana&apos;] for循环遍历整个列表 123for value in range(1,5) #1到5之间的数，步长为1for value in range(1,10,2) #指定步长为2 对数字列表进行简单的统计计算 1234list1 = [1, 2, 3, 4, 5]min(list1)max(list1)sum(list1) 处理列表中的部分元素，切片，若不指定索引，则开始于第一个元素，结束于最后一个元素，而负数索引则表示与末尾节点之间的相应的距离 12345678numbers = [1, 2, 3, 4, 5]print(numbers[0:3]) #打印前三个数字numbers1 = [1, 2, 3, 4, 5]numbers2=numbers1numbers3=numbers1[ : ]#numbers2和numbers1是同一个列表#numbers3和numbers1是两个列表 元组 元组使用圆括号来标识，使用方括号+下标来访问元组，元组内的元素不能被修改也不能被赋值 可以通过个给存储元组的变量赋值来修改元组的元素，即重新定义一个元组]]></content>
@@ -177,17 +188,6 @@
       </tags>
   </entry>
   <entry>
-    <title><![CDATA[堆排序]]></title>
-    <url>%2F2019%2F05%2F28%2F%E5%A0%86%E6%8E%92%E5%BA%8F%2F</url>
-    <content type="text"><![CDATA[堆排序 堆排序的最坏、最好和平均时间复杂度为O(nlogn) 以数组来描述堆：以子节点求父节点=(i-1)/2，以父节点求子节点=2i+1 2i+2 堆是完全二叉树 堆的每个节点的值都大于等于/小于等于其左右子节点的值，a[i]&gt;=a[2i+1]&amp;&amp;a[i]&gt;=a[2i+2] 堆排序： 堆化操作：完成每个子树的堆化 从倒数第二层开始网上开始做堆化操作 将堆顶的最大值移到末尾，将树长度-1，循环完成堆排序 12345678910111213141516171819202122232425262728293031323334353637383940414243444546474849505152535455565758596061#include &lt;iostream&gt;#include &lt;vector&gt;using namespace std;void heap_sort(vector&lt;int&gt;&amp; tree, int&amp; n);void heap_build(vector&lt;int&gt;&amp; tree, int&amp; n);void heapify(vector&lt;int&gt;&amp; tree, int&amp; n, int i);int main() &#123; vector&lt;int&gt; tree&#123;1,4,10,5,8,3,7,2,9&#125;; int len=tree.size(); heap_sort(tree,len); for(int i=0; i&lt;len; ++i) cout&lt;&lt;tree[i]&lt;&lt;&quot; &quot;; return 0;&#125;void heapify(vector&lt;int&gt;&amp; tree, int&amp; n, int i)&#123; if(i&gt;=n) return; int c1=2*i+1; int c2=2*i+2; int maxNum=i; if(c1&lt;n &amp;&amp; tree[c1]&gt;tree[maxNum]) maxNum=c1; if(c2&lt;n &amp;&amp; tree[c2]&gt;tree[maxNum]) maxNum=c2; if(maxNum!=i) &#123; swap(tree[maxNum],tree[i]); heapify(tree, n, maxNum); &#125;&#125;void heap_build(vector&lt;int&gt;&amp; tree, int&amp; n)&#123; int parent=(n-1)/2; for(int i=parent; i&gt;=0; --i) &#123; heapify(tree, n, i); &#125;&#125;void heap_sort(vector&lt;int&gt;&amp; tree, int&amp; n)&#123; heap_build(tree, n); for(int i=n-1; i&gt;=0; --i) &#123; swap(tree[i],tree[0]); heapify(tree, i, 0); &#125;&#125;]]></content>
-      <categories>
-        <category>排序算法</category>
-      </categories>
-      <tags>
-        <tag>数据结构</tag>
-      </tags>
-  </entry>
-  <entry>
     <title><![CDATA[TCP和UDP的区别]]></title>
     <url>%2F2019%2F05%2F28%2FTCP%E5%92%8CUDP%E7%9A%84%E5%8C%BA%E5%88%AB%2F</url>
     <content type="text"><![CDATA[TCP和UDP的区别]]></content>
@@ -196,6 +196,17 @@
       </categories>
       <tags>
         <tag>计算机网络</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title><![CDATA[堆排序]]></title>
+    <url>%2F2019%2F05%2F28%2F%E5%A0%86%E6%8E%92%E5%BA%8F%2F</url>
+    <content type="text"><![CDATA[堆排序 堆排序的最坏、最好和平均时间复杂度为O(nlogn) 以数组来描述堆：以子节点求父节点=(i-1)/2，以父节点求子节点=2i+1 2i+2 堆是完全二叉树 堆的每个节点的值都大于等于/小于等于其左右子节点的值，a[i]&gt;=a[2i+1]&amp;&amp;a[i]&gt;=a[2i+2] 堆排序： 堆化操作：完成每个子树的堆化 从倒数第二层开始网上开始做堆化操作 将堆顶的最大值移到末尾，将树长度-1，循环完成堆排序 12345678910111213141516171819202122232425262728293031323334353637383940414243444546474849505152535455565758596061#include &lt;iostream&gt;#include &lt;vector&gt;using namespace std;void heap_sort(vector&lt;int&gt;&amp; tree, int&amp; n);void heap_build(vector&lt;int&gt;&amp; tree, int&amp; n);void heapify(vector&lt;int&gt;&amp; tree, int&amp; n, int i);int main() &#123; vector&lt;int&gt; tree&#123;1,4,10,5,8,3,7,2,9&#125;; int len=tree.size(); heap_sort(tree,len); for(int i=0; i&lt;len; ++i) cout&lt;&lt;tree[i]&lt;&lt;&quot; &quot;; return 0;&#125;void heapify(vector&lt;int&gt;&amp; tree, int&amp; n, int i)&#123; if(i&gt;=n) return; int c1=2*i+1; int c2=2*i+2; int maxNum=i; if(c1&lt;n &amp;&amp; tree[c1]&gt;tree[maxNum]) maxNum=c1; if(c2&lt;n &amp;&amp; tree[c2]&gt;tree[maxNum]) maxNum=c2; if(maxNum!=i) &#123; swap(tree[maxNum],tree[i]); heapify(tree, n, maxNum); &#125;&#125;void heap_build(vector&lt;int&gt;&amp; tree, int&amp; n)&#123; int parent=(n-1)/2; for(int i=parent; i&gt;=0; --i) &#123; heapify(tree, n, i); &#125;&#125;void heap_sort(vector&lt;int&gt;&amp; tree, int&amp; n)&#123; heap_build(tree, n); for(int i=n-1; i&gt;=0; --i) &#123; swap(tree[i],tree[0]); heapify(tree, i, 0); &#125;&#125;]]></content>
+      <categories>
+        <category>排序算法</category>
+      </categories>
+      <tags>
+        <tag>数据结构</tag>
       </tags>
   </entry>
   <entry>

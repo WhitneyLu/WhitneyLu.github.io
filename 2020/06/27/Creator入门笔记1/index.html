@@ -95,7 +95,7 @@
 
 
 
-  <meta name="keywords" content="数据结构,">
+  <meta name="keywords" content="Python,">
 
 
 
@@ -106,18 +106,18 @@
 
 
 
-<meta name="description" content="完全二叉树实现的堆排序">
-<meta name="keywords" content="数据结构">
+<meta name="description" content="Qt Creator">
+<meta name="keywords" content="Python">
 <meta property="og:type" content="article">
-<meta property="og:title" content="堆排序">
-<meta property="og:url" content="https://whitneylu.github.io/2019/05/28/堆排序/index.html">
+<meta property="og:title" content="Qt Creator入门笔记1">
+<meta property="og:url" content="https://whitneylu.github.io/2020/06/27/Creator入门笔记1/index.html">
 <meta property="og:site_name" content="Whitney&#39;s coding note">
-<meta property="og:description" content="完全二叉树实现的堆排序">
+<meta property="og:description" content="Qt Creator">
 <meta property="og:locale" content="default">
-<meta property="og:updated_time" content="2019-08-22T13:25:55.264Z">
+<meta property="og:updated_time" content="2020-06-27T05:14:36.077Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="堆排序">
-<meta name="twitter:description" content="完全二叉树实现的堆排序">
+<meta name="twitter:title" content="Qt Creator入门笔记1">
+<meta name="twitter:description" content="Qt Creator">
 
 
 
@@ -147,13 +147,13 @@
 
 
 
-  <link rel="canonical" href="https://whitneylu.github.io/2019/05/28/堆排序/">
+  <link rel="canonical" href="https://whitneylu.github.io/2020/06/27/Creator入门笔记1/">
 
 
 
 
 
-  <title>堆排序 | Whitney's coding note</title>
+  <title>Qt Creator入门笔记1 | Whitney's coding note</title>
   
 
 
@@ -280,7 +280,7 @@
   
   
   <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="https://whitneylu.github.io/2019/05/28/堆排序/">
+    <link itemprop="mainEntityOfPage" href="https://whitneylu.github.io/2020/06/27/Creator入门笔记1/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="name" content="WhitneyLu">
@@ -297,7 +297,7 @@
 
         
         
-          <h1 class="post-title" itemprop="name headline">堆排序</h1>
+          <h1 class="post-title" itemprop="name headline">Qt Creator入门笔记1</h1>
         
 
         <div class="post-meta">
@@ -309,8 +309,8 @@
               
                 <span class="post-meta-item-text">Posted on</span>
               
-              <time title="Post created" itemprop="dateCreated datePublished" datetime="2019-05-28T00:00:00+08:00">
-                2019-05-28
+              <time title="Post created" itemprop="dateCreated datePublished" datetime="2020-06-27T00:00:00+08:00">
+                2020-06-27
               </time>
             
 
@@ -332,8 +332,8 @@
               
               
                 <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/排序算法/" itemprop="url" rel="index">
-                    <span itemprop="name">排序算法</span>
+                  <a href="/categories/Qt-Creator从入门到实践/" itemprop="url" rel="index">
+                    <span itemprop="name">Qt Creator从入门到实践</span>
                   </a>
                 </span>
 
@@ -368,7 +368,7 @@
                   <span class="post-meta-item-text">Words count in article&#58;</span>
                 
                 <span title="Words count in article">
-                  388
+                  657
                 </span>
               
 
@@ -392,7 +392,7 @@
 
           
               <div class="post-description">
-                  完全二叉树实现的堆排序
+                  Qt Creator
               </div>
           
 
@@ -409,19 +409,40 @@
       
 
       
-        <h2 id="堆排序"><a href="#堆排序" class="headerlink" title="堆排序"></a>堆排序</h2><ol>
-<li>堆排序的最坏、最好和平均时间复杂度为O(nlogn)</li>
-<li>以数组来描述堆：以子节点求父节点=(i-1)/2，以父节点求子节点=2i+1 2i+2</li>
-<li>堆是完全二叉树</li>
-<li>堆的每个节点的值都大于等于/小于等于其左右子节点的值，a[i]&gt;=a[2i+1]&amp;&amp;a[i]&gt;=a[2i+2]</li>
-<li>堆排序：</li>
+        <ol>
+<li>创建有窗口类：<code>myWidget</code></li>
+<li><p>基类有三种选择：<code>QWidget/QMainWidget/QDialog</code>，窗口/有菜单栏窗口/对话框</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">int main(int argc, char *argv[]) //argc命令行变量的数量，argv命令行变量数组</span><br><span class="line">&#123;</span><br><span class="line">    QApplication a(argc, argv); //在QT中应用程序对象有且仅有一个</span><br><span class="line">    MainWindow w; //窗口对象</span><br><span class="line">    w.show(); //显示对象</span><br><span class="line">    return a.exec(); //代码阻塞到当前行</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>pro工程文件</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line">QT       += core gui #Qt包含的模块，核心和图形，如udp和tcp在network中</span><br><span class="line"> </span><br><span class="line">greaterThan(QT_MAJOR_VERSION, 4): QT += widgets #大于4版本的Qt包含Widget模块</span><br><span class="line"></span><br><span class="line">CONFIG += c++11</span><br><span class="line"></span><br><span class="line">SOURCES += \ #源文件</span><br><span class="line">    main.cpp \</span><br><span class="line">    mainwindow.cpp</span><br><span class="line">    </span><br><span class="line">HEADERS += \ #头文件</span><br><span class="line">    mainwindow.h</span><br><span class="line"></span><br><span class="line">FORMS += \</span><br><span class="line">    mainwindow.ui</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>自动对齐command+i，切换同名.cpp和.h F4</p>
+</li>
+<li>按钮控件头文件`#include <qpushbutton></qpushbutton></li>
+<li><p>设置按钮和窗口大小与标题</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><span class="line">#include &quot;widget.h&quot;</span><br><span class="line">#include &quot;ui_widget.h&quot;</span><br><span class="line">#include &lt;QPushButton&gt;</span><br><span class="line"></span><br><span class="line">Widget::Widget(QWidget *parent) : QWidget(parent), ui(new Ui::Widget)</span><br><span class="line">&#123;</span><br><span class="line">    ui-&gt;setupUi(this);</span><br><span class="line">    QPushButton * b1 = new QPushButton;</span><br><span class="line">    //b1-&gt;show(); //以顶层的方式弹出窗口控件</span><br><span class="line">    b1-&gt;setParent(this); //按钮依赖于当前Widget窗口</span><br><span class="line">    b1-&gt;setText(&quot;new button1&quot;);</span><br><span class="line">    QPushButton * b2 = new QPushButton(&quot;new button2&quot;, this);</span><br><span class="line">    b2-&gt;move(100, 100); //移动按钮，坐标</span><br><span class="line">    b2-&gt;resize(1,1);//按钮重置大小</span><br><span class="line">    resize(800,600); //设置窗口大小</span><br><span class="line">    setFixedSize(800,600); //固定窗口大小</span><br><span class="line">    setWindowTitle(&quot;the First Window&quot;); //命名窗口标题</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">Widget::~Widget()</span><br><span class="line">&#123;</span><br><span class="line">    delete ui;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>按钮控件常用api</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">setParent(this);//设置父亲</span><br><span class="line">setText(&quot;123&quot;);设置文本</span><br><span class="line">move()</span><br></pre></td></tr></table></figure>
+</li>
 </ol>
-<ul>
-<li>堆化操作：完成每个子树的堆化</li>
-<li>从倒数第二层开始网上开始做堆化操作</li>
-<li>将堆顶的最大值移到末尾，将树长度-1，循环完成堆排序</li>
-</ul>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br></pre></td><td class="code"><pre><span class="line">#include &lt;iostream&gt;</span><br><span class="line">#include &lt;vector&gt;</span><br><span class="line">using namespace std;</span><br><span class="line"></span><br><span class="line">void heap_sort(vector&lt;int&gt;&amp; tree, int&amp; n);</span><br><span class="line">void heap_build(vector&lt;int&gt;&amp; tree, int&amp; n);</span><br><span class="line">void heapify(vector&lt;int&gt;&amp; tree, int&amp; n, int i);</span><br><span class="line"></span><br><span class="line">int main() &#123;</span><br><span class="line">	vector&lt;int&gt; tree&#123;1,4,10,5,8,3,7,2,9&#125;;</span><br><span class="line">	int len=tree.size();</span><br><span class="line"></span><br><span class="line">	heap_sort(tree,len);</span><br><span class="line"></span><br><span class="line">	for(int i=0; i&lt;len; ++i)</span><br><span class="line">		cout&lt;&lt;tree[i]&lt;&lt;&quot; &quot;;</span><br><span class="line"></span><br><span class="line">	return 0;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">void heapify(vector&lt;int&gt;&amp; tree, int&amp; n, int i)</span><br><span class="line">&#123;</span><br><span class="line">	if(i&gt;=n)</span><br><span class="line">		return;</span><br><span class="line"></span><br><span class="line">	int c1=2*i+1;</span><br><span class="line">	int c2=2*i+2;</span><br><span class="line">	int maxNum=i;</span><br><span class="line"></span><br><span class="line">	if(c1&lt;n &amp;&amp; tree[c1]&gt;tree[maxNum])</span><br><span class="line">		maxNum=c1;</span><br><span class="line"></span><br><span class="line">	if(c2&lt;n &amp;&amp; tree[c2]&gt;tree[maxNum])</span><br><span class="line">		maxNum=c2;</span><br><span class="line"></span><br><span class="line">	if(maxNum!=i)</span><br><span class="line">	&#123;</span><br><span class="line">		swap(tree[maxNum],tree[i]);</span><br><span class="line">		heapify(tree, n, maxNum);</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">void heap_build(vector&lt;int&gt;&amp; tree, int&amp; n)</span><br><span class="line">&#123;</span><br><span class="line">	int parent=(n-1)/2;</span><br><span class="line">	for(int i=parent; i&gt;=0; --i)</span><br><span class="line">	&#123;</span><br><span class="line">		heapify(tree, n, i);</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">void heap_sort(vector&lt;int&gt;&amp; tree, int&amp; n)</span><br><span class="line">&#123;</span><br><span class="line">	heap_build(tree, n);</span><br><span class="line"></span><br><span class="line">	for(int i=n-1; i&gt;=0; --i)</span><br><span class="line">	&#123;</span><br><span class="line">		swap(tree[i],tree[0]);</span><br><span class="line">		heapify(tree, i, 0);</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h3 id="对象数模型"><a href="#对象数模型" class="headerlink" title="对象数模型"></a>对象数模型</h3><ol>
+<li>创建对象时，这个对象会自动添加到其父对象的children()列表</li>
+<li>当父对象析构时，会清除掉列表中的所有对象都会被析构</li>
+<li>当创建的对象在堆区的时候，如果指定的父亲是QObject派生下来的类，或者是QObject子类派生下来的类，可以不用管理释放操作，将对象放入对象树中</li>
+</ol>
+<h3 id="信号和槽"><a href="#信号和槽" class="headerlink" title="信号和槽"></a>信号和槽</h3><ol>
+<li>信号槽松散耦合，信号端和接收端没有关联，通过connect函数连接</li>
+<li><p>信号函数</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">void clicked() //点击</span><br><span class="line">void pressed() //按下</span><br><span class="line">void released() //松开</span><br><span class="line">void toggled(bool checked) //状态改变</span><br><span class="line">//connect(信号发送端,信号函数地址,信号接收端,信号函数地址);</span><br><span class="line">connect(myBtn, &amp;QPushButton::clicked, this, &amp;QWidget::close); //点击按钮关闭窗口</span><br><span class="line">disconnect(t, teacherSingal, s, studentSlot); //断开信号</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>自定义信号写在signals下，返回值为void，可以有参数，只需要声明，不需要实现</p>
+</li>
+<li>触发自定义信号 emit</li>
+<li>一个信号可以连接多个槽函数，多个信号可以连接同一个槽函数</li>
+<li>信号和槽的参数类型类型必须一一对应，信号参数的个数可以多余槽函数的参数个数</li>
+</ol>
 
       
     </div>
@@ -448,7 +469,7 @@
       
         <div class="post-tags">
           
-            <a href="/tags/数据结构/" rel="tag"><i class="fa fa-tag"></i> 数据结构</a>
+            <a href="/tags/Python/" rel="tag"><i class="fa fa-tag"></i> Python</a>
           
         </div>
       
@@ -476,8 +497,8 @@
         <div class="post-nav">
           <div class="post-nav-next post-nav-item">
             
-              <a href="/2019/05/25/二叉树/" rel="next" title="二叉树">
-                <i class="fa fa-chevron-left"></i> 二叉树
+              <a href="/2020/05/04/Python编程从入门到实践1/" rel="next" title="Python编程从入门到实践 1">
+                <i class="fa fa-chevron-left"></i> Python编程从入门到实践 1
               </a>
             
           </div>
@@ -485,10 +506,6 @@
           <span class="post-nav-divider"></span>
 
           <div class="post-nav-prev post-nav-item">
-            
-              <a href="/2019/05/28/TCP和UDP的区别/" rel="prev" title="TCP和UDP的区别">
-                TCP和UDP的区别 <i class="fa fa-chevron-right"></i>
-              </a>
             
           </div>
         </div>
@@ -646,7 +663,7 @@
             
 
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#堆排序"><span class="nav-number">1.</span> <span class="nav-text">堆排序</span></a></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#对象数模型"><span class="nav-number">1.</span> <span class="nav-text">对象数模型</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#信号和槽"><span class="nav-number">2.</span> <span class="nav-text">信号和槽</span></a></li></ol></div>
             
 
           </div>
