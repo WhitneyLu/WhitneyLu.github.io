@@ -1,0 +1,999 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next gemini use-motion" lang>
+<head><meta name="generator" content="Hexo 3.8.0">
+  <meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+<meta name="theme-color" content="#222">
+<meta name="google-site-verification" content="eaUMXvNaTlS5XY6VQbEb2OQ9XI-jGDm0VQvmNHMz5qI">
+<meta name="baidu-site-verification" content="8GfnZRBeT5">
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform">
+<meta http-equiv="Cache-Control" content="no-siteapp">
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css">
+
+
+
+
+  
+  
+  
+  
+
+  
+    
+    
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+    
+    
+    <link href="https://fonts.cat.net/css?family=Roboto Slab:300,300italic,400,400italic,700,700italic&subset=latin,latin-ext" rel="stylesheet" type="text/css">
+  
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css">
+
+<link href="/css/main.css?v=5.1.4" rel="stylesheet" type="text/css">
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=5.1.4">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=5.1.4" color="#222">
+
+
+
+
+
+  <meta name="keywords" content="MySQL,">
+
+
+
+
+
+
+
+
+
+
+<meta name="description" content="数据库基本原理、MySQL">
+<meta name="keywords" content="MySQL">
+<meta property="og:type" content="article">
+<meta property="og:title" content="数据库2">
+<meta property="og:url" content="https://whitneylu.github.io/2021/03/14/数据库2/index.html">
+<meta property="og:site_name" content="Whitney&#39;s coding note">
+<meta property="og:description" content="数据库基本原理、MySQL">
+<meta property="og:locale" content="default">
+<meta property="og:updated_time" content="2021-03-14T12:04:14.410Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="数据库2">
+<meta name="twitter:description" content="数据库基本原理、MySQL">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Gemini',
+    version: '5.1.4',
+    sidebar: {"position":"left","display":"post","offset":12,"b2t":false,"scrollpercent":true,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    duoshuo: {
+      userId: '0',
+      author: 'Author'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="https://whitneylu.github.io/2021/03/14/数据库2/">
+
+
+
+
+
+  <title>数据库2 | Whitney's coding note</title>
+  
+
+
+
+
+
+
+
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="default">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">Whitney's coding note</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle">Study as if you were going to live forever.</p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br>
+            
+            Home
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br>
+            
+            Tags
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br>
+            
+            Categories
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br>
+            
+            Archives
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="https://whitneylu.github.io/2021/03/14/数据库2/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="WhitneyLu">
+      <meta itemprop="description" content>
+      <meta itemprop="image" content="/images/nessa.png">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Whitney's coding note">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">数据库2</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">Posted on</span>
+              
+              <time title="Post created" itemprop="dateCreated datePublished" datetime="2021-03-14T00:00:00+08:00">
+                2021-03-14
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category">
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">In</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/数据库/" itemprop="url" rel="index">
+                    <span itemprop="name">数据库</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+            <span class="post-meta-divider">|</span>
+            <span class="page-pv"><i class="fa fa-file-o"></i>
+            <span class="busuanzi-value" id="busuanzi_value_page_pv"></span>
+            </span>
+          
+
+          
+            <div class="post-wordcount">
+              
+                
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-file-word-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">Words count in article&#58;</span>
+                
+                <span title="Words count in article">
+                  2.6k
+                </span>
+              
+
+              
+                <span class="post-meta-divider">|</span>
+              
+
+              
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-clock-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">Reading time &asymp;</span>
+                
+                <span title="Reading time">
+                  13
+                </span>
+              
+            </div>
+          
+
+          
+              <div class="post-description">
+                  数据库基本原理、MySQL
+              </div>
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <h2 id="数据库的三大设计范式"><a href="#数据库的三大设计范式" class="headerlink" title="数据库的三大设计范式"></a>数据库的三大设计范式</h2><h3 id="第一范式：数据表中的所有字段都是不可分割的原子值"><a href="#第一范式：数据表中的所有字段都是不可分割的原子值" class="headerlink" title="第一范式：数据表中的所有字段都是不可分割的原子值"></a>第一范式：数据表中的所有字段都是不可分割的原子值</h3><ol>
+<li>字段值还可以继续拆分的就不满足第一范式</li>
+<li>范式，设计的越详细，对某些实际操作可能更好，但是不一定</li>
+</ol>
+<h3 id="第二范式："><a href="#第二范式：" class="headerlink" title="第二范式："></a>第二范式：</h3><ol>
+<li>必须满足第一范式的要求</li>
+<li>除主键外的每一列都必须完全依赖于主键</li>
+<li>如果出现不完全依赖，只可能发生在联合主键的情况下</li>
+<li>如果不满足，则拆表，直到实现完全依赖于主键</li>
+</ol>
+<h3 id="第三范式："><a href="#第三范式：" class="headerlink" title="第三范式："></a>第三范式：</h3><ol>
+<li>必须满足第二范式</li>
+<li>除了主键列之外，其他列之间不能有传递依赖关系</li>
+</ol>
+<h3 id="查询训练"><a href="#查询训练" class="headerlink" title="查询训练"></a>查询训练</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br><span class="line">103</span><br><span class="line">104</span><br><span class="line">105</span><br><span class="line">106</span><br><span class="line">107</span><br><span class="line">108</span><br><span class="line">109</span><br><span class="line">110</span><br><span class="line">111</span><br><span class="line">112</span><br><span class="line">113</span><br><span class="line">114</span><br><span class="line">115</span><br><span class="line">116</span><br><span class="line">117</span><br><span class="line">118</span><br><span class="line">119</span><br><span class="line">120</span><br><span class="line">121</span><br><span class="line">122</span><br><span class="line">123</span><br><span class="line">124</span><br><span class="line">125</span><br><span class="line">126</span><br><span class="line">127</span><br><span class="line">128</span><br><span class="line">129</span><br><span class="line">130</span><br><span class="line">131</span><br><span class="line">132</span><br><span class="line">133</span><br><span class="line">134</span><br><span class="line">135</span><br><span class="line">136</span><br><span class="line">137</span><br><span class="line">138</span><br><span class="line">139</span><br><span class="line">140</span><br><span class="line">141</span><br><span class="line">142</span><br><span class="line">143</span><br><span class="line">144</span><br><span class="line">145</span><br><span class="line">146</span><br><span class="line">147</span><br><span class="line">148</span><br><span class="line">149</span><br><span class="line">150</span><br><span class="line">151</span><br><span class="line">152</span><br><span class="line">153</span><br><span class="line">154</span><br><span class="line">155</span><br><span class="line">156</span><br><span class="line">157</span><br><span class="line">158</span><br><span class="line">159</span><br><span class="line">160</span><br><span class="line">161</span><br><span class="line">162</span><br><span class="line">163</span><br><span class="line">164</span><br><span class="line">165</span><br><span class="line">166</span><br><span class="line">167</span><br><span class="line">168</span><br><span class="line">169</span><br><span class="line">170</span><br><span class="line">171</span><br><span class="line">172</span><br><span class="line">173</span><br><span class="line">174</span><br><span class="line">175</span><br><span class="line">176</span><br><span class="line">177</span><br><span class="line">178</span><br><span class="line">179</span><br><span class="line">180</span><br><span class="line">181</span><br><span class="line">182</span><br><span class="line">183</span><br><span class="line">184</span><br><span class="line">185</span><br><span class="line">186</span><br><span class="line">187</span><br><span class="line">188</span><br><span class="line">189</span><br><span class="line">190</span><br><span class="line">191</span><br><span class="line">192</span><br><span class="line">193</span><br><span class="line">194</span><br><span class="line">195</span><br><span class="line">196</span><br><span class="line">197</span><br><span class="line">198</span><br><span class="line">199</span><br><span class="line">200</span><br><span class="line">201</span><br><span class="line">202</span><br><span class="line">203</span><br><span class="line">204</span><br><span class="line">205</span><br><span class="line">206</span><br><span class="line">207</span><br><span class="line">208</span><br><span class="line">209</span><br><span class="line">210</span><br><span class="line">211</span><br><span class="line">212</span><br></pre></td><td class="code"><pre><span class="line">create table student(</span><br><span class="line">student_num varchar(20) primary key,</span><br><span class="line">student_name varchar(20) not null,</span><br><span class="line">student_sex varchar(10) not null,</span><br><span class="line">student_birthday datetime,</span><br><span class="line">class varchar(20)</span><br><span class="line">);</span><br><span class="line"></span><br><span class="line">create table teacher(</span><br><span class="line">teacher_num varchar(20) primary key,</span><br><span class="line">teacher_name varchar(20) not null,</span><br><span class="line">teacher_sex varchar(20) not null,</span><br><span class="line">teacher_birthday varchar(20),</span><br><span class="line">prof varchar(20) not null,</span><br><span class="line">depart varchar(20) not null</span><br><span class="line">);</span><br><span class="line"></span><br><span class="line">create table course(</span><br><span class="line">course_num varchar(20) primary key,</span><br><span class="line">course_name varchar(20) not null,</span><br><span class="line">teacher_num varchar(20) not null,</span><br><span class="line">foreign key(teacher_num) references teacher(teacher_num)</span><br><span class="line">);</span><br><span class="line"></span><br><span class="line">create table score(</span><br><span class="line">student_num varchar(20) primary key,</span><br><span class="line">course_num varchar(20) not null,</span><br><span class="line">degree decimal,</span><br><span class="line">foreign key(student_num) references student(student_num),</span><br><span class="line">foreign key(course_num) references course(course_num)</span><br><span class="line">);</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">insert into student values(&apos;101&apos;, &apos;aaa&apos;, &apos;f&apos;, &apos;1996-01-01&apos;, &apos;101&apos;);</span><br><span class="line">insert into student values(&apos;201&apos;, &apos;bbb&apos;, &apos;f&apos;, &apos;1995-06-01&apos;, &apos;202&apos;);</span><br><span class="line">insert into student values(&apos;301&apos;, &apos;ccc&apos;, &apos;f&apos;, &apos;1994-04-01&apos;, &apos;301&apos;);</span><br><span class="line">insert into student values(&apos;111&apos;, &apos;ddd&apos;, &apos;f&apos;, &apos;1996-01-01&apos;, &apos;102&apos;);</span><br><span class="line">insert into student values(&apos;112&apos;, &apos;eee&apos;, &apos;f&apos;, &apos;1996-01-01&apos;, &apos;101&apos;);</span><br><span class="line">insert into student values(&apos;201&apos;, &apos;fff&apos;, &apos;f&apos;, &apos;1995-07-31&apos;, &apos;202&apos;);</span><br><span class="line">insert into student values(&apos;113&apos;, &apos;ggg&apos;, &apos;f&apos;, &apos;1996-11-21&apos;, &apos;103&apos;);</span><br><span class="line">insert into student values(&apos;114&apos;, &apos;hhh&apos;, &apos;f&apos;, &apos;1996-01-21&apos;, &apos;103&apos;);</span><br><span class="line">insert into student values(&apos;311&apos;, &apos;iii&apos;, &apos;f&apos;, &apos;1994-06-08&apos;, &apos;302&apos;);</span><br><span class="line">insert into student values(&apos;123&apos;, &apos;jjj&apos;, &apos;f&apos;, &apos;1996-11-01&apos;, &apos;101&apos;);</span><br><span class="line">insert into student values(&apos;211&apos;, &apos;kkk&apos;, &apos;f&apos;, &apos;1995-04-21&apos;, &apos;201&apos;);</span><br><span class="line"></span><br><span class="line">insert into teacher values(&apos;990101&apos;, &apos;huanglaoshi&apos;, &apos;f&apos;, &apos;1972-01-21&apos;, &apos;jiaoshou&apos;, &apos;cs&apos;);</span><br><span class="line">insert into teacher values(&apos;080101&apos;, &apos;zhanglaoshi&apos;, &apos;m&apos;, &apos;1991-06-08&apos;, &apos;fujiaoshou&apos;, &apos;es&apos;);</span><br><span class="line">insert into teacher values(&apos;050101&apos;, &apos;xulaoshi&apos;, &apos;f&apos;, &apos;1987-11-01&apos;, &apos;fujiaoshou&apos;, &apos;cs&apos;);</span><br><span class="line">insert into teacher values(&apos;030101&apos;, &apos;liulaoshi&apos;, &apos;m&apos;, &apos;1986-04-21&apos;, &apos;fujiaoshou&apos;, &apos;es&apos;);</span><br><span class="line"></span><br><span class="line">insert into course values(&apos;1-101&apos;, &apos;cscc&apos;, &apos;990101&apos;);</span><br><span class="line">insert into course values(&apos;2-201&apos;, &apos;dsjkl&apos;, &apos;080101&apos;);</span><br><span class="line">insert into course values(&apos;3-301&apos;, &apos;sdqku&apos;, &apos;050101&apos;);</span><br><span class="line">insert into course values(&apos;4-401&apos;, &apos;asdhk&apos;, &apos;030101&apos;);</span><br><span class="line"></span><br><span class="line">insert into score values(&apos;101&apos;, &apos;1-101&apos;, &apos;98&apos;);</span><br><span class="line">insert into score values(&apos;201&apos;, &apos;1-101&apos;, &apos;89&apos;);</span><br><span class="line">insert into score values(&apos;301&apos;, &apos;1-101&apos;, &apos;78&apos;);</span><br><span class="line">insert into score values(&apos;111&apos;, &apos;1-101&apos;, &apos;94&apos;);</span><br><span class="line">insert into score values(&apos;112&apos;, &apos;2-201&apos;, &apos;68&apos;);</span><br><span class="line">insert into score values(&apos;201&apos;, &apos;2-201&apos;, &apos;87&apos;);</span><br><span class="line">insert into score values(&apos;113&apos;, &apos;2-201&apos;, &apos;87&apos;);</span><br><span class="line">insert into score values(&apos;114&apos;, &apos;3-301&apos;, &apos;92&apos;);</span><br><span class="line">insert into score values(&apos;311&apos;, &apos;3-301&apos;, &apos;94&apos;);</span><br><span class="line">insert into score values(&apos;123&apos;, &apos;4-401&apos;, &apos;93&apos;);</span><br><span class="line">insert into score values(&apos;211&apos;, &apos;4-401&apos;, &apos;96&apos;);</span><br><span class="line"></span><br><span class="line">//查询部分列</span><br><span class="line">select student_name,student_sex from student;</span><br><span class="line"></span><br><span class="line">//剔除重复信息</span><br><span class="line">select distinct depart from teacher;</span><br><span class="line"></span><br><span class="line">//查询区间</span><br><span class="line">select * from score where degree between 60 and 80;</span><br><span class="line">select * from score where degree &gt; 60 and degree &lt; 80;</span><br><span class="line">select student_num,degree from score where degree between 70 and 90;</span><br><span class="line"></span><br><span class="line">//或的关系的查询</span><br><span class="line">select * from score where degree in(98, 96);</span><br><span class="line">select * from student where class = &quot;101&quot; or student_sex = &quot;f&quot;;</span><br><span class="line"></span><br><span class="line">//并且关系and</span><br><span class="line">select * from student where class = &quot;101&quot; and student_sex = &quot;f&quot;;</span><br><span class="line"></span><br><span class="line">//降序查询</span><br><span class="line">select * from student order by class desc;</span><br><span class="line"></span><br><span class="line">//升序查询</span><br><span class="line">select * from student order by class asc;</span><br><span class="line"></span><br><span class="line">select * from score order by course_num asc, degree desc;</span><br><span class="line"></span><br><span class="line">//统计人数</span><br><span class="line">select count(*) from student where class = &quot;101&quot;;</span><br><span class="line"></span><br><span class="line">//查询最高分的学生学号和课程号</span><br><span class="line">select student_num, course_num from score where degree = (select max(degree) from score);</span><br><span class="line">//排序做法：limit 第一个数字表示从第几个开始，第二个表示有几个</span><br><span class="line">select student_num, course_num, degree from score order by degree desc limit 0,1; </span><br><span class="line"></span><br><span class="line">//查询每门课的平均成绩avg</span><br><span class="line">select avg(degree) from score where course_num = &quot;1-101&quot;;</span><br><span class="line">select course_num,avg(degree) from score group by course_num;</span><br><span class="line"></span><br><span class="line">//score表中至少有2名学生选修并且以3开头的课程的平均分数</span><br><span class="line">select course_num, avg(degree), count(*) from score group by course_num having count(*)&gt;=2 and course_num like &apos;1%&apos;;</span><br><span class="line"></span><br><span class="line">//查询在不同表内的信息</span><br><span class="line">select student_name, course_num, degree from student,score where student.student_num = score.student_num;</span><br><span class="line">select student_num, course_name, degree from course, score where course.course_num = score.course_num;</span><br><span class="line"></span><br><span class="line">//三个表</span><br><span class="line">select student_name, course_name, degree from student, course,score where student.student_num = score.student_num and course.course_num = score.course_num;</span><br><span class="line"></span><br><span class="line">//查询某个班每门课的平均分</span><br><span class="line"></span><br><span class="line">select course_num, avg(degree) from score where student_num in (select student_num from student where class = &apos;101&apos;) group by course_num;</span><br><span class="line"></span><br><span class="line">//</span><br><span class="line">select * from score where degree &gt; (select degree from score where student_num = &apos;112&apos; and course_num = &apos;2-201&apos;) and course_num = &apos;2-201&apos;;</span><br><span class="line"></span><br><span class="line">//查询出生年相同</span><br><span class="line">select year(student_birthday) from student where student_number in (101, 201);</span><br><span class="line">select student_num, student_name, student_birthday from student</span><br><span class="line">where year(student_birthday) in (select year(student_birthday) from student where student_num in (101, 201));</span><br><span class="line"></span><br><span class="line">//</span><br><span class="line">select teacher_num from teacher where teacher_name = &apos;liulaoshi&apos;;</span><br><span class="line"></span><br><span class="line">select * from score where course_num = (select course_num from course where teacher_num = (select teacher_num from teacher where teacher_name = &apos;liulaoshi&apos;))select count(*) from student where class = &quot;101&quot;;</span><br><span class="line"></span><br><span class="line">//</span><br><span class="line">select course_num from score group by course having count(*) &gt; 5;</span><br><span class="line">select teacher_num from course where course_num in (select course_num from score group by course having count(*) &gt; 5);</span><br><span class="line">select * from teacher where teacher_num = </span><br><span class="line">(select teacher_num from course where course_num in </span><br><span class="line">(select course_num from score group by course_num having count(*) &gt; 3));</span><br><span class="line"></span><br><span class="line">//有85分以上的成绩的课程的course_num</span><br><span class="line"></span><br><span class="line">select course_num from score where degree &gt; 85;</span><br><span class="line"></span><br><span class="line">//</span><br><span class="line">select * from score where course_num in (select course_num from teacher where depart = &apos;cs&apos;);</span><br><span class="line"></span><br><span class="line">//一个系中独有的职称的老师</span><br><span class="line">select * from teacher where depart = &apos;cs&apos; and prof not in (select prof from teacher where depart = &apos;es&apos;)</span><br><span class="line">union</span><br><span class="line">select * from teacher where depart = &apos;es&apos; and prof not in (select prof from teacher where depart = &apos;cs&apos;);</span><br><span class="line"></span><br><span class="line">//大于某个人</span><br><span class="line">select * from score where degree &gt; (select degree from score where course_num = &apos;1-101&apos; and student_num = &apos;201&apos;) and course_num = &apos;1-101&apos;;</span><br><span class="line">//大于任意一个人</span><br><span class="line">select * from score where degree &gt; any (select degree from score where course_num = &apos;1-101&apos;) and course_num = &apos;1-101&apos; order by degree desc;</span><br><span class="line"></span><br><span class="line">//大于所有人</span><br><span class="line">select * from score where course_num = &apos;1-101&apos; and degree &gt; all (select degree from score where course_num = &apos;2-201&apos;);</span><br><span class="line"></span><br><span class="line">//联合两个表格，使用别名统一名字</span><br><span class="line">select teacher_name as name, teacher_sex as sex, teacher_birthday as brithday from teacher union select student_name, student_sex, student_birthday from student;</span><br><span class="line"></span><br><span class="line">//查询成绩比平均成绩低的同学</span><br><span class="line">select * from score where degree &lt; (select avg(degree) from score);</span><br><span class="line">select * from score a where degree &lt; (select avg(degree) from score b where a.course_num = b.course_num);</span><br><span class="line"></span><br><span class="line">//</span><br><span class="line">select * from teacher where teacher_num in (select teacher_num from course);</span><br><span class="line"></span><br><span class="line">//至少有两名男生的班号</span><br><span class="line">select class from student where (select count(*) from student where student_sex = &apos;f&apos;) &gt; 4;</span><br><span class="line">select class from student where student_sex = &apos;f&apos; group by class having count(*) &gt; 2;</span><br><span class="line"></span><br><span class="line">//</span><br><span class="line">select * from student where student_name no like &apos;a%&apos;;</span><br><span class="line"></span><br><span class="line">//年龄</span><br><span class="line">select student_name, year(now()) - year(student_birthday) as &apos;old&apos; from student;</span><br><span class="line"></span><br><span class="line">//最大值 最小值</span><br><span class="line">select max(student_birthday) as &apos;max&apos;, min(student_birthday) as &apos;min&apos; from student;</span><br><span class="line"></span><br><span class="line">//按照班号</span><br><span class="line">select * from student order by class desc, student_birthday;</span><br><span class="line"></span><br><span class="line">//查询男教师及其所上的课程</span><br><span class="line">select * from course where teacher_num in (select teacher_num from teacher where teacher_sex = &apos;m&apos;);</span><br><span class="line"></span><br><span class="line">//</span><br><span class="line">select student_name from student where student_sex = (select student_sex from student where student_name = &apos;aaa&apos;);</span><br><span class="line">select student_name from student where student_sex = (select student_sex from student where student_name = &apos;aaa&apos;) and class = (select class from student where student_name = &apos;aaa&apos;);</span><br><span class="line"></span><br><span class="line">select * from student where student_sex = &apos;f&apos; and </span><br><span class="line">select * from score </span><br><span class="line">where course_num = (select course_num from course where course_name = &apos;cscc&apos;) </span><br><span class="line">and student_num in (select student_num from student where student_sex = &apos;f&apos; );</span><br><span class="line"></span><br><span class="line">//建立grade表</span><br><span class="line">create table grade(</span><br><span class="line">low int(3),</span><br><span class="line">up int(3),</span><br><span class="line">grade char(1)</span><br><span class="line">);</span><br><span class="line"></span><br><span class="line">insert into grade values(90, 100, &apos;A&apos;);</span><br><span class="line">insert into grade values(80, 89, &apos;B&apos;);</span><br><span class="line">insert into grade values(70, 79, &apos;C&apos;);</span><br><span class="line">insert into grade values(60, 69, &apos;D&apos;);</span><br><span class="line">insert into grade values(0, 59, &apos;E&apos;);</span><br><span class="line"></span><br><span class="line">//查询</span><br><span class="line">select student_num, course_num, grade from score, grade where degree between low and up;</span><br></pre></td></tr></table></figure>
+<h3 id="SQL的四种连接查询"><a href="#SQL的四种连接查询" class="headerlink" title="SQL的四种连接查询"></a>SQL的四种连接查询</h3><ol>
+<li>内连接</li>
+</ol>
+<ul>
+<li>inner join 或者 join</li>
+</ul>
+<ol start="2">
+<li>外连接</li>
+</ol>
+<ul>
+<li>左连接left join或者left outer join</li>
+<li>右连接right join或者right outer join</li>
+</ul>
+<ol start="3">
+<li>完全外连接 full join或者full outer join</li>
+</ol>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br></pre></td><td class="code"><pre><span class="line">// 创建两个表</span><br><span class="line">create table person(</span><br><span class="line">id int,</span><br><span class="line">name varchar(20),</span><br><span class="line">cardID int</span><br><span class="line">);</span><br><span class="line"></span><br><span class="line">create table card(</span><br><span class="line">id int,</span><br><span class="line">name varchar(20)</span><br><span class="line">);</span><br><span class="line"></span><br><span class="line">insert into card values(1, &apos;fanka&apos;);</span><br><span class="line">insert into card values(2, &apos;nonghang&apos;);</span><br><span class="line">insert into card values(3, &apos;gongshang&apos;);</span><br><span class="line">insert into card values(4, &apos;youzheng&apos;);</span><br><span class="line">insert into card values(5, &apos;jianhang&apos;);</span><br><span class="line"></span><br><span class="line">insert into person values(1, &apos;zhangsan&apos;, 1);</span><br><span class="line">insert into person values(2, &apos;wangwu&apos;, 3);</span><br><span class="line">insert into person values(3, &apos;zhaoliu&apos;, 6);</span><br><span class="line"></span><br><span class="line">insert into person values(1, &apos;zhangsan&apos;, 1);</span><br><span class="line">insert into person values(2, &apos;wangwu&apos;, 1);</span><br><span class="line">insert into person values(3, &apos;zhaoliu&apos;, 1);</span><br></pre></td></tr></table></figure>
+<ol start="4">
+<li>inner join 查询<br><code>select * from person inner join card on person.cardId = card.id;</code></li>
+</ol>
+<ul>
+<li>内联查询，就是两张表中的数据通过某个字段相对查询出相关的记录数据</li>
+</ul>
+<ol start="5">
+<li>left join左外连接<br><code>select * from person left join card on person.cardId = card.id;</code></li>
+</ol>
+<ul>
+<li>把左边表的数据都取出来，右边表的数据如果有则相等，如果没有就补NULL</li>
+</ul>
+<ol start="6">
+<li>right join右外连接，与左外连接相似</li>
+<li><p>full join全外链接，MySQL不支持，两个表的并集</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">select * from person left join card on person.cardId = card.id</span><br><span class="line">union</span><br><span class="line">select * from person right join card on person.cardId = card.id;</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>不用常见外键，通过相同的字段查询交集并集等</p>
+</li>
+</ol>
+<h2 id="MySQL事务"><a href="#MySQL事务" class="headerlink" title="MySQL事务"></a>MySQL事务</h2><ol>
+<li>是最小的不可分割的工作单元，事务能够保证业务的完整性</li>
+<li>MySQL默认开启事务<code>select @@autocommit;</code></li>
+<li>执行sql语句时，效果会立即体现，不能回滚</li>
+<li>关闭事务，可以回滚，但是手动提交<code>commit;</code>后，仍然不能回滚</li>
+<li><p><code>begin;</code>或者<code>start transaction;</code>都可以手动开启一个事务</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">begin;</span><br><span class="line">update user set money = money - 100 where name = &apos;aaa&apos;;</span><br><span class="line">update user set money = money + 100 where name = &apos;bbb&apos;;</span><br><span class="line">commit;</span><br><span class="line">//无法回滚</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>事务的四大特征ACID</p>
+</li>
+</ol>
+<ul>
+<li>原子性，事务是最小的单位，不可再次分割</li>
+<li>一致性，同一事务中必须保证同时成功或者同时失败</li>
+<li>隔离性，两个事务之间具有隔离性</li>
+<li>持久性，事务一旦提交，就不可以回滚</li>
+</ul>
+<ol start="7">
+<li>事务的隔离性，隔离级别越高，性能越差</li>
+</ol>
+<ul>
+<li>read uncommited; 读未提交的，事务a做操作，没有提交，但b可以读，脏读</li>
+<li>read committed; 读已提交的，事务a做操作必须已经提交，b才可以读到，不可重复读</li>
+<li>repeatable read; 可重复读 MySQL默认，幻读</li>
+<li>serializable; 串行化，可重复读，禁止写入操作，必须等待其他事务结束，性能特差</li>
+</ul>
+<ol start="8">
+<li>查看MySQL事务隔离级别</li>
+</ol>
+<ul>
+<li>系统级别<code>select @@global.transaction_isolation;</code></li>
+<li>会话级别<code>select @@transaction_isolation;</code></li>
+</ul>
+<ol start="9">
+<li>修改隔离级别<code>set global transaction islotion level read uncommited;</code></li>
+</ol>
+
+      
+    </div>
+    
+    
+    
+
+    
+      <div>
+        <div id="wechat_subscriber" style="display: block; padding: 10px 0; margin: 20px auto; width: 100%; text-align: center">
+    <img id="wechat_subscriber_qcode" src="/images/wechat.jpg" alt="WhitneyLu wechat" style="width: 200px; max-width: 100%;">
+    <div>Contact me by scanning my public WeChat QR code</div>
+</div>
+
+
+      </div>
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/MySQL/" rel="tag"><i class="fa fa-tag"></i> MySQL</a>
+          
+        </div>
+      
+
+      
+      
+        <div class="post-widgets">
+        
+
+        
+
+        
+          
+          <div id="needsharebutton-postbottom">
+            <span class="btn">
+              <i class="fa fa-share-alt" aria-hidden="true"></i>
+            </span>
+          </div>
+        
+        </div>
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2021/03/07/数据库1/" rel="next" title="数据库1">
+                <i class="fa fa-chevron-left"></i> 数据库1
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+<script type="text/javascript" src="https://me.idealli.com/images/load.gif" data-src="/js/src/love.js"></script>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            Table of Contents
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            Overview
+          </li>
+        </ul>
+      
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <img class="site-author-image" itemprop="image" src="/images/nessa.png" alt="WhitneyLu">
+            
+              <p class="site-author-name" itemprop="name">WhitneyLu</p>
+              <p class="site-description motion-element" itemprop="description"></p>
+          </div>
+
+          <nav class="site-state motion-element">
+
+            
+              <div class="site-state-item site-state-posts">
+              
+                <a href="/archives/">
+              
+                  <span class="site-state-item-count">37</span>
+                  <span class="site-state-item-name">posts</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-categories">
+                <a href="/categories/index.html">
+                  <span class="site-state-item-count">27</span>
+                  <span class="site-state-item-name">categories</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-tags">
+                <a href="/tags/index.html">
+                  <span class="site-state-item-count">10</span>
+                  <span class="site-state-item-name">tags</span>
+                </a>
+              </div>
+            
+
+          </nav>
+
+          
+
+          
+            <div class="links-of-author motion-element">
+                
+                  <span class="links-of-author-item">
+                    <a href="https://github.com/yourname" target="_blank" title="GitHub">
+                      
+                        <i class="fa fa-fw fa-github"></i></a>
+                  </span>
+                
+                  <span class="links-of-author-item">
+                    <a href="mailto:miracle960118@gmail.com" target="_blank" title="E-Mail">
+                      
+                        <i class="fa fa-fw fa-envelope"></i></a>
+                  </span>
+                
+                  <span class="links-of-author-item">
+                    <a href="https://www.instagram.com" target="_blank" title="Instagram">
+                      
+                        <i class="fa fa-fw fa-instagram"></i></a>
+                  </span>
+                
+            </div>
+          
+
+          
+          
+
+          
+          
+
+          
+
+        </div>
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#数据库的三大设计范式"><span class="nav-number">1.</span> <span class="nav-text">数据库的三大设计范式</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#第一范式：数据表中的所有字段都是不可分割的原子值"><span class="nav-number">1.1.</span> <span class="nav-text">第一范式：数据表中的所有字段都是不可分割的原子值</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#第二范式："><span class="nav-number">1.2.</span> <span class="nav-text">第二范式：</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#第三范式："><span class="nav-number">1.3.</span> <span class="nav-text">第三范式：</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#查询训练"><span class="nav-number">1.4.</span> <span class="nav-text">查询训练</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#SQL的四种连接查询"><span class="nav-number">1.5.</span> <span class="nav-text">SQL的四种连接查询</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#MySQL事务"><span class="nav-number">2.</span> <span class="nav-text">MySQL事务</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; 2019 &mdash; <span itemprop="copyrightYear">2021</span>
+  <span class="with-love">
+    <i class="fa fa-Whitney"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">WhitneyLu</span>
+
+  
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item-icon">
+      <i class="fa fa-area-chart"></i>
+    </span>
+    
+      <span class="post-meta-item-text">Site words total count&#58;</span>
+    
+    <span title="Site words total count">79.9k</span>
+  
+</div>
+
+
+
+
+
+
+
+        
+<div class="busuanzi-count">
+  <script async src="https://dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+  
+    <span class="site-uv">
+      <i class="fa fa-user"></i>
+      <span class="busuanzi-value" id="busuanzi_value_site_uv"></span>
+      
+    </span>
+  
+
+  
+    <span class="site-pv">
+      <i class="fa fa-eye"></i>
+      <span class="busuanzi-value" id="busuanzi_value_site_pv"></span>
+      
+    </span>
+  
+</div>
+
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+          <span id="scrollpercent"><span>0</span>%</span>
+        
+      </div>
+    
+
+    
+      <div id="needsharebutton-float">
+        <span class="btn">
+          <i class="fa fa-share-alt" aria-hidden="true"></i>
+        </span>
+      </div>
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.4"></script>
+
+
+
+  
+  
+
+
+  <script type="text/javascript" src="/js/src/affix.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/schemes/pisces.js?v=5.1.4"></script>
+
+
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.4"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+  
+  
+  <link rel="stylesheet" href="/lib/needsharebutton/needsharebutton.css">
+
+  
+  
+  <script src="/lib/needsharebutton/needsharebutton.js"></script>
+
+  <script>
+    
+      pbOptions = {};
+      
+          pbOptions.iconStyle = "default";
+      
+          pbOptions.boxForm = "horizontal";
+      
+          pbOptions.position = "bottomCenter";
+      
+          pbOptions.networks = "Weibo,Wechat,Douban,QQZone,Twitter,Facebook";
+      
+      new needShareButton('#needsharebutton-postbottom', pbOptions);
+    
+    
+      flOptions = {};
+      
+          flOptions.iconStyle = "default";
+      
+          flOptions.boxForm = "vertical";
+      
+          flOptions.position = "topRight";
+      
+          flOptions.networks = "Weibo,Wechat,Douban,QQZone,Twitter,Facebook";
+      
+      new needShareButton('#needsharebutton-float', flOptions);
+    
+  </script>
+
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>
