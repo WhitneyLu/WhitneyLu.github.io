@@ -1,0 +1,1023 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next gemini use-motion" lang>
+<head><meta name="generator" content="Hexo 3.8.0">
+  <meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+<meta name="theme-color" content="#222">
+<meta name="google-site-verification" content="eaUMXvNaTlS5XY6VQbEb2OQ9XI-jGDm0VQvmNHMz5qI">
+<meta name="baidu-site-verification" content="8GfnZRBeT5">
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform">
+<meta http-equiv="Cache-Control" content="no-siteapp">
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css">
+
+
+
+
+  
+  
+  
+  
+
+  
+    
+    
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+    
+    
+    <link href="https://fonts.cat.net/css?family=Roboto Slab:300,300italic,400,400italic,700,700italic&subset=latin,latin-ext" rel="stylesheet" type="text/css">
+  
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css">
+
+<link href="/css/main.css?v=5.1.4" rel="stylesheet" type="text/css">
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=5.1.4">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=5.1.4" color="#222">
+
+
+
+
+
+  <meta name="keywords" content="redis,">
+
+
+
+
+
+
+
+
+
+
+<meta name="description" content="redis基础、非关系型数据库">
+<meta name="keywords" content="redis">
+<meta property="og:type" content="article">
+<meta property="og:title" content="redis基础">
+<meta property="og:url" content="https://whitneylu.github.io/2021/04/11/redis基础/index.html">
+<meta property="og:site_name" content="Whitney&#39;s coding note">
+<meta property="og:description" content="redis基础、非关系型数据库">
+<meta property="og:locale" content="default">
+<meta property="og:updated_time" content="2021-04-11T11:18:38.272Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="redis基础">
+<meta name="twitter:description" content="redis基础、非关系型数据库">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Gemini',
+    version: '5.1.4',
+    sidebar: {"position":"left","display":"post","offset":12,"b2t":false,"scrollpercent":true,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    duoshuo: {
+      userId: '0',
+      author: 'Author'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="https://whitneylu.github.io/2021/04/11/redis基础/">
+
+
+
+
+
+  <title>redis基础 | Whitney's coding note</title>
+  
+
+
+
+
+
+
+
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="default">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">Whitney's coding note</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle">Study as if you were going to live forever.</p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br>
+            
+            Home
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br>
+            
+            Tags
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br>
+            
+            Categories
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br>
+            
+            Archives
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="https://whitneylu.github.io/2021/04/11/redis基础/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="WhitneyLu">
+      <meta itemprop="description" content>
+      <meta itemprop="image" content="/images/nessa.png">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Whitney's coding note">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">redis基础</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">Posted on</span>
+              
+              <time title="Post created" itemprop="dateCreated datePublished" datetime="2021-04-11T00:00:00+08:00">
+                2021-04-11
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category">
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">In</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/redis、数据库/" itemprop="url" rel="index">
+                    <span itemprop="name">redis、数据库</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+            <span class="post-meta-divider">|</span>
+            <span class="page-pv"><i class="fa fa-file-o"></i>
+            <span class="busuanzi-value" id="busuanzi_value_page_pv"></span>
+            </span>
+          
+
+          
+            <div class="post-wordcount">
+              
+                
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-file-word-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">Words count in article&#58;</span>
+                
+                <span title="Words count in article">
+                  1.4k
+                </span>
+              
+
+              
+                <span class="post-meta-divider">|</span>
+              
+
+              
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-clock-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">Reading time &asymp;</span>
+                
+                <span title="Reading time">
+                  6
+                </span>
+              
+            </div>
+          
+
+          
+              <div class="post-description">
+                  redis基础、非关系型数据库
+              </div>
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <h2 id="redis基础"><a href="#redis基础" class="headerlink" title="redis基础"></a>redis基础</h2><h3 id="NoSQL非关系型数据库"><a href="#NoSQL非关系型数据库" class="headerlink" title="NoSQL非关系型数据库"></a>NoSQL非关系型数据库</h3><ol>
+<li>方便扩展，数据之间没有关系</li>
+<li>大数据高性能（redis一秒可以读取8万次）</li>
+<li>NoSQL是一种细粒度的缓存，性能会比较高</li>
+<li>数据类型是多样性的，不需要事先设计数据库</li>
+<li>传统的RDBMS</li>
+</ol>
+<ul>
+<li>结构化组织</li>
+<li>SQL</li>
+<li>数据和关系都存在单独的表中 row column</li>
+<li>数据定义语言</li>
+<li>严格的一致性</li>
+<li>基础的事务</li>
+</ul>
+<ol start="6">
+<li>NoSQL</li>
+</ol>
+<ul>
+<li>不仅仅是数据</li>
+<li>没有固定的查询语言</li>
+<li>键值对存储、列存储、文档存储、图形数据库</li>
+<li>最终一致性</li>
+<li>CAP定理4和BASE理论 （异地多活）</li>
+<li>高性能、高可用性、高可扩展性</li>
+</ul>
+<ol start="7">
+<li>3V：海量、多样、实时/3高：高并发、高可扩、高性能</li>
+<li>RDBMS + NoSQL一起使用</li>
+<li>在应用和底层数据元之间，构建一层代理<br>10.文档型数据库</li>
+</ol>
+<ul>
+<li>MongoDB基于分布式文件存储的数据库，C++编写，用来处理大量的文档</li>
+<li>MongoDB是一个介于关系型数据库和非关系型数据库之间的产品</li>
+<li>ConthDB</li>
+</ul>
+<ol start="11">
+<li>列存储数据库</li>
+</ol>
+<ul>
+<li>HBase</li>
+<li>分布式文件系统</li>
+</ul>
+<ol start="12">
+<li>图关系数据库</li>
+</ol>
+<h3 id="redis基础-1"><a href="#redis基础-1" class="headerlink" title="redis基础"></a>redis基础</h3><ol>
+<li>redis是非关系型数据库、缓存数据库、远程字典服务、也被称为结构化数据库</li>
+<li>基于网络，可基于内存可持久化的key-value数据库，提供多种语言的api</li>
+<li>用处</li>
+</ol>
+<ul>
+<li>内存存储、持久化</li>
+<li>效率高可用于高速缓存</li>
+<li>发布订阅系统</li>
+<li>地图信息分析</li>
+<li>计时器、计数器（浏览量）</li>
+</ul>
+<ol start="3">
+<li>redis-benchmark官方压力测试工具</li>
+<li>redis是单线程的</li>
+</ol>
+<h3 id="redis命令"><a href="#redis命令" class="headerlink" title="redis命令"></a>redis命令</h3><ol>
+<li>关机shutdown</li>
+<li><code>select 1</code>切换数据库，默认16个数据库</li>
+<li><code>DBSIZE</code> 查看DB大小</li>
+<li>启动<code>ps -ef|grep redis</code> <code>redis-server redis-config/redis.conf</code> <code>redis-cli -p 6379</code></li>
+<li>查看所有的<code>key *</code></li>
+<li>清空当前数据库<code>flushdb</code></li>
+<li>清空所有数据库<code>flushall</code></li>
+<li>是否存在key<code>exists name</code></li>
+<li>将数据移动到数据库1<code>move name 1</code></li>
+<li>10秒？10个滴答 过期<code>expire name 10</code> <code>time to live ttl</code></li>
+<li>追加 <code>append key1 &quot;hello&quot;</code></li>
+<li>加一操作<code>incr num</code> 减一操作<code>decr num</code></li>
+<li>指定数值操作<code>incrby num 10  decrby num 4</code></li>
+<li>截取字符串<code>getrange key1 0 3</code></li>
+<li>替换相应位置的字符串 <code>setrange key1 1 abc</code></li>
+<li><code>setex key3 30 &quot;hello&quot;</code>设置过期时间</li>
+<li><code>setnx key3 &quot;redis&quot;</code>如果不存在再创建key3，如果存在直接创建失败</li>
+<li>批量设置，批量获取，<code>mset mget</code>，原子性操作一个不成功，全部都不成功，或者全部成功</li>
+<li>设置一个对象<code>set user:1{name:zhangsan, age:2}</code>设置一个对象，值为json<code>mset user:1:name zhangshang user:1:age 2</code></li>
+<li><code>getset</code>先get再set</li>
+<li>操作命令记录<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line">127.0.0.1:6379[1]&gt; dbsize #占用内存大小</span><br><span class="line">(integer) 0</span><br><span class="line">127.0.0.1:6379[1]&gt; set name luxinwei</span><br><span class="line">OK</span><br><span class="line">127.0.0.1:6379[1]&gt; get name</span><br><span class="line">&quot;luxinwei&quot;</span><br><span class="line">127.0.0.1:6379[1]&gt; dbsize</span><br><span class="line">(integer) 1</span><br><span class="line">127.0.0.1:6379[1]&gt; keys *</span><br><span class="line">1) &quot;name&quot;</span><br><span class="line"></span><br><span class="line">127.0.0.1:6379&gt; getset db redis 如果不存在则返回nil，并设置新的</span><br><span class="line">(nil)</span><br><span class="line">127.0.0.1:6379&gt; get db</span><br><span class="line">&quot;redis&quot;</span><br><span class="line">127.0.0.1:6379&gt; getset db mongodb 如果存在则返回原来的值，并设置新的</span><br><span class="line">&quot;redis&quot;</span><br><span class="line">127.0.0.1:6379&gt; get db</span><br><span class="line">&quot;mongodb&quot;</span><br></pre></td></tr></table></figure>
+</li>
+</ol>
+<h4 id="list基本的数据类型，相当于双向队列"><a href="#list基本的数据类型，相当于双向队列" class="headerlink" title="list基本的数据类型，相当于双向队列"></a>list基本的数据类型，相当于双向队列</h4><ol>
+<li>lpush,rpush 尾部插入</li>
+<li>lpop,rpop 移除尾部</li>
+<li>lrange,rrange 范围</li>
+<li>lindex,rindex 下标</li>
+<li>ltrim,rtrim修剪，list截断</li>
+<li>rpoplpush 移除列表的最后一个元素，移动到新的列表中</li>
+<li>列表存在，才能使用<code>lset list 0 item</code></li>
+<li><code>linsert list before two twotwo</code>插入</li>
+<li>在收尾插入或改动值效率最高，中间元素效率较低</li>
+<li>消息队列lpushrpop</li>
+<li>栈lpushlpop</li>
+</ol>
+<h4 id="hash-key-map集合"><a href="#hash-key-map集合" class="headerlink" title="hash key-map集合"></a>hash key-map集合</h4><ol>
+<li>hash更适合对象的存储<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br></pre></td><td class="code"><pre><span class="line">127.0.0.1:6379&gt; hset myhash field hash1</span><br><span class="line">(integer) 1</span><br><span class="line">127.0.0.1:6379&gt; hget myhash field</span><br><span class="line">&quot;hash1&quot;</span><br><span class="line">127.0.0.1:6379&gt; hmset myhash field1 hello field2 world #批量创建</span><br><span class="line">OK</span><br><span class="line">127.0.0.1:6379&gt; hmget myhash field1 field2</span><br><span class="line">1) &quot;hello&quot;</span><br><span class="line">2) &quot;world&quot;</span><br><span class="line">127.0.0.1:6379&gt; hgetall myhash #获取全部数据</span><br><span class="line">1) &quot;field&quot;</span><br><span class="line">2) &quot;hash1&quot;</span><br><span class="line">3) &quot;field1&quot;</span><br><span class="line">4) &quot;hello&quot;</span><br><span class="line">5) &quot;field2&quot;</span><br><span class="line">6) &quot;world&quot;</span><br><span class="line">127.0.0.1:6379&gt; hdel myhash field #删除指定字段</span><br><span class="line">(integer) 1</span><br><span class="line">127.0.0.1:6379&gt; hexists myhash field2 #判断hash中是否存在指定字段</span><br><span class="line">(integer) 1</span><br><span class="line">127.0.0.1:6379&gt; hset myhash field3 5</span><br><span class="line">(integer) 1</span><br><span class="line">127.0.0.1:6379&gt; hincrby myhash field3 5 #指定增量</span><br><span class="line">(integer) 10</span><br><span class="line">127.0.0.1:6379&gt; hsetnx myhash field3 hello #如果存在不可以设置</span><br><span class="line">(integer) 0</span><br><span class="line">127.0.0.1:6379&gt; hsetnx myhash field4 hello #如果不存在可以设置</span><br><span class="line">(integer) 1</span><br></pre></td></tr></table></figure>
+</li>
+</ol>
+<h4 id="Zset有序集合"><a href="#Zset有序集合" class="headerlink" title="Zset有序集合"></a>Zset有序集合</h4><ol>
+<li>在set基础上增加了一个值，set k1 v1<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br></pre></td><td class="code"><pre><span class="line">127.0.0.1:6379&gt; zadd myset 1 one</span><br><span class="line">(integer) 1</span><br><span class="line">127.0.0.1:6379&gt; zadd myset 2 two 3 three</span><br><span class="line">(integer) 2</span><br><span class="line">127.0.0.1:6379&gt; zadd salary 2500 a</span><br><span class="line">(integer) 1</span><br><span class="line">127.0.0.1:6379&gt; zadd salary 1999 b</span><br><span class="line">(integer) 1</span><br><span class="line">127.0.0.1:6379&gt; zadd salary 3000 c</span><br><span class="line">(integer) 1</span><br><span class="line">127.0.0.1:6379&gt; zrangebyscore salary -inf +inf #正向排序</span><br><span class="line">1) &quot;b&quot;</span><br><span class="line">2) &quot;a&quot;</span><br><span class="line">3) &quot;c&quot;</span><br><span class="line">127.0.0.1:6379&gt; zrangebyscore salary -inf +inf withscores</span><br><span class="line">1) &quot;b&quot;</span><br><span class="line">2) &quot;1999&quot;</span><br><span class="line">3) &quot;a&quot;</span><br><span class="line">4) &quot;2500&quot;</span><br><span class="line">5) &quot;c&quot;</span><br><span class="line">6) &quot;3000&quot;</span><br><span class="line">127.0.0.1:6379&gt; zrevrangebyscore salary +inf -inf #反向排序</span><br><span class="line">1) &quot;c&quot;</span><br><span class="line">2) &quot;a&quot;</span><br><span class="line">3) &quot;b&quot;</span><br><span class="line">127.0.0.1:6379&gt; zrem salart b #移除元素</span><br><span class="line">(integer) 1</span><br><span class="line">127.0.0.1:6379&gt; zcard salary #获取成员数量</span><br><span class="line">(integer) 3</span><br><span class="line">127.0.0.1:6379&gt; zadd myset 1 hello</span><br><span class="line">(integer) 1</span><br><span class="line">127.0.0.1:6379&gt; zadd myset 2 world 3 aaaa</span><br><span class="line">(integer) 2</span><br><span class="line">127.0.0.1:6379&gt; zcount myset 1 3 #获取指定区间的成员数量</span><br><span class="line">(integer) 3</span><br></pre></td></tr></table></figure>
+</li>
+</ol>
+<h4 id="set排序作用"><a href="#set排序作用" class="headerlink" title="set排序作用"></a>set排序作用</h4><ol>
+<li>存储成绩表、工资表排序</li>
+<li>排行榜</li>
+<li>重要消息，带权重进行判断</li>
+</ol>
+
+      
+    </div>
+    
+    
+    
+
+    
+      <div>
+        <div id="wechat_subscriber" style="display: block; padding: 10px 0; margin: 20px auto; width: 100%; text-align: center">
+    <img id="wechat_subscriber_qcode" src="/images/wechat.jpg" alt="WhitneyLu wechat" style="width: 200px; max-width: 100%;">
+    <div>Contact me by scanning my public WeChat QR code</div>
+</div>
+
+
+      </div>
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/redis/" rel="tag"><i class="fa fa-tag"></i> redis</a>
+          
+        </div>
+      
+
+      
+      
+        <div class="post-widgets">
+        
+
+        
+
+        
+          
+          <div id="needsharebutton-postbottom">
+            <span class="btn">
+              <i class="fa fa-share-alt" aria-hidden="true"></i>
+            </span>
+          </div>
+        
+        </div>
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2021/03/14/数据库2/" rel="next" title="数据库2">
+                <i class="fa fa-chevron-left"></i> 数据库2
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+<script type="text/javascript" src="https://me.idealli.com/images/load.gif" data-src="/js/src/love.js"></script>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            Table of Contents
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            Overview
+          </li>
+        </ul>
+      
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <img class="site-author-image" itemprop="image" src="/images/nessa.png" alt="WhitneyLu">
+            
+              <p class="site-author-name" itemprop="name">WhitneyLu</p>
+              <p class="site-description motion-element" itemprop="description"></p>
+          </div>
+
+          <nav class="site-state motion-element">
+
+            
+              <div class="site-state-item site-state-posts">
+              
+                <a href="/archives/">
+              
+                  <span class="site-state-item-count">38</span>
+                  <span class="site-state-item-name">posts</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-categories">
+                <a href="/categories/index.html">
+                  <span class="site-state-item-count">28</span>
+                  <span class="site-state-item-name">categories</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-tags">
+                <a href="/tags/index.html">
+                  <span class="site-state-item-count">11</span>
+                  <span class="site-state-item-name">tags</span>
+                </a>
+              </div>
+            
+
+          </nav>
+
+          
+
+          
+            <div class="links-of-author motion-element">
+                
+                  <span class="links-of-author-item">
+                    <a href="https://github.com/yourname" target="_blank" title="GitHub">
+                      
+                        <i class="fa fa-fw fa-github"></i></a>
+                  </span>
+                
+                  <span class="links-of-author-item">
+                    <a href="mailto:miracle960118@gmail.com" target="_blank" title="E-Mail">
+                      
+                        <i class="fa fa-fw fa-envelope"></i></a>
+                  </span>
+                
+                  <span class="links-of-author-item">
+                    <a href="https://www.instagram.com" target="_blank" title="Instagram">
+                      
+                        <i class="fa fa-fw fa-instagram"></i></a>
+                  </span>
+                
+            </div>
+          
+
+          
+          
+
+          
+          
+
+          
+
+        </div>
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#redis基础"><span class="nav-number">1.</span> <span class="nav-text">redis基础</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#NoSQL非关系型数据库"><span class="nav-number">1.1.</span> <span class="nav-text">NoSQL非关系型数据库</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#redis基础-1"><span class="nav-number">1.2.</span> <span class="nav-text">redis基础</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#redis命令"><span class="nav-number">1.3.</span> <span class="nav-text">redis命令</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#list基本的数据类型，相当于双向队列"><span class="nav-number">1.3.1.</span> <span class="nav-text">list基本的数据类型，相当于双向队列</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#hash-key-map集合"><span class="nav-number">1.3.2.</span> <span class="nav-text">hash key-map集合</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#Zset有序集合"><span class="nav-number">1.3.3.</span> <span class="nav-text">Zset有序集合</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#set排序作用"><span class="nav-number">1.3.4.</span> <span class="nav-text">set排序作用</span></a></li></ol></li></ol></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; 2019 &mdash; <span itemprop="copyrightYear">2021</span>
+  <span class="with-love">
+    <i class="fa fa-Whitney"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">WhitneyLu</span>
+
+  
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item-icon">
+      <i class="fa fa-area-chart"></i>
+    </span>
+    
+      <span class="post-meta-item-text">Site words total count&#58;</span>
+    
+    <span title="Site words total count">81.3k</span>
+  
+</div>
+
+
+
+
+
+
+
+        
+<div class="busuanzi-count">
+  <script async src="https://dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+  
+    <span class="site-uv">
+      <i class="fa fa-user"></i>
+      <span class="busuanzi-value" id="busuanzi_value_site_uv"></span>
+      
+    </span>
+  
+
+  
+    <span class="site-pv">
+      <i class="fa fa-eye"></i>
+      <span class="busuanzi-value" id="busuanzi_value_site_pv"></span>
+      
+    </span>
+  
+</div>
+
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+          <span id="scrollpercent"><span>0</span>%</span>
+        
+      </div>
+    
+
+    
+      <div id="needsharebutton-float">
+        <span class="btn">
+          <i class="fa fa-share-alt" aria-hidden="true"></i>
+        </span>
+      </div>
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.4"></script>
+
+
+
+  
+  
+
+
+  <script type="text/javascript" src="/js/src/affix.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/schemes/pisces.js?v=5.1.4"></script>
+
+
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.4"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+  
+  
+  <link rel="stylesheet" href="/lib/needsharebutton/needsharebutton.css">
+
+  
+  
+  <script src="/lib/needsharebutton/needsharebutton.js"></script>
+
+  <script>
+    
+      pbOptions = {};
+      
+          pbOptions.iconStyle = "default";
+      
+          pbOptions.boxForm = "horizontal";
+      
+          pbOptions.position = "bottomCenter";
+      
+          pbOptions.networks = "Weibo,Wechat,Douban,QQZone,Twitter,Facebook";
+      
+      new needShareButton('#needsharebutton-postbottom', pbOptions);
+    
+    
+      flOptions = {};
+      
+          flOptions.iconStyle = "default";
+      
+          flOptions.boxForm = "vertical";
+      
+          flOptions.position = "topRight";
+      
+          flOptions.networks = "Weibo,Wechat,Douban,QQZone,Twitter,Facebook";
+      
+      new needShareButton('#needsharebutton-float', flOptions);
+    
+  </script>
+
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>
