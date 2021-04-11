@@ -95,7 +95,7 @@
 
 
 
-  <meta name="keywords" content="操作系统,">
+  <meta name="keywords" content="redis,">
 
 
 
@@ -106,23 +106,18 @@
 
 
 
-<meta name="description" content="虚拟内存">
-<meta name="keywords" content="操作系统">
+<meta name="description" content="redis基础、非关系型数据库">
+<meta name="keywords" content="redis">
 <meta property="og:type" content="article">
-<meta property="og:title" content="虚拟内存">
-<meta property="og:url" content="https://whitneylu.github.io/2019/04/10/虚拟内存/index.html">
+<meta property="og:title" content="redis基础2-三种特殊的类型">
+<meta property="og:url" content="https://whitneylu.github.io/2021/04/11/redis基础2/index.html">
 <meta property="og:site_name" content="Whitney&#39;s coding note">
-<meta property="og:description" content="虚拟内存">
+<meta property="og:description" content="redis基础、非关系型数据库">
 <meta property="og:locale" content="default">
-<meta property="og:image" content="https://whitneylu.github.io/image/页面命中和缺页操作图.jpg">
-<meta property="og:image" content="https://whitneylu.github.io/image/地址翻译符号.png">
-<meta property="og:image" content="https://whitneylu.github.io/image/页表的地址翻译.jpg">
-<meta property="og:image" content="https://whitneylu.github.io/image/TLB命中和不命中操作图.jpg">
-<meta property="og:updated_time" content="2019-06-02T12:43:25.252Z">
+<meta property="og:updated_time" content="2021-04-11T13:15:01.554Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="虚拟内存">
-<meta name="twitter:description" content="虚拟内存">
-<meta name="twitter:image" content="https://whitneylu.github.io/image/页面命中和缺页操作图.jpg">
+<meta name="twitter:title" content="redis基础2-三种特殊的类型">
+<meta name="twitter:description" content="redis基础、非关系型数据库">
 
 
 
@@ -152,13 +147,13 @@
 
 
 
-  <link rel="canonical" href="https://whitneylu.github.io/2019/04/10/虚拟内存/">
+  <link rel="canonical" href="https://whitneylu.github.io/2021/04/11/redis基础2/">
 
 
 
 
 
-  <title>虚拟内存 | Whitney's coding note</title>
+  <title>redis基础2-三种特殊的类型 | Whitney's coding note</title>
   
 
 
@@ -285,7 +280,7 @@
   
   
   <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="https://whitneylu.github.io/2019/04/10/虚拟内存/">
+    <link itemprop="mainEntityOfPage" href="https://whitneylu.github.io/2021/04/11/redis基础2/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="name" content="WhitneyLu">
@@ -302,7 +297,7 @@
 
         
         
-          <h1 class="post-title" itemprop="name headline">虚拟内存</h1>
+          <h1 class="post-title" itemprop="name headline">redis基础2-三种特殊的类型</h1>
         
 
         <div class="post-meta">
@@ -314,8 +309,8 @@
               
                 <span class="post-meta-item-text">Posted on</span>
               
-              <time title="Post created" itemprop="dateCreated datePublished" datetime="2019-04-10T00:00:00+08:00">
-                2019-04-10
+              <time title="Post created" itemprop="dateCreated datePublished" datetime="2021-04-11T00:00:00+08:00">
+                2021-04-11
               </time>
             
 
@@ -337,8 +332,8 @@
               
               
                 <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/虚拟内存/" itemprop="url" rel="index">
-                    <span itemprop="name">虚拟内存</span>
+                  <a href="/categories/redis、数据库/" itemprop="url" rel="index">
+                    <span itemprop="name">redis、数据库</span>
                   </a>
                 </span>
 
@@ -373,7 +368,7 @@
                   <span class="post-meta-item-text">Words count in article&#58;</span>
                 
                 <span title="Words count in article">
-                  2k
+                  875
                 </span>
               
 
@@ -389,7 +384,7 @@
                   <span class="post-meta-item-text">Reading time &asymp;</span>
                 
                 <span title="Reading time">
-                  7
+                  4
                 </span>
               
             </div>
@@ -397,7 +392,7 @@
 
           
               <div class="post-description">
-                  虚拟内存
+                  redis基础、非关系型数据库
               </div>
           
 
@@ -414,102 +409,25 @@
       
 
       
-        <h2 id="虚拟内存"><a href="#虚拟内存" class="headerlink" title="虚拟内存"></a>虚拟内存</h2><ol>
-<li>虚拟内存是硬件异常、硬件地址翻译、主存、磁盘文件和内核软件的完美交互，为每个进程提供一个大的、一致的、私有的地址空间</li>
-<li>虚拟内存的三个能力：</li>
+        <h2 id="Redis基础2"><a href="#Redis基础2" class="headerlink" title="Redis基础2"></a>Redis基础2</h2><h3 id="三种特殊的类型"><a href="#三种特殊的类型" class="headerlink" title="三种特殊的类型"></a>三种特殊的类型</h3><h4 id="geospatial地理位置"><a href="#geospatial地理位置" class="headerlink" title="geospatial地理位置"></a>geospatial地理位置</h4><ol>
+<li>推算两地之间的距离</li>
+<li>geo的底层原理就是Zset</li>
 </ol>
-<ul>
-<li>将主存看成是存储在磁盘上的地址空间的高速缓存，在主存中保留只保留活动区域，根据需要在主存和磁盘之间来回传送数据</li>
-<li>为每个进程提供一致的地址空间，简化内存管理</li>
-<li>保护每个进程的地址空间不被其他进程破坏</li>
-</ul>
-<ol start="3">
-<li>计算机内存被组织成M个连续的字节大小的单元组成的数组，每个字节都有一个唯一的物理地址，使用物理地址访问内存称为<strong>物理寻址</strong></li>
-<li><strong>虚拟寻址</strong>，CPU生成一个虚拟地址（Virtual Address,VA）来访问内存，这个虚拟地址在被传送到内存之前，先转换为物理地址</li>
-<li>将一个虚拟地址转换成为物理地址的过程称为<strong>地址翻译</strong></li>
-<li>CPU芯片上的内存管理单元，利用存放在主存中的查询表来翻译虚拟地址，该表的内容由操作系统管理</li>
-<li><strong>地址空间</strong>是非负整数地址的有序集合：{0,1,2,3,…}，如果地址空间的整数是连续的，我们可以成之为<strong>线性地址空间</strong>，假设使用的是线性地址空间，在一个带虚拟内存的系统中，CPU从一个有N=2^n-1个地址的地址空间中生成虚拟地址，这个地址空间称为<strong>虚拟地址空间</strong>：{0,1,2,…,N-1}，称为n位地址空间</li>
-<li>系统的物理地址空间对应物理内存的M个字节：{0,1,2,3,…,M-1}</li>
-<li>允许每个对象有多个独立的地址，每个地址都来自不同的地址空间</li>
-<li>在任何时刻，虚拟内存被分为三个互不相交的子集：未分配的、缓存的、未缓存的</li>
-<li><strong>DRAM缓存组织</strong>：因为对磁盘访问时间都很长，DRAM缓存通常使用写回而不是直写</li>
-<li>虚拟内存作为内存保护工具</li>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br></pre></td><td class="code"><pre><span class="line">#添加地理位置geoadd</span><br><span class="line">#两级无法直接添加</span><br><span class="line">#经度、纬度、名称</span><br><span class="line">127.0.0.1:6379&gt; geoadd china:city 116.40 39.9 beijing</span><br><span class="line">(integer) 1</span><br><span class="line">127.0.0.1:6379&gt; geoadd china:city 121.47 31.23 shanghai</span><br><span class="line">(integer) 1</span><br><span class="line">127.0.0.1:6379&gt; geoadd china:city 120.16 30.24 hangzhou</span><br><span class="line">(integer) 1</span><br><span class="line">127.0.0.1:6379&gt; geoadd china:city 106.5 29.53 chongqing</span><br><span class="line">(integer) 1</span><br><span class="line">127.0.0.1:6379&gt; geoadd china:city 108.96 34.26 xian</span><br><span class="line">(integer) 1</span><br><span class="line"></span><br><span class="line">#获取指定位置的经纬度geopos</span><br><span class="line">127.0.0.1:6379&gt; geopos china:city beijing</span><br><span class="line">1) &quot;116.39999896287918091&quot;</span><br><span class="line">2) &quot;39.90000009167092543&quot;</span><br><span class="line">   </span><br><span class="line">#两地之间的距离geodist</span><br><span class="line">127.0.0.1:6379&gt; geodist china:city beijing shanghai</span><br><span class="line">&quot;1067378.7564&quot;</span><br><span class="line">127.0.0.1:6379&gt; geodist china:city beijing shanghai km</span><br><span class="line">&quot;1067.3788&quot;</span><br><span class="line"></span><br><span class="line">#给定的经纬度为中心，指定半径为距离georadius</span><br><span class="line">127.0.0.1:6379&gt; georadius china:city 100 30 1000 km</span><br><span class="line">1) &quot;chongqing&quot;</span><br><span class="line">2) &quot;xian&quot;</span><br><span class="line">127.0.0.1:6379&gt; georadius china:city 100 30 1000 km withcoord</span><br><span class="line">1) 1) &quot;chongqing&quot;</span><br><span class="line">   2) 1) &quot;106.49999767541885376&quot;</span><br><span class="line">      2) &quot;29.52999957900659211&quot;</span><br><span class="line">2) 1) &quot;xian&quot;</span><br><span class="line">   2) 1) &quot;108.96000176668167114&quot;</span><br><span class="line">      2) &quot;34.25999964418929977&quot;</span><br><span class="line">127.0.0.1:6379&gt; georadius china:city 100 30 1000 km withdist</span><br><span class="line">1) 1) &quot;chongqing&quot;</span><br><span class="line">   2) &quot;629.6756&quot;</span><br><span class="line">2) 1) &quot;xian&quot;</span><br><span class="line">   2) &quot;967.2846&quot;</span><br><span class="line">127.0.0.1:6379&gt; </span><br><span class="line"></span><br><span class="line">#找出位于指定元素周围的其他元素georadiusbymember</span><br><span class="line">127.0.0.1:6379&gt; georadiusbymember china:city beijing 2000 km</span><br><span class="line">1) &quot;chongqing&quot;</span><br><span class="line">2) &quot;xian&quot;</span><br><span class="line">3) &quot;hangzhou&quot;</span><br><span class="line">4) &quot;shanghai&quot;</span><br><span class="line">5) &quot;beijing&quot;</span><br><span class="line"></span><br><span class="line">#返回11个字符，代表当前城市经纬度的字符串，两个字符串越接近代表两个地方越接近 geohash</span><br><span class="line">127.0.0.1:6379&gt; geohash china:city beijing chongqing</span><br><span class="line">1) &quot;wx4fbxxfke0&quot;</span><br><span class="line">2) &quot;wm5xzrybty0&quot;</span><br><span class="line"></span><br><span class="line">#geo的底层原理就是Zset，通过底层原理删除一个元素</span><br><span class="line">127.0.0.1:6379&gt; zrange china:city 0 -1</span><br><span class="line">1) &quot;chongqing&quot;</span><br><span class="line">2) &quot;xian&quot;</span><br><span class="line">3) &quot;hangzhou&quot;</span><br><span class="line">4) &quot;shanghai&quot;</span><br><span class="line">5) &quot;beijing&quot;</span><br><span class="line">127.0.0.1:6379&gt; zrem china:city shanghai</span><br><span class="line">(integer) 1</span><br></pre></td></tr></table></figure>
+<h4 id="Hyperloglog数据结构"><a href="#Hyperloglog数据结构" class="headerlink" title="Hyperloglog数据结构"></a>Hyperloglog数据结构</h4><ol>
+<li>基数：不重复的元素</li>
+<li>Redis Hyperloglog基数统计的算法，网页UV：一个网页同一个人访问多次算作是一个人，不会重复统计</li>
+<li>传统方式，set保存用户ID，set中不允许重复，可以使用set中元素的数量作为标准</li>
+<li>目的是为了计数，不是为了保护用户ID，需要login呢？</li>
+<li>Redis Hyperloglog基数统计的算法占用12KB内存，如果从内存角度来比较，是首选，错误率0.81%，统计UV任务</li>
 </ol>
-<ul>
-<li>在PTE上添加额外的许可位来控制对一个虚拟页面内容的访问</li>
-<li>SUP表示进程必须运行在内核模式下才能访问该页，READ和WRITE控制页面的读写。如果违反许可条件会处罚保护故障，”段错误“</li>
-</ul>
-<ol start="13">
-<li>虚拟内存作为内存管理的工具</li>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line">127.0.0.1:6379&gt; pfadd mykey a b c hc o j k k k k hy ii o p p g f u #添加</span><br><span class="line">(integer) 1</span><br><span class="line">127.0.0.1:6379&gt; pfcount mykey #计数</span><br><span class="line">(integer) 13</span><br><span class="line">127.0.0.1:6379&gt; pfadd mykey a b c ie k d j k l g t u a</span><br><span class="line">(integer) 1</span><br><span class="line">127.0.0.1:6379&gt; pfcount mykey</span><br><span class="line">(integer) 16</span><br><span class="line">127.0.0.1:6379&gt; pfadd mykey2 a h n g b g b k s</span><br><span class="line">(integer) 1</span><br><span class="line">127.0.0.1:6379&gt; pfmerge mykey3 mykey mykey2 #合并</span><br><span class="line">OK</span><br><span class="line">127.0.0.1:6379&gt; pfcount mykey3</span><br><span class="line">(integer) 19</span><br></pre></td></tr></table></figure>
+<h4 id="Bitmaps位图"><a href="#Bitmaps位图" class="headerlink" title="Bitmaps位图"></a>Bitmaps位图</h4><ol>
+<li>位存储，只有0和1的两种状态</li>
+<li>用户活跃/不活跃 登录/未登录 打卡/未打卡都可以使用Bitmaps</li>
+<li>只要46个字节就可以存储用户一年内的状态</li>
 </ol>
-<ul>
-<li>操作系统通常为每个进程都提供一个独立的页表，有一个独立的虚拟地址空间，多个虚拟页面可以映射到同一个共享物理页面上</li>
-<li>VM简化了链接和加载、代码和数据共享，以及应用程序的内存分配</li>
-<li><strong>简化链接</strong>：独立的地址空间允许每个进程的内存映像使用相同的基本格式，简化了连接器的设计和实现，允许链接器生成完全连接的可执行文件</li>
-<li><strong>简化加载</strong>：容易向内存中加载可执行文件和共享对象文件。将一组连续的虚拟也映射到任意一个文件中的任意位置的表示法称为内存映射，Linux提供mmp系统调用，允许应用程序自己做内存映射</li>
-<li><strong>简化共享</strong>：操作系统将不同进程中的适当的虚拟页面映射到相同的物理页面</li>
-<li><strong>简化内存分配</strong>：当一个运行在用户进程中的程序要求额外的堆空间时，操作系统分配一个适当数字个连续的虚拟内存页面，页面可以随机的分散在物理内存中</li>
-</ul>
-<h3 id="页"><a href="#页" class="headerlink" title="页"></a>页</h3><ol>
-<li>MMU（内存管理单元）中的地址翻译硬件和一个存放在物理内存中叫做页表的数据结构，判断虚拟页是否缓存在DRAM的某个地方及之后的措施，这个功能是由软硬件联合提供的，包括操作系统软件</li>
-<li>页表将虚拟页映射到物理页，每次地址翻译器将虚拟地址转换为物理地址时都会读取页表，操作系统负责维护页表的内容，以及磁盘与DRAM之间来回传送页</li>
-<li>虚拟空间中每个页在页表中的一个固定偏移量处都有一个PTE，PTE由一个有效位和n位地址字符串组成，有效位表明虚拟页是否被缓存在DRAM中。</li>
-</ol>
-<ul>
-<li>如果设置了有效位，地址字段就表示DRAM中相应的物理页的起始位置</li>
-<li>如果没有设置有效位，空地址表示虚拟页还没被分配<br><img src="/image/页面命中和缺页操作图.jpg" alt></li>
-</ul>
-<ol start="4">
-<li>页面命中，使用PTE中的物理内存地址构造出这个字的物理地址</li>
-</ol>
-<ul>
-<li>处理器生成一个虚拟地址，传送给MMU</li>
-<li>MMU生成一个PTE地址，并从高速缓存/主存请求得到它</li>
-<li>高速缓存/主存向MMU返回PTE</li>
-<li>MMU构造物理地址，传送给高速缓存/主存</li>
-<li>高速缓存/主存返回请求的数据字给处理器</li>
-</ul>
-<ol start="5">
-<li>DRAM缓存不命中称为<strong>缺页</strong>，缺页异常调用内核中的缺页异常处理程序，程序会选择一个牺牲页VP4，把它复制回磁盘，修改页表条目，然后从磁盘中复制VP3，复制VP3到内存中的PP3，更新PTE3，再次调用导致缺页的指令</li>
-<li>缺页，硬件和操作系统内核一起完成**</li>
-</ol>
-<ul>
-<li>处理器生成一个虚拟地址，传送给MMU</li>
-<li>MMU生成一个PTE地址，并从高速缓存/主存请求得到它</li>
-<li>高速缓存/主存向MMU返回PTE</li>
-<li>PTE中有效位是0，触发异常，传递到缺页异常处理程序</li>
-<li>缺页处理程序确定物理内存牺牲页，如果页面已经被修改了，换出到磁盘</li>
-<li>缺页处理程序页面调入新的页面，更新内存的PTE</li>
-<li>缺页处理程序返回到原来的进程，再次执行导致缺页的指令</li>
-</ul>
-<ol start="7">
-<li>磁盘和内存之间的传送页的活动叫做交换或者<strong>页面调度</strong>，当有不命中发生时，才换入页面这种策略称为<strong>按需页面调度</strong>，现代计算机系统都使用按需调度</li>
-<li><strong>局部性原则</strong>保证在任意时刻，程序趋向于在一个较小的活动页面集合上工作，这个集合称为<strong>工作集</strong>或者是<strong>常驻集合</strong>。良好的局部性保证虚拟内存系统能够工作的很好</li>
-</ol>
-<h3 id="地址翻译"><a href="#地址翻译" class="headerlink" title="地址翻译"></a>地址翻译</h3><p><img src="/image/地址翻译符号.png" alt><br><img src="/image/页表的地址翻译.jpg" alt></p>
-<ol>
-<li>CPU中的一个控制寄存器（Page Table Base Register,PTBR）指向当前页表</li>
-<li>n位虚拟内存包含两个部分：一个p位的虚拟页面偏移（virtual page offset，VPO）和一个n-p位的虚拟页号（virtual page number,VPN）</li>
-<li>MMU利用VPN来选择适当的PTE，将页表条目中的物理页号和虚拟地址中的VPO串联起来，得到相应的物理地址</li>
-<li>物理页面偏移（PPO）和VPO是相同的</li>
-</ol>
-<h4 id="利用TLB加速地址翻译"><a href="#利用TLB加速地址翻译" class="headerlink" title="利用TLB加速地址翻译"></a>利用TLB加速地址翻译</h4><ol>
-<li>MMU包括一个关于PTE的小的缓存，称为翻译后备缓冲器，每行都保存着单个PTE组成的块。</li>
-<li>TLB每一行都保存着单个PTE组成的块。</li>
-<li>用于组匹配和行匹配的索引和标记字节是从虚拟地址中的虚拟页号中提取出来的。</li>
-<li>TLB索引位和标记位组成了VPN<br><img src="/image/TLB命中和不命中操作图.jpg" alt></li>
-<li>TLB命中时包含的步骤：</li>
-</ol>
-<ul>
-<li>CPU产生虚拟地址</li>
-<li>MMU从TLB中取出相应的PTE</li>
-<li>MMU将这个地址翻译成一个物理地址，并发送到高速缓存和主存</li>
-<li>高速缓存和主存讲请求的字节返回CPU</li>
-</ul>
-<ol start="6">
-<li>TLB不明中时，MMU必须从L1缓存中取出相应的PTE，新取出的PTE存放在TLB中，可能会覆盖一个已经存在的条目</li>
-</ol>
-
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line">127.0.0.1:6379&gt; setbit sign 0 1</span><br><span class="line">(integer) 0</span><br><span class="line">127.0.0.1:6379&gt; setbit sign 1 1</span><br><span class="line">(integer) 0</span><br><span class="line">127.0.0.1:6379&gt; setbit sign 2 0</span><br><span class="line">(integer) 0</span><br><span class="line">127.0.0.1:6379&gt; setbit sign 3 0</span><br><span class="line">(integer) 0</span><br><span class="line">127.0.0.1:6379&gt; setbit sign 4 0 </span><br><span class="line">(integer) 0</span><br><span class="line">127.0.0.1:6379&gt; setbit sign 5 1</span><br><span class="line">(integer) 0</span><br><span class="line">127.0.0.1:6379&gt; setbit sign 6 1</span><br><span class="line">(integer) 0</span><br><span class="line">127.0.0.1:6379&gt; bitcount sign #统计打卡记录</span><br><span class="line">(integer) 4</span><br></pre></td></tr></table></figure>
       
     </div>
     
@@ -535,7 +453,7 @@
       
         <div class="post-tags">
           
-            <a href="/tags/操作系统/" rel="tag"><i class="fa fa-tag"></i> 操作系统</a>
+            <a href="/tags/redis/" rel="tag"><i class="fa fa-tag"></i> redis</a>
           
         </div>
       
@@ -563,8 +481,8 @@
         <div class="post-nav">
           <div class="post-nav-next post-nav-item">
             
-              <a href="/2019/04/05/链接/" rel="next" title="链接">
-                <i class="fa fa-chevron-left"></i> 链接
+              <a href="/2021/04/11/redis基础/" rel="next" title="redis基础">
+                <i class="fa fa-chevron-left"></i> redis基础
               </a>
             
           </div>
@@ -572,10 +490,6 @@
           <span class="post-nav-divider"></span>
 
           <div class="post-nav-prev post-nav-item">
-            
-              <a href="/2019/04/10/异常控制和进程/" rel="prev" title="异常控制">
-                异常控制 <i class="fa fa-chevron-right"></i>
-              </a>
             
           </div>
         </div>
@@ -733,7 +647,7 @@
             
 
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#虚拟内存"><span class="nav-number">1.</span> <span class="nav-text">虚拟内存</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#页"><span class="nav-number">1.1.</span> <span class="nav-text">页</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#地址翻译"><span class="nav-number">1.2.</span> <span class="nav-text">地址翻译</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#利用TLB加速地址翻译"><span class="nav-number">1.2.1.</span> <span class="nav-text">利用TLB加速地址翻译</span></a></li></ol></li></ol></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#Redis基础2"><span class="nav-number">1.</span> <span class="nav-text">Redis基础2</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#三种特殊的类型"><span class="nav-number">1.1.</span> <span class="nav-text">三种特殊的类型</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#geospatial地理位置"><span class="nav-number">1.1.1.</span> <span class="nav-text">geospatial地理位置</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#Hyperloglog数据结构"><span class="nav-number">1.1.2.</span> <span class="nav-text">Hyperloglog数据结构</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#Bitmaps位图"><span class="nav-number">1.1.3.</span> <span class="nav-text">Bitmaps位图</span></a></li></ol></li></ol></li></ol></div>
             
 
           </div>
