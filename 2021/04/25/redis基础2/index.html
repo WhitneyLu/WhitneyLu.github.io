@@ -1,0 +1,1085 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next gemini use-motion" lang>
+<head><meta name="generator" content="Hexo 3.8.0">
+  <meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+<meta name="theme-color" content="#222">
+<meta name="google-site-verification" content="eaUMXvNaTlS5XY6VQbEb2OQ9XI-jGDm0VQvmNHMz5qI">
+<meta name="baidu-site-verification" content="8GfnZRBeT5">
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform">
+<meta http-equiv="Cache-Control" content="no-siteapp">
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css">
+
+
+
+
+  
+  
+  
+  
+
+  
+    
+    
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+    
+    
+    <link href="https://fonts.cat.net/css?family=Roboto Slab:300,300italic,400,400italic,700,700italic&subset=latin,latin-ext" rel="stylesheet" type="text/css">
+  
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css">
+
+<link href="/css/main.css?v=5.1.4" rel="stylesheet" type="text/css">
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=5.1.4">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=5.1.4" color="#222">
+
+
+
+
+
+  <meta name="keywords" content="redis,">
+
+
+
+
+
+
+
+
+
+
+<meta name="description" content="redis基础、非关系型数据库">
+<meta name="keywords" content="redis">
+<meta property="og:type" content="article">
+<meta property="og:title" content="redis基础2">
+<meta property="og:url" content="https://whitneylu.github.io/2021/04/25/redis基础2/index.html">
+<meta property="og:site_name" content="Whitney&#39;s coding note">
+<meta property="og:description" content="redis基础、非关系型数据库">
+<meta property="og:locale" content="default">
+<meta property="og:updated_time" content="2021-04-26T15:00:01.858Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="redis基础2">
+<meta name="twitter:description" content="redis基础、非关系型数据库">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Gemini',
+    version: '5.1.4',
+    sidebar: {"position":"left","display":"post","offset":12,"b2t":false,"scrollpercent":true,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    duoshuo: {
+      userId: '0',
+      author: 'Author'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="https://whitneylu.github.io/2021/04/25/redis基础2/">
+
+
+
+
+
+  <title>redis基础2 | Whitney's coding note</title>
+  
+
+
+
+
+
+
+
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="default">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">Whitney's coding note</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle">Study as if you were going to live forever.</p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br>
+            
+            Home
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br>
+            
+            Tags
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br>
+            
+            Categories
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br>
+            
+            Archives
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="https://whitneylu.github.io/2021/04/25/redis基础2/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="WhitneyLu">
+      <meta itemprop="description" content>
+      <meta itemprop="image" content="/images/nessa.png">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Whitney's coding note">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">redis基础2</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">Posted on</span>
+              
+              <time title="Post created" itemprop="dateCreated datePublished" datetime="2021-04-25T00:00:00+08:00">
+                2021-04-25
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category">
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">In</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/redis、数据库/" itemprop="url" rel="index">
+                    <span itemprop="name">redis、数据库</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+            <span class="post-meta-divider">|</span>
+            <span class="page-pv"><i class="fa fa-file-o"></i>
+            <span class="busuanzi-value" id="busuanzi_value_page_pv"></span>
+            </span>
+          
+
+          
+            <div class="post-wordcount">
+              
+                
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-file-word-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">Words count in article&#58;</span>
+                
+                <span title="Words count in article">
+                  3.2k
+                </span>
+              
+
+              
+                <span class="post-meta-divider">|</span>
+              
+
+              
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-clock-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">Reading time &asymp;</span>
+                
+                <span title="Reading time">
+                  12
+                </span>
+              
+            </div>
+          
+
+          
+              <div class="post-description">
+                  redis基础、非关系型数据库
+              </div>
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <h2 id="Redis基础2"><a href="#Redis基础2" class="headerlink" title="Redis基础2"></a>Redis基础2</h2><h3 id="三种特殊的类型"><a href="#三种特殊的类型" class="headerlink" title="三种特殊的类型"></a>三种特殊的类型</h3><h4 id="geospatial地理位置"><a href="#geospatial地理位置" class="headerlink" title="geospatial地理位置"></a>geospatial地理位置</h4><ol>
+<li>推算两地之间的距离</li>
+<li>geo的底层原理就是Zset</li>
+</ol>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br></pre></td><td class="code"><pre><span class="line">#添加地理位置geoadd</span><br><span class="line">#两级无法直接添加</span><br><span class="line">#经度、纬度、名称</span><br><span class="line">127.0.0.1:6379&gt; geoadd china:city 116.40 39.9 beijing</span><br><span class="line">(integer) 1</span><br><span class="line">127.0.0.1:6379&gt; geoadd china:city 121.47 31.23 shanghai</span><br><span class="line">(integer) 1</span><br><span class="line">127.0.0.1:6379&gt; geoadd china:city 120.16 30.24 hangzhou</span><br><span class="line">(integer) 1</span><br><span class="line">127.0.0.1:6379&gt; geoadd china:city 106.5 29.53 chongqing</span><br><span class="line">(integer) 1</span><br><span class="line">127.0.0.1:6379&gt; geoadd china:city 108.96 34.26 xian</span><br><span class="line">(integer) 1</span><br><span class="line"></span><br><span class="line">#获取指定位置的经纬度geopos</span><br><span class="line">127.0.0.1:6379&gt; geopos china:city beijing</span><br><span class="line">1) &quot;116.39999896287918091&quot;</span><br><span class="line">2) &quot;39.90000009167092543&quot;</span><br><span class="line">   </span><br><span class="line">#两地之间的距离geodist</span><br><span class="line">127.0.0.1:6379&gt; geodist china:city beijing shanghai</span><br><span class="line">&quot;1067378.7564&quot;</span><br><span class="line">127.0.0.1:6379&gt; geodist china:city beijing shanghai km</span><br><span class="line">&quot;1067.3788&quot;</span><br><span class="line"></span><br><span class="line">#给定的经纬度为中心，指定半径为距离georadius</span><br><span class="line">127.0.0.1:6379&gt; georadius china:city 100 30 1000 km</span><br><span class="line">1) &quot;chongqing&quot;</span><br><span class="line">2) &quot;xian&quot;</span><br><span class="line">127.0.0.1:6379&gt; georadius china:city 100 30 1000 km withcoord</span><br><span class="line">1) 1) &quot;chongqing&quot;</span><br><span class="line">   2) 1) &quot;106.49999767541885376&quot;</span><br><span class="line">      2) &quot;29.52999957900659211&quot;</span><br><span class="line">2) 1) &quot;xian&quot;</span><br><span class="line">   2) 1) &quot;108.96000176668167114&quot;</span><br><span class="line">      2) &quot;34.25999964418929977&quot;</span><br><span class="line">127.0.0.1:6379&gt; georadius china:city 100 30 1000 km withdist</span><br><span class="line">1) 1) &quot;chongqing&quot;</span><br><span class="line">   2) &quot;629.6756&quot;</span><br><span class="line">2) 1) &quot;xian&quot;</span><br><span class="line">   2) &quot;967.2846&quot;</span><br><span class="line">127.0.0.1:6379&gt; </span><br><span class="line"></span><br><span class="line">#找出位于指定元素周围的其他元素georadiusbymember</span><br><span class="line">127.0.0.1:6379&gt; georadiusbymember china:city beijing 2000 km</span><br><span class="line">1) &quot;chongqing&quot;</span><br><span class="line">2) &quot;xian&quot;</span><br><span class="line">3) &quot;hangzhou&quot;</span><br><span class="line">4) &quot;shanghai&quot;</span><br><span class="line">5) &quot;beijing&quot;</span><br><span class="line"></span><br><span class="line">#返回11个字符，代表当前城市经纬度的字符串，两个字符串越接近代表两个地方越接近 geohash</span><br><span class="line">127.0.0.1:6379&gt; geohash china:city beijing chongqing</span><br><span class="line">1) &quot;wx4fbxxfke0&quot;</span><br><span class="line">2) &quot;wm5xzrybty0&quot;</span><br><span class="line"></span><br><span class="line">#geo的底层原理就是Zset，通过底层原理删除一个元素</span><br><span class="line">127.0.0.1:6379&gt; zrange china:city 0 -1</span><br><span class="line">1) &quot;chongqing&quot;</span><br><span class="line">2) &quot;xian&quot;</span><br><span class="line">3) &quot;hangzhou&quot;</span><br><span class="line">4) &quot;shanghai&quot;</span><br><span class="line">5) &quot;beijing&quot;</span><br><span class="line">127.0.0.1:6379&gt; zrem china:city shanghai</span><br><span class="line">(integer) 1</span><br></pre></td></tr></table></figure>
+<h4 id="Hyperloglog数据结构"><a href="#Hyperloglog数据结构" class="headerlink" title="Hyperloglog数据结构"></a>Hyperloglog数据结构</h4><ol>
+<li>基数：不重复的元素</li>
+<li>Redis Hyperloglog基数统计的算法，网页UV：一个网页同一个人访问多次算作是一个人，不会重复统计</li>
+<li>传统方式，set保存用户ID，set中不允许重复，可以使用set中元素的数量作为标准</li>
+<li>目的是为了计数，不是为了保护用户ID，需要login呢？</li>
+<li>Redis Hyperloglog基数统计的算法占用12KB内存，如果从内存角度来比较，是首选，错误率0.81%，统计UV任务</li>
+</ol>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line">127.0.0.1:6379&gt; pfadd mykey a b c hc o j k k k k hy ii o p p g f u #添加</span><br><span class="line">(integer) 1</span><br><span class="line">127.0.0.1:6379&gt; pfcount mykey #计数</span><br><span class="line">(integer) 13</span><br><span class="line">127.0.0.1:6379&gt; pfadd mykey a b c ie k d j k l g t u a</span><br><span class="line">(integer) 1</span><br><span class="line">127.0.0.1:6379&gt; pfcount mykey</span><br><span class="line">(integer) 16</span><br><span class="line">127.0.0.1:6379&gt; pfadd mykey2 a h n g b g b k s</span><br><span class="line">(integer) 1</span><br><span class="line">127.0.0.1:6379&gt; pfmerge mykey3 mykey mykey2 #合并</span><br><span class="line">OK</span><br><span class="line">127.0.0.1:6379&gt; pfcount mykey3</span><br><span class="line">(integer) 19</span><br></pre></td></tr></table></figure>
+<h4 id="Bitmaps位图"><a href="#Bitmaps位图" class="headerlink" title="Bitmaps位图"></a>Bitmaps位图</h4><ol>
+<li>位存储，只有0和1的两种状态</li>
+<li>用户活跃/不活跃 登录/未登录 打卡/未打卡都可以使用Bitmaps</li>
+<li>只要46个字节就可以存储用户一年内的状态</li>
+</ol>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line">127.0.0.1:6379&gt; setbit sign 0 1</span><br><span class="line">(integer) 0</span><br><span class="line">127.0.0.1:6379&gt; setbit sign 1 1</span><br><span class="line">(integer) 0</span><br><span class="line">127.0.0.1:6379&gt; setbit sign 2 0</span><br><span class="line">(integer) 0</span><br><span class="line">127.0.0.1:6379&gt; setbit sign 3 0</span><br><span class="line">(integer) 0</span><br><span class="line">127.0.0.1:6379&gt; setbit sign 4 0 </span><br><span class="line">(integer) 0</span><br><span class="line">127.0.0.1:6379&gt; setbit sign 5 1</span><br><span class="line">(integer) 0</span><br><span class="line">127.0.0.1:6379&gt; setbit sign 6 1</span><br><span class="line">(integer) 0</span><br><span class="line">127.0.0.1:6379&gt; bitcount sign #统计打卡记录</span><br><span class="line">(integer) 4</span><br></pre></td></tr></table></figure>
+<h3 id="事务"><a href="#事务" class="headerlink" title="事务"></a>事务</h3><ol>
+<li>Redis事务的本质，一组命令的集合，一个事务中的所有命令都会被序列化，在事务执行过程中会按照顺序执行。</li>
+</ol>
+<ul>
+<li>一次性</li>
+<li>顺序性</li>
+<li>排他性</li>
+</ul>
+<ol start="2">
+<li>所有命令在事务中并没有直接被执行，只有发起执行命令才会被执行</li>
+<li>Redis单条命令保存原子性，但是是事务不保证原子性</li>
+<li>Redis没有隔离级别的概念</li>
+<li>Redis事务，批量执行命令</li>
+</ol>
+<ul>
+<li>开启事务 mutli</li>
+<li>命令入队</li>
+<li>执行事务 exec<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">127.0.0.1:6379&gt; multi</span><br><span class="line">OK</span><br><span class="line">127.0.0.1:6379&gt; set k4 v4</span><br><span class="line">QUEUED</span><br><span class="line">127.0.0.1:6379&gt; set k5 v5</span><br><span class="line">QUEUED</span><br><span class="line">127.0.0.1:6379&gt; exec</span><br><span class="line">1) OK</span><br><span class="line">2) OK</span><br></pre></td></tr></table></figure>
+</li>
+</ul>
+<ol start="6">
+<li>放弃事务 discard</li>
+<li><strong>编译型错误</strong>，代码有问题，事务中的所有命令都不会背执行</li>
+<li><strong>运行时异常</strong>，队列中存在语法错误，执行命令时，错误命令抛出异常，其他命令正常执行，（验证了Redis不存在事务原子性）</li>
+</ol>
+<h3 id="悲观锁和乐观锁"><a href="#悲观锁和乐观锁" class="headerlink" title="悲观锁和乐观锁"></a>悲观锁和乐观锁</h3><h4 id="悲观锁"><a href="#悲观锁" class="headerlink" title="悲观锁"></a>悲观锁</h4><ol>
+<li>无论做什么都要加锁</li>
+<li></li>
+</ol>
+<h4 id="乐观锁"><a href="#乐观锁" class="headerlink" title="乐观锁"></a>乐观锁</h4><ol>
+<li>监视<code>watch</code>即为乐观锁，如果监视的值在执行时未发生变化，则执行成功，否则整个队列执行失败</li>
+</ol>
+<h3 id="配置文件redis-conf"><a href="#配置文件redis-conf" class="headerlink" title="配置文件redis.conf"></a>配置文件redis.conf</h3><ol>
+<li><code>bind 127.0.0.1</code>绑定ip</li>
+<li><code>protected-mode yes</code>保护模式</li>
+<li><code>port 6379</code> 端口设置</li>
+<li><code>daemonize yes</code>默认no，yes时以守护进行的方式运行</li>
+<li>持久化：在规定时间内执行了多少次操作，会持续化到文件.rdb .aof</li>
+</ol>
+<ul>
+<li><code>save 900 1</code>900秒内，至少有一个key进行了修改，即进行持久化操作</li>
+<li><code>save 300 10</code>300秒内至少有10个key进行了修改</li>
+<li><code>stop-writes-on-bgsave-error yes</code>持久化如果出错是否继续工作</li>
+<li><code>rbdcompression yes</code>是否压缩rdb文件，需要消耗一些CPU资源</li>
+<li><code>rdbchecksum yes</code>保存rbd文件时，检查校验错误</li>
+<li><code>dir ./</code>rdb保存的目录</li>
+</ul>
+<ol start="6">
+<li>security安全配置，默认没有密码</li>
+</ol>
+<ul>
+<li><code>config get requirepass</code>获取密码</li>
+<li><code>config set requirepass &quot;111&quot;</code>设置密码</li>
+<li><code>auth 111</code>获取权限</li>
+</ul>
+<ol start="7">
+<li>限制client</li>
+</ol>
+<ul>
+<li><code>maxclier 10000</code>设置能连接上redis的最大服务器数量</li>
+<li><code>maxmemory &lt;byte&gt;</code>Redis配置最大的内存容量</li>
+<li><code>maxmemory-policy noeviction</code>内存到达上限后的处理策略<ul>
+<li>noeviction：当内存使用达到阈值的时候，所有引起申请内存的命令会报错</li>
+<li>allkeys-lru：在所有键中采用lru算法删除键，直到腾出足够内存为止</li>
+<li>volatile-lru：在设置了过期时间的键中采用lru算法删除键，直到腾出足够内存为止</li>
+<li>allkeys-random：在所有键中采用随机删除键，直到腾出足够内存为止</li>
+<li>volatile-random：在设置了过期时间的键中随机删除键，直到腾出足够内存为止</li>
+<li>volatile-ttl：在设置了过期时间的键空间中，具有更早过期时间的key优先移除</li>
+</ul>
+</li>
+<li><code>appendonly no</code>默认不开启aof模式，默认使用rbd方式持久化</li>
+<li><code>appendfsync always/everysec/no</code>每次次该都会同步/每秒执行一次sync/不执行sync</li>
+</ul>
+<h3 id="Redis持久化"><a href="#Redis持久化" class="headerlink" title="Redis持久化"></a>Redis持久化</h3><ol>
+<li>单独创建一个子进程来进行持久化，将数据写入到一个临时文件中，持久化过程结束后将这个文件替换上次持久化后的文件，整个过程主进程不进行任何IO操作。</li>
+<li>默认使用rdb实现持久化，保存的文件尾dump.rdb，在snapshot中配置</li>
+<li>save命令，flushall，关闭Redis都会生成rdb</li>
+<li>恢复rdb，dump.rdb在redis-server同级目录下，开启Redis会自动恢复数据</li>
+<li>适合大规模的数据恢复</li>
+<li>AOF将所有命令保存在一个文件中，恢复的时候就把这些操作全部重新执行一遍，数据量较大时效率较低</li>
+<li><code>appendonly yes</code>修改配置文件，开启aof</li>
+<li>如果aof文件被破坏，Redis连接失败，<code>redis-check-aof --fix appendonly.aof</code>文件恢复aof文件</li>
+<li>每一次修改都同步，保障文件完整性</li>
+<li>aof修复速度远大于rdb，运行效率也较低</li>
+<li>aof文件默认最大64M，超过这个大小时候fork一个新的进程来重新aof</li>
+<li>如果redis做缓存，不需要持久化</li>
+<li>同时开启两种方式，优先使用aof来恢复，aof更加完整</li>
+<li>rdb更适用于备份数据库</li>
+</ol>
+<h3 id="Redis发布和订阅"><a href="#Redis发布和订阅" class="headerlink" title="Redis发布和订阅"></a>Redis发布和订阅</h3><ol>
+<li>用C中的pubsub.c文件，通过publish/subscribe/psubscribe实现订阅和发布的功能</li>
+<li>订阅频道后，在redis-server中维护一个字典表，字典表标识频道，字典的值是链表，链表中保存所有订阅这个频道的客户端</li>
+<li>subscribe命令将客户端添加到给定的channel的订阅链表中</li>
+<li>publish命令遍历链表，将消息发送给所有订阅者</li>
+</ol>
+<h3 id="Redis主从复制"><a href="#Redis主从复制" class="headerlink" title="Redis主从复制"></a>Redis主从复制</h3><ol>
+<li>将一台Redis服务器的数据复制到其他服务器，称为主节点和从节点，数据复制是单项的，从主复制到从，主节点只能有一个。一般为一主二从</li>
+<li>读写分离，80%的情况下都在进行读操作，减缓服务器压力</li>
+<li>主从复制的作用：</li>
+</ol>
+<ul>
+<li>数据冗余：实现数据的热备份</li>
+<li>故障恢复：主节点出现问题时可以由从节点恢复</li>
+<li>负载均衡：主从复制配合读写分离，分担服务器负载，在写少读多的情况下，可以大大减少Redis服务器的并发量</li>
+<li>高可用（基群）基石：主从复制是哨兵和基群能够实施的基础</li>
+</ul>
+<ol start="4">
+<li>环境配置：</li>
+</ol>
+<ul>
+<li>默认所有节点都是主节点，因此需要配置从库</li>
+<li>复制多个redis.conf，修改配置文件，所有服务的pid、dump.rdb、端口、logfile等不能重复</li>
+<li><code>slaveof 127.0.0.1 6379</code>配置主节点，此节点变为从节点</li>
+<li><code>info replication</code>查看信息</li>
+<li>真实的主从配置，在文件中配置，则是永久的</li>
+</ul>
+<ol start="5">
+<li>主机中的所有信息都会被从机自动保存</li>
+<li>主机断开连接，重新连接成功后，能立即重新读取数据。实际应该在从机中选取一个作为主机</li>
+<li><code>slaveof no one</code>将自己设置为主节点，此时可以手动将其他从节点配置到当前主节点上</li>
+<li>若是从机断开，重新启动后数据立马从主机中再次获取（永久的主从配置）</li>
+<li>复制原理：</li>
+</ol>
+<ul>
+<li>slave启动成功连接到master后发送一个sync同步命令</li>
+<li>master接到命令后启动后台存盘过程，同时收集所有用于修改数据集命令，在后台进程执行完毕后，master将传送整个数据文件到slave，并完成一个完全同步</li>
+<li><strong>全量复制</strong>：slave服务器在接收到数据库文件数据后，将其存盘并加载到内存中</li>
+<li><strong>增量复制</strong>：master继续将新的所有收集到的修改命令一次传递给slave，完成同步  </li>
+<li>只要重新连接master，一次完全同步将会被自动执行，<strong>即全量复制</strong></li>
+</ul>
+<h3 id="哨兵模式"><a href="#哨兵模式" class="headerlink" title="哨兵模式"></a><strong>哨兵模式</strong></h3><ol>
+<li>重新开启一个进程，作为一个独立的进程，发送命令，等待Redis服务器相应，监视多个Redis服务器</li>
+<li>专业套娃：配置多个哨兵互相监督</li>
+<li>检测到主节点不可用，哨兵之前投票，确定宕机后，进行failover操作。切换成功后，通过发布订阅模式，将哨兵把自己的监控转移到新的主机</li>
+<li><p>sentinel.conf，<code>redis-sentinel sentinel.conf</code>启动哨兵模式</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">sentinel monitor myredis 127.0.0.1 6379 1 //被监控的名称，1代表主机挂了之后投票，1票就可以认为是宕机</span><br><span class="line"></span><br><span class="line">sentinel failover-timeout 18000</span><br><span class="line">//默认三分钟</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>原本的主机重新连接，只能归并到现在的主机下面当从机</p>
+</li>
+<li>哨兵集群，基于主从复制模式，主从切换转移故障，实现系统的高可用性</li>
+<li>哨兵模式不好在线扩容，基群到达上线后，很难实现在线扩容，需要单独配置</li>
+</ol>
+<h3 id="Redis缓存穿透和雪崩"><a href="#Redis缓存穿透和雪崩" class="headerlink" title="Redis缓存穿透和雪崩"></a>Redis缓存穿透和雪崩</h3><ol>
+<li><strong>缓存没有命中</strong>，持久层数据库也没有，当很多用户都在请求持久层数据库，会给持久层数据库造成很大的压力，相当于就是缓存穿透</li>
+<li>使用布隆过滤器，对所有可能查询的参数以hash形式存储，在控制层先进行过滤，避免对底层存储系统产生大的查询压力</li>
+<li>缓存空对象，也会造成一些新的问题</li>
+<li>缓存击穿：大并发集中对一个点进行访问，这个key在<strong>失效</strong>的瞬间，持续的大并发就击破缓存，直接请求数据库</li>
+<li>设置热点数据不过期，加互斥锁，保证每个key同时只有一个线程去持久层数据库查询数据（限流降级）</li>
+<li><strong>缓存雪崩</strong>，在某个时刻，缓存集体失效</li>
+</ol>
+<ul>
+<li><strong>Redis高可用</strong>，增设Redis服务器</li>
+<li><strong>限流降级</strong>，缓存失效后通过一定的手段来控制读写数据库写缓存的线程数量</li>
+<li><strong>数据预热</strong>，在正式部署钱对可能的数据线访问一遍，在即将发生大并发访问钱手动触发加载缓存不同的key，设置不同的过期时间，使缓存失效的时间更均匀</li>
+</ul>
+
+      
+    </div>
+    
+    
+    
+
+    
+      <div>
+        <div id="wechat_subscriber" style="display: block; padding: 10px 0; margin: 20px auto; width: 100%; text-align: center">
+    <img id="wechat_subscriber_qcode" src="/images/wechat.jpg" alt="WhitneyLu wechat" style="width: 200px; max-width: 100%;">
+    <div>Contact me by scanning my public WeChat QR code</div>
+</div>
+
+
+      </div>
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/redis/" rel="tag"><i class="fa fa-tag"></i> redis</a>
+          
+        </div>
+      
+
+      
+      
+        <div class="post-widgets">
+        
+
+        
+
+        
+          
+          <div id="needsharebutton-postbottom">
+            <span class="btn">
+              <i class="fa fa-share-alt" aria-hidden="true"></i>
+            </span>
+          </div>
+        
+        </div>
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2021/04/11/redis基础/" rel="next" title="redis基础">
+                <i class="fa fa-chevron-left"></i> redis基础
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+<script type="text/javascript" src="https://me.idealli.com/images/load.gif" data-src="/js/src/love.js"></script>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            Table of Contents
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            Overview
+          </li>
+        </ul>
+      
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <img class="site-author-image" itemprop="image" src="/images/nessa.png" alt="WhitneyLu">
+            
+              <p class="site-author-name" itemprop="name">WhitneyLu</p>
+              <p class="site-description motion-element" itemprop="description"></p>
+          </div>
+
+          <nav class="site-state motion-element">
+
+            
+              <div class="site-state-item site-state-posts">
+              
+                <a href="/archives/">
+              
+                  <span class="site-state-item-count">39</span>
+                  <span class="site-state-item-name">posts</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-categories">
+                <a href="/categories/index.html">
+                  <span class="site-state-item-count">28</span>
+                  <span class="site-state-item-name">categories</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-tags">
+                <a href="/tags/index.html">
+                  <span class="site-state-item-count">11</span>
+                  <span class="site-state-item-name">tags</span>
+                </a>
+              </div>
+            
+
+          </nav>
+
+          
+
+          
+            <div class="links-of-author motion-element">
+                
+                  <span class="links-of-author-item">
+                    <a href="https://github.com/yourname" target="_blank" title="GitHub">
+                      
+                        <i class="fa fa-fw fa-github"></i></a>
+                  </span>
+                
+                  <span class="links-of-author-item">
+                    <a href="mailto:miracle960118@gmail.com" target="_blank" title="E-Mail">
+                      
+                        <i class="fa fa-fw fa-envelope"></i></a>
+                  </span>
+                
+                  <span class="links-of-author-item">
+                    <a href="https://www.instagram.com" target="_blank" title="Instagram">
+                      
+                        <i class="fa fa-fw fa-instagram"></i></a>
+                  </span>
+                
+            </div>
+          
+
+          
+          
+
+          
+          
+
+          
+
+        </div>
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#Redis基础2"><span class="nav-number">1.</span> <span class="nav-text">Redis基础2</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#三种特殊的类型"><span class="nav-number">1.1.</span> <span class="nav-text">三种特殊的类型</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#geospatial地理位置"><span class="nav-number">1.1.1.</span> <span class="nav-text">geospatial地理位置</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#Hyperloglog数据结构"><span class="nav-number">1.1.2.</span> <span class="nav-text">Hyperloglog数据结构</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#Bitmaps位图"><span class="nav-number">1.1.3.</span> <span class="nav-text">Bitmaps位图</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#事务"><span class="nav-number">1.2.</span> <span class="nav-text">事务</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#悲观锁和乐观锁"><span class="nav-number">1.3.</span> <span class="nav-text">悲观锁和乐观锁</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#悲观锁"><span class="nav-number">1.3.1.</span> <span class="nav-text">悲观锁</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#乐观锁"><span class="nav-number">1.3.2.</span> <span class="nav-text">乐观锁</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#配置文件redis-conf"><span class="nav-number">1.4.</span> <span class="nav-text">配置文件redis.conf</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Redis持久化"><span class="nav-number">1.5.</span> <span class="nav-text">Redis持久化</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Redis发布和订阅"><span class="nav-number">1.6.</span> <span class="nav-text">Redis发布和订阅</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Redis主从复制"><span class="nav-number">1.7.</span> <span class="nav-text">Redis主从复制</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#哨兵模式"><span class="nav-number">1.8.</span> <span class="nav-text">哨兵模式</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Redis缓存穿透和雪崩"><span class="nav-number">1.9.</span> <span class="nav-text">Redis缓存穿透和雪崩</span></a></li></ol></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; 2019 &mdash; <span itemprop="copyrightYear">2021</span>
+  <span class="with-love">
+    <i class="fa fa-Whitney"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">WhitneyLu</span>
+
+  
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item-icon">
+      <i class="fa fa-area-chart"></i>
+    </span>
+    
+      <span class="post-meta-item-text">Site words total count&#58;</span>
+    
+    <span title="Site words total count">84.5k</span>
+  
+</div>
+
+
+
+
+
+
+
+        
+<div class="busuanzi-count">
+  <script async src="https://dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+  
+    <span class="site-uv">
+      <i class="fa fa-user"></i>
+      <span class="busuanzi-value" id="busuanzi_value_site_uv"></span>
+      
+    </span>
+  
+
+  
+    <span class="site-pv">
+      <i class="fa fa-eye"></i>
+      <span class="busuanzi-value" id="busuanzi_value_site_pv"></span>
+      
+    </span>
+  
+</div>
+
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+          <span id="scrollpercent"><span>0</span>%</span>
+        
+      </div>
+    
+
+    
+      <div id="needsharebutton-float">
+        <span class="btn">
+          <i class="fa fa-share-alt" aria-hidden="true"></i>
+        </span>
+      </div>
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.4"></script>
+
+
+
+  
+  
+
+
+  <script type="text/javascript" src="/js/src/affix.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/schemes/pisces.js?v=5.1.4"></script>
+
+
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.4"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+  
+  
+  <link rel="stylesheet" href="/lib/needsharebutton/needsharebutton.css">
+
+  
+  
+  <script src="/lib/needsharebutton/needsharebutton.js"></script>
+
+  <script>
+    
+      pbOptions = {};
+      
+          pbOptions.iconStyle = "default";
+      
+          pbOptions.boxForm = "horizontal";
+      
+          pbOptions.position = "bottomCenter";
+      
+          pbOptions.networks = "Weibo,Wechat,Douban,QQZone,Twitter,Facebook";
+      
+      new needShareButton('#needsharebutton-postbottom', pbOptions);
+    
+    
+      flOptions = {};
+      
+          flOptions.iconStyle = "default";
+      
+          flOptions.boxForm = "vertical";
+      
+          flOptions.position = "topRight";
+      
+          flOptions.networks = "Weibo,Wechat,Douban,QQZone,Twitter,Facebook";
+      
+      new needShareButton('#needsharebutton-float', flOptions);
+    
+  </script>
+
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>
