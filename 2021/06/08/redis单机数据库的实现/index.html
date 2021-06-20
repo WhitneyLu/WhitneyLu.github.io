@@ -114,7 +114,7 @@
 <meta property="og:site_name" content="Whitney&#39;s coding note">
 <meta property="og:description" content="redis基础、非关系型数据库">
 <meta property="og:locale" content="default">
-<meta property="og:updated_time" content="2021-06-08T15:05:26.695Z">
+<meta property="og:updated_time" content="2021-06-20T07:39:00.081Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Redis单机数据库的实现">
 <meta name="twitter:description" content="redis基础、非关系型数据库">
@@ -368,7 +368,7 @@
                   <span class="post-meta-item-text">Words count in article&#58;</span>
                 
                 <span title="Words count in article">
-                  3.2k
+                  3.8k
                 </span>
               
 
@@ -384,7 +384,7 @@
                   <span class="post-meta-item-text">Reading time &asymp;</span>
                 
                 <span title="Reading time">
-                  11
+                  13
                 </span>
               
             </div>
@@ -597,6 +597,51 @@
 <li>文件事件和时间事件的处理是同步、有序、原子地执行</li>
 <li>时间事件会比预设的到达时间稍晚一点</li>
 </ul>
+<h2 id="客户端"><a href="#客户端" class="headerlink" title="客户端"></a>客户端</h2><ol>
+<li>根据客户端类型，fd属性的值可以是-1或者大于-1的整数</li>
+</ol>
+<ul>
+<li>伪客户端的fd属性是-1，伪客户端：AOF文件还原数据库状态，执行Lua脚本中包含的Redis命令</li>
+<li>普通客户端的fd属性的值大于-1</li>
+</ul>
+<ol start="2">
+<li>默认情况下客户端没有名字，可以通过setname来设置客户端名称</li>
+<li>客户端标志flags记录了客户端的角色</li>
+<li>输入缓冲区根据输入内容动态的增大或者缩小，但是它的大小不会超过1GB</li>
+<li>输出缓冲区：每个客户端有两个输出缓冲区，一个是固定大小的，一个是可变的</li>
+</ol>
+<ul>
+<li>固定大小的缓冲区可以用来保存长度比较小的回复，最大为16KB</li>
+<li>可变大小的缓冲区可以用来保存长度比较大的回复，最大不能超过硬性限制值</li>
+</ul>
+<ol start="6">
+<li>客户端的状态authenticated属性用来记录客户端是否通过了身份验证</li>
+</ol>
+<ul>
+<li>如果authenticated的值为0，表示客户端未通过身份验证</li>
+<li>如果是0则表示通过了身份验证</li>
+</ul>
+<ol start="7">
+<li>时间：</li>
+</ol>
+<ul>
+<li>ctime属性记录了创建客户端的时间</li>
+<li>lastinteration属性记录了客户端与服务器最后一次互动的时间</li>
+<li>lastinteration可以用来计算客户端的空转时间</li>
+<li>obuf_soft_limit_reached_time属性记录了输出缓冲区第一次到达软性限制的时间</li>
+</ul>
+<h2 id="服务器"><a href="#服务器" class="headerlink" title="服务器"></a>服务器</h2><ol>
+<li>若cmd的指针指向null，说明用户输入的命令名字找不到相应的命令实现，服务器不再执行后续操作，并向客户端返回一个错误</li>
+<li>更新时间缓存：</li>
+</ol>
+<ul>
+<li>服务器在只会打印日志、更新服务器的LRU时钟、决定是否执行持久化、计算服务器上限时间这类时间精度要求不高的功能上，使用unixtime属性和mstime属性</li>
+<li>对于键设置过期时间，添加慢查询日志这种需要高精度时间的功能来说会再次执行系统调用，获取最准确的系统当时时间</li>
+</ul>
+<ol start="3">
+<li>severCron函数会以每10秒一次的频率更新lrulocck的值</li>
+<li>severCron函数中的trackOperationsPerSecond函数会以每100毫秒一次的频率执行</li>
+</ol>
 
       
     </div>
@@ -817,7 +862,7 @@
             
 
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#数据库"><span class="nav-number">1.</span> <span class="nav-text">数据库</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#AOF-RDB和复制功能对过期键的处理"><span class="nav-number">1.1.</span> <span class="nav-text">AOF/RDB和复制功能对过期键的处理</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#数据库通知"><span class="nav-number">1.2.</span> <span class="nav-text">数据库通知</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#RDB持久化"><span class="nav-number">2.</span> <span class="nav-text">RDB持久化</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#RDB持久化-1"><span class="nav-number">2.1.</span> <span class="nav-text">RDB持久化</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#rdb文件"><span class="nav-number">2.2.</span> <span class="nav-text">rdb文件</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#AOF持久化"><span class="nav-number">3.</span> <span class="nav-text">AOF持久化</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#AOF持久化-1"><span class="nav-number">3.1.</span> <span class="nav-text">AOF持久化</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#AOF重写"><span class="nav-number">3.2.</span> <span class="nav-text">AOF重写</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#事件：Redis服务器是一个事件驱动程序"><span class="nav-number">4.</span> <span class="nav-text">事件：Redis服务器是一个事件驱动程序</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#文件事件"><span class="nav-number">4.1.</span> <span class="nav-text">文件事件</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#时间事件"><span class="nav-number">4.2.</span> <span class="nav-text">时间事件</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#事件的调度与执行"><span class="nav-number">4.3.</span> <span class="nav-text">事件的调度与执行</span></a></li></ol></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#数据库"><span class="nav-number">1.</span> <span class="nav-text">数据库</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#AOF-RDB和复制功能对过期键的处理"><span class="nav-number">1.1.</span> <span class="nav-text">AOF/RDB和复制功能对过期键的处理</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#数据库通知"><span class="nav-number">1.2.</span> <span class="nav-text">数据库通知</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#RDB持久化"><span class="nav-number">2.</span> <span class="nav-text">RDB持久化</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#RDB持久化-1"><span class="nav-number">2.1.</span> <span class="nav-text">RDB持久化</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#rdb文件"><span class="nav-number">2.2.</span> <span class="nav-text">rdb文件</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#AOF持久化"><span class="nav-number">3.</span> <span class="nav-text">AOF持久化</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#AOF持久化-1"><span class="nav-number">3.1.</span> <span class="nav-text">AOF持久化</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#AOF重写"><span class="nav-number">3.2.</span> <span class="nav-text">AOF重写</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#事件：Redis服务器是一个事件驱动程序"><span class="nav-number">4.</span> <span class="nav-text">事件：Redis服务器是一个事件驱动程序</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#文件事件"><span class="nav-number">4.1.</span> <span class="nav-text">文件事件</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#时间事件"><span class="nav-number">4.2.</span> <span class="nav-text">时间事件</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#事件的调度与执行"><span class="nav-number">4.3.</span> <span class="nav-text">事件的调度与执行</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#客户端"><span class="nav-number">5.</span> <span class="nav-text">客户端</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#服务器"><span class="nav-number">6.</span> <span class="nav-text">服务器</span></a></li></ol></div>
             
 
           </div>
@@ -851,7 +896,7 @@
     
       <span class="post-meta-item-text">Site words total count&#58;</span>
     
-    <span title="Site words total count">89.4k</span>
+    <span title="Site words total count">90k</span>
   
 </div>
 
